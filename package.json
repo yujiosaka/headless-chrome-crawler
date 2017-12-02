@@ -1,0 +1,41 @@
+{
+  "name": "headless-chrome-crawler",
+  "version": "1.0.0-rc",
+  "description": "Headless Chrome Crawler for Node.js Powered by Puppeteer",
+  "main": "index.js",
+  "license": "MIT",
+  "author": "Yuji Isobe",
+  "scripts": {
+    "lint": "eslint --quiet -f codeframe . || eslint .",
+    "test": "npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yujiosaka/headless-chrome-crawler.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yujiosaka/headless-chrome-crawler/issues"
+  },
+  "homepage": "https://github.com/yujiosaka/headless-chrome-crawler#readme",
+  "dependencies": {
+    "jquery": "3.2.1",
+    "lodash": "4.17.4",
+    "p-queue": "2.3.0",
+    "puppeteer": "0.13.0"
+  },
+  "devDependencies": {
+    "eslint": "4.11.0",
+    "eslint-config-airbnb": "16.1.0",
+    "eslint-plugin-import": "2.8.0"
+  },
+  "keywords": [
+    "headless",
+    "chrome",
+    "crawler",
+    "crawling",
+    "puppeteer"
+  ],
+  "engines": {
+    "node": ">=6.4.0"
+  }
+}
