@@ -1,8 +1,3 @@
-logs
-*.log
-npm-debug.log*
-lib-cov
-coverage
 node_modules/
-.npm
+.yarn-integrity
 .eslintcache
