@@ -1,8 +1,4 @@
-logs
-*.log
-npm-debug.log*
-lib-cov
-coverage
 node_modules/
-.npm
+coverage/
+.yarn-integrity
 .eslintcache

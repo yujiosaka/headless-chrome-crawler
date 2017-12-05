@@ -6,8 +6,9 @@
   "license": "MIT",
   "author": "Yuji Isobe",
   "scripts": {
+    "coverage": "istanbul cover _mocha",
     "lint": "eslint --quiet -f codeframe . || eslint .",
-    "test": "npm run lint"
+    "test": "npm run lint && npm run coverage && mocha"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/yujiosaka/headless-chrome-crawler#readme",
   "dependencies": {
+    "debug": "3.1.0",
     "jquery": "3.2.1",
     "lodash": "4.17.4",
     "p-queue": "2.3.0",
@@ -26,7 +28,10 @@
   "devDependencies": {
     "eslint": "4.11.0",
     "eslint-config-airbnb": "16.1.0",
-    "eslint-plugin-import": "2.8.0"
+    "eslint-plugin-import": "2.8.0",
+    "istanbul": "0.4.5",
+    "mocha": "4.0.1",
+    "power-assert": "1.4.4"
   },
   "keywords": [
     "headless",
