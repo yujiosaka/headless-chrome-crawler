@@ -1,6 +1,6 @@
 const HCCrawler = require('../lib/hccrawler');
 
-const hccrawler = new HCCrawler({
+HCCrawler.launch({
   // Global functions won't be called
   evaluatePage: (() => {
     throw new Error('Evaluate page function is not overriden!');
@@ -8,10 +8,8 @@ const hccrawler = new HCCrawler({
   onSuccess: (() => {
     throw new Error('On sucess function is not overriden!');
   }),
-});
-
-hccrawler.launch()
-  .then(() => {
+})
+  .then(hccrawler => {
     hccrawler.queue({
       url: 'https://example.com',
       evaluatePage: (() => ({
@@ -23,8 +21,6 @@ hccrawler.launch()
         console.log('onSuccess', result);
       }),
     });
-    return hccrawler.onIdle();
-  })
-  .then(() => {
-    hccrawler.close();
+    hccrawler.onIdle()
+      .then(() => hccrawler.close());
   });
