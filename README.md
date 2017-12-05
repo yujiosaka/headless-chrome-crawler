@@ -79,7 +79,7 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
 ### class: HCCrawler
 
 You can pass the following options to the constructor.
-Concurrency can only be set in the constructor, but other options can be overridden by each [hccrawler.queuesize](#hccrawlerqueuesize)'s options
+Concurrency can only be set in the constructor, but other options can be overridden by each [hccrawler.queue](#hccrawlerqueueoptions)'s options
 
 * `options` <[Object]>
   * `url` <[String]> Url to navigate to. The url should include scheme, e.g. `https://`.
