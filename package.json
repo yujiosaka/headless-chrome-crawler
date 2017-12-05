@@ -6,8 +6,9 @@
   "license": "MIT",
   "author": "Yuji Isobe",
   "scripts": {
+    "coverage": "istanbul cover _mocha",
     "lint": "eslint --quiet -f codeframe . || eslint .",
-    "test": "npm run lint && mocha"
+    "test": "npm run lint && npm run coverage && mocha"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "eslint": "4.11.0",
     "eslint-config-airbnb": "16.1.0",
     "eslint-plugin-import": "2.8.0",
+    "istanbul": "0.4.5",
     "mocha": "4.0.1",
     "power-assert": "1.4.4"
   },
