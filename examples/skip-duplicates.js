@@ -9,7 +9,7 @@ const hccrawler = new HCCrawler({
     p: $('p').text(),
   })),
   onSuccess: (result => {
-    requestedObj[result.url] = true;
+    requestedObj[result.options.url] = true;
     console.log('onSuccess', result);
   }),
   shouldRequest: (options => {
