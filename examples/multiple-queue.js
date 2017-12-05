@@ -1,6 +1,6 @@
 const HCCrawler = require('../lib/hccrawler');
 
-const hccrawler = new HCCrawler({
+HCCrawler.launch({
   evaluatePage: (() => ({
     title: $('title').text(),
     h1: $('h1').text(),
@@ -9,14 +9,10 @@ const hccrawler = new HCCrawler({
   onSuccess: (result => {
     console.log('onSuccess', result);
   }),
-});
-
-hccrawler.launch()
-  .then(() => {
+})
+  .then(hccrawler => {
     hccrawler.queue('https://example.com'); // one URL
     hccrawler.queue(['https://example.net', { url: 'https://example.org' }]); // multiple URLs in different styles.
-    return hccrawler.onIdle();
-  })
-  .then(() => {
-    hccrawler.close();
+    return hccrawler.onIdle()
+      .then(() => hccrawler.close());
   });
