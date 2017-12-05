@@ -138,3 +138,24 @@ When both defined, hccrawler.queue's options are always preferred.
 #### hccrawler.queueSize
 
 * returns: <[number]> The size of queues. This property is read only.
+
+## Debugging tips
+
+### Puppeteer.launch's options
+
+[hccrawler.launch](#chcrawlerlaunchoptions)'s options are passed straight to [Puppeteer.launch API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
+It may be useful to set the `headless` and `slowMo` options so that you can see what is going on.
+
+```js
+hccrawler.launch({ headless: false, slowMo: 10 });
+```
+
+### Enable debug logging
+
+All requests and browser's logs are logged via the [debug]'(https://github.com/visionmedia/debug)' module under the `hccrawler` namespace.
+
+```
+env DEBUG="hccrawler:*" node script.js
+env DEBUG="hccrawler:request" node script.js
+env DEBUG="hccrawler:browser" node script.js
+```
