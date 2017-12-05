@@ -1,4 +1,4 @@
-const HCCrawler = require('../lib/hccrawler');
+const HCCrawler = require('../');
 
 const requestedObj = {};
 
@@ -18,11 +18,10 @@ HCCrawler.launch({
     return true;
   }),
 })
-  .then(hccrawler => {
-    hccrawler.queue('https://example.com');
-    hccrawler.queue('https://example.net');
-    hccrawler.queue('https://example.org');
-    hccrawler.queue('https://example.com'); // The queue won't be requested
-    hccrawler.onIdle()
-      .then(() => hccrawler.close());
+  .then(crawler => {
+    crawler.queue('https://example.com');
+    crawler.queue('https://example.net');
+    crawler.queue('https://example.com'); // The queue won't be requested
+    crawler.onIdle()
+      .then(() => crawler.close());
   });

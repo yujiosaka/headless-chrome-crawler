@@ -32,7 +32,7 @@ The API of headless-chrome-crawler is inspired by that of [node-crawler](https:/
 ```js
 const HCCrawler = require('headless-chrome-crawler');
 
-const hccrawler = new HCCrawler({
+HCCrawler.launch({
   evaluatePage: (() => ({
     title: $('title').text(),
     h1: $('h1').text(),
@@ -41,13 +41,11 @@ const hccrawler = new HCCrawler({
   onSuccess: (result => {
     console.log('onSuccess', result); // resolves status, options and evaluated result.
   }),
-});
-
-hccrawler.launch()
-  .then(() => {
-    hccrawler.queue('https://example.com');
-    hccrawler.queue(['https://example.net', 'https://example.org']);
-    hccrawler.queue({
+})
+  .then(crawler => {
+    crawler.queue('https://example.com');
+    crawler.queue(['https://example.net', 'https://example.org']);
+    crawler.queue({
       jQuery: false,
       url: 'https://example.com',
       evaluatePage: (() => ({
@@ -56,9 +54,9 @@ hccrawler.launch()
         p: document.getElementsByTagName('p')[0].innerText
       })),
     });
-    return hccrawler.onIdle();
-  })
-  .then(() => hccrawler.close());
+    crawler.onIdle()
+      .then(() => crawler.close());
+  });
 ```
 
 ## Examples

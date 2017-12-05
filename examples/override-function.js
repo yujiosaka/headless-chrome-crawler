@@ -1,4 +1,4 @@
-const HCCrawler = require('../lib/hccrawler');
+const HCCrawler = require('../');
 
 HCCrawler.launch({
   // Global functions won't be called
@@ -9,8 +9,8 @@ HCCrawler.launch({
     throw new Error('On sucess function is not overriden!');
   }),
 })
-  .then(hccrawler => {
-    hccrawler.queue({
+  .then(crawler => {
+    crawler.queue({
       url: 'https://example.com',
       evaluatePage: (() => ({
         title: $('title').text(),
@@ -21,6 +21,6 @@ HCCrawler.launch({
         console.log('onSuccess', result);
       }),
     });
-    hccrawler.onIdle()
-      .then(() => hccrawler.close());
+    crawler.onIdle()
+      .then(() => crawler.close());
   });

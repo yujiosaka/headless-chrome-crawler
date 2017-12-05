@@ -1,4 +1,4 @@
-const HCCrawler = require('../lib/hccrawler');
+const HCCrawler = require('../');
 
 HCCrawler.launch({
   jQuery: false, // jQuery script tag won't be added
@@ -17,8 +17,8 @@ HCCrawler.launch({
     console.error('onError', err);
   }),
 })
-  .then(hccrawler => {
-    hccrawler.queue('https://example.com');
-    hccrawler.onIdle()
-      .then(() => hccrawler.close());
+  .then(crawler => {
+    crawler.queue('https://example.com');
+    crawler.onIdle()
+      .then(() => crawler.close());
   });

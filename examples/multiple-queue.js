@@ -1,4 +1,4 @@
-const HCCrawler = require('../lib/hccrawler');
+const HCCrawler = require('../');
 
 HCCrawler.launch({
   evaluatePage: (() => ({
@@ -10,9 +10,9 @@ HCCrawler.launch({
     console.log('onSuccess', result);
   }),
 })
-  .then(hccrawler => {
-    hccrawler.queue('https://example.com'); // one URL
-    hccrawler.queue(['https://example.net', { url: 'https://example.org' }]); // multiple URLs in different styles.
-    return hccrawler.onIdle()
-      .then(() => hccrawler.close());
+  .then(crawler => {
+    crawler.queue('https://example.com'); // one URL
+    crawler.queue(['https://example.net', { url: 'https://example.org' }]); // multiple URLs in different styles.
+    crawler.onIdle()
+      .then(() => crawler.close());
   });
