@@ -7,7 +7,7 @@
   "author": "Yuji Isobe",
   "scripts": {
     "lint": "eslint --quiet -f codeframe . || eslint .",
-    "test": "npm run lint"
+    "test": "npm run lint && mocha"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,9 @@
   "devDependencies": {
     "eslint": "4.11.0",
     "eslint-config-airbnb": "16.1.0",
-    "eslint-plugin-import": "2.8.0"
+    "eslint-plugin-import": "2.8.0",
+    "mocha": "4.0.1",
+    "power-assert": "1.4.4"
   },
   "keywords": [
     "headless",
