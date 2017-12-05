@@ -69,15 +69,16 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
 
 * [class: HCCrawler](#class-hccrawler)
   * [hccrawler.launch([options])](#hccrawlerlaunchoptions)
-  * [hccrawler.queue([options])](#hccrawlerqueueoptions)
-  * [hccrawler.onIdle()](#hccrawleronidle)
-  * [hccrawler.close()](#hccrawlerclose)
-  * [hccrawler.queuesize](#hccrawlerqueuesize)
+* [class: Crawler](#class-crawler)
+  * [crawler.queue([options])](#crawlerqueueoptions)
+  * [crawler.onIdle()](#crawleronidle)
+  * [crawler.close()](#crawlerclose)
+  * [crawler.queueSize](#crawlerqueuesize)
 
 ### class: HCCrawler
 
 You can pass the following options to the constructor.
-Concurrency can only be set in the constructor, but other options can be overridden by each [hccrawler.queue](#hccrawlerqueueoptions)'s options
+Concurrency can only be set in the constructor, but other options can be overridden by each [crawler.queue](#crawlerqueueoptions)'s options
 
 * `options` <[Object]>
   * `url` <[String]> Url to navigate to. The url should include scheme, e.g. `https://`.
@@ -98,19 +99,19 @@ Concurrency can only be set in the constructor, but other options can be overrid
   * `username` <[String]> Username required for Basic Authentication. pass `null` if it's not necessary.
   * `password` <[String]> Password required for Basic Authentication. pass `null` if it's not necessary.
   * `shouldRequest(options)` <[Function]> Return `false` if you want to skip the request. Useful for skipping duplicates.
-    * `options` <[Object]> Options merged with hccrawler.queue's options.
+    * `options` <[Object]> Options merged with crawler.queue's options.
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
   * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
     * `response` <[Object]>
       * `status` <[String]> status code of the request.
-      * `options` <[Object]> Options merged with hccrawler.queue's options.
+      * `options` <[Object]> Options merged with crawler.queue's options.
       * `result` <[Serializable]> The result resolved from `evaluatePage()`.
   * `onError(err)` <[Function]> Function to be called when request fails.
     * `err` <[Error]> Error object.
 
 > **Note**: `url`, `timeout` are `waitUntil` options are passed to [Puppeteer](https://github.com/GoogleChrome/puppeteer). For updated information, see [Puppeteer's page.goto(url, options) API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)
 
-#### hccrawler.launch([options])
+#### crawler.launch([options])
 
 The options are passed straight to [Puppeteer.launch API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
 Following options may be useful for debugging.
@@ -119,21 +120,21 @@ Following options may be useful for debugging.
   - `headless` <[boolean]> Whether to run Chromium in [headless mode](https://developers.google.com/web/updates/2017/04/headless-chrome), defaults to `true` unless the `devtools` option is `true`.
   - `slowMo` <[number]> Slows down Puppeteer operations by the specified amount of milliseconds. Useful so that you can see what is going on.
 
-#### hccrawler.queue([options])
+#### crawler.queue([options])
 
 Options can be either an array or an object.
-All options are common with HCCrawler's constructor options except that `concurrency` option cannot be set in `hccrawler.queue`.
-When both defined, hccrawler.queue's options are always preferred.
+All options are common with HCCrawler's constructor options except that `concurrency` option cannot be set in `crawler.queue`.
+When both defined, crawler.queue's options are always preferred.
 
-#### hccrawler.onIdle()
+#### crawler.onIdle()
 
 - returns: <[Promise]> Promise is chained when queues become empty.
 
-#### hccrawler.close()
+#### crawler.close()
 
 - returns: <[Promise]> Promise is chained when ther browser is successfully closed.
 
-#### hccrawler.queueSize
+#### crawler.queueSize
 
 * returns: <[number]> The size of queues. This property is read only.
 
@@ -141,11 +142,11 @@ When both defined, hccrawler.queue's options are always preferred.
 
 ### Puppeteer.launch's options
 
-[hccrawler.launch](#chcrawlerlaunchoptions)'s options are passed straight to [Puppeteer.launch API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
+[crawler.launch](#chcrawlerlaunchoptions)'s options are passed straight to [Puppeteer.launch API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
 It may be useful to set the `headless` and `slowMo` options so that you can see what is going on.
 
 ```js
-hccrawler.launch({ headless: false, slowMo: 10 });
+HCcrawler.launch({ headless: false, slowMo: 10 });
 ```
 
 ### Enable debug logging
