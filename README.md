@@ -3,7 +3,7 @@ Headless Chrome Crawler for Node.js Powered by [Puppeteer](https://github.com/Go
 
 ## Features
 
-Crawlers based on simple requests to html files are generally fast. However, it sometimes end up just capturing empty bodies, especially when the websites are built on such modern frontend frameworks as AngularJS, ReactJS and Vue.js.
+Crawlers based on simple requests to html files are generally fast. However, it sometimes end up capturing empty bodies, especially when the websites are built on such modern frontend frameworks as AngularJS, ReactJS and Vue.js.
 
 Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler allows you to scrape those single page applications with the following features:
 
@@ -78,64 +78,82 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
 * [class: Crawler](#class-crawler)
   * [crawler.queue([options])](#crawlerqueueoptions)
   * [crawler.onIdle()](#crawleronidle)
-  * [crawler.close()](#crawlerclose)
   * [crawler.queueSize](#crawlerqueuesize)
 
 ### class: HCCrawler
 
-HCCrawler provides a static method to launch a crawler. It extends [Puppeteer class](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#class-puppeteer), so other static method like `executablePath` is available.
+HCCrawler provides a method to launch a crawler. It extends [Puppeteer class](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#class-puppeteer), so any methods like `HCCrawler.executablePath()` are available.
+
+#### HCCrawler.connect([options])
+
+* `options` <[Object]>
+  * `concurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
+
+This method connects to an existing Chromium instance. The following options are passed straight to [Puppeteer.connect API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
+
+```
+browserWSEndpoint, ignoreHTTPSErrors
+```
+
+Also, the following options can be set as default values when [crawler.queue([options])](#crawlerqueueoptions) are executed.
+
+```
+url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, shouldRequest, evaluatePage, onSuccess, onError
+```
+
+> **Note**: In practice, setting the options every time you queue the requests is not only redundant but also slow. Therefore, it's recommended to set the default values and override them depending on the necessity.
 
 #### HCCrawler.launch([options])
 
-The options are passed straight to [Puppeteer.launch API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
+* `options` <[Object]>
+  * `concurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
 
-You can pass the following options to the constructor.
-Concurrency can only be set in the constructor, but other options can be overridden by each [crawler.queue](#crawlerqueueoptions)'s options
+The method launches a Chromium instance. The following options are passed straight to [Puppeteer.launch API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
+
+```
+ignoreHTTPSErrors, headless, executablePath, slowMo, args, handleSIGINT, handleSIGTERM, handleSIGHUP, timeout, dumpio, userDataDir, env, devtools
+```
+
+Also, the following options can be set as default values when [crawler.queue([options])](#crawlerqueueoptions) are executed.
+
+```
+url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, shouldRequest, evaluatePage, onSuccess, onError
+```
+
+> **Note**: In practice, setting the options every time you queue the requests is not only redundant but also slow. Therefore, it's recommended to set the default values and override them depending on the necessity.
+
+### class: Crawler
+
+HCCrawler provides a method to queue a request. It extends [Puppeteer's Browser class](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#class-browser), so any methods like `crawler.close()` are available.
+
+#### crawler.queue([options])
 
 * `options` <[Object]>
   * `url` <[String]> Url to navigate to. The url should include scheme, e.g. `https://`.
-  * `timeout` <[number]> Maximum navigation time in milliseconds, defaults to `30`, pass `0` to disable timeout.
-  * `waitUntil` <string|Array<string>> When to consider navigation succeeded, defaults to `load`. Given an array of event strings, navigation is considered to be successful after all events have been fired. Events can be either:
-    * `load` - consider navigation to be finished when the `load` event is fired.
-    * `domcontentloaded` - consider navigation to be finished when the `DOMContentLoaded` event is fired.
-    * `networkidle0` - consider navigation to be finished when there are no more than `0` network connections for at least `500` ms.
-    * `networkidle2` - consider navigation to be finished when there are no more than `2` network connections for at least `500` ms.
-  * `concurrency` <[number]> Number of pages to work concurrently, defaults to `10`.
   * `priority` <[number]> Basic priority of queues, defaults to `1`. Queues with larger priorities are preferred.
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, concurrency must be `1`.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
   * `jQuery` <[boolean]> Whether to automatically add jQuery tag to page, defaults to `true`.
-  * `captureConsole` <[boolean]> Whether to capture browser's console. Useful for debugging, defaults to `false`.
   * `device` <[String]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
   * `username` <[String]> Username required for Basic Authentication. pass `null` if it's not necessary.
   * `password` <[String]> Password required for Basic Authentication. pass `null` if it's not necessary.
-  * `shouldRequest(options)` <[Function]> Return `false` if you want to skip the request. Useful for skipping duplicates.
-    * `options` <[Object]> Options merged with crawler.queue's options.
+  * `preRequest(options)` <[Function]> Function to do anything like waiting and modifying options before each request. You can also return `false` if you want to skip the request.
+    * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
   * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
     * `response` <[Object]>
       * `status` <[String]> status code of the request.
       * `options` <[Object]> Options merged with crawler.queue's options.
       * `result` <[Serializable]> The result resolved from `evaluatePage()`.
-  * `onError(err)` <[Function]> Function to be called when request fails.
-    * `err` <[Error]> Error object.
+  * `onError(error)` <[Function]> Function to be called when request fails.
+    * `error` <[Error]> Error object.
 
-> **Note**: `url`, `timeout` are `waitUntil` options are passed to [Puppeteer](https://github.com/GoogleChrome/puppeteer). For updated information, see [Puppeteer's page.goto(url, options) API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)
-
-#### crawler.queue([options])
-
-Options can be either an array or an object.
-All options are common with HCCrawler's constructor options except that `concurrency` option cannot be set in `crawler.queue`.
-When both defined, crawler.queue's options are always preferred.
+The options can be either an object, an array, or a string. When it's an array, each item in the array will be executed. When it's a string, the options are transformed to an object with only url defined.
 
 #### crawler.onIdle()
 
 - returns: <[Promise]> Promise is chained when queues become empty.
-
-#### crawler.close()
-
-- returns: <[Promise]> Promise is chained when ther browser is successfully closed.
 
 #### crawler.queueSize
 
