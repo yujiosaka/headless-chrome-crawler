@@ -1,6 +1,6 @@
-const HCCrawler = require('../lib/hccrawler');
+const HCCrawler = require('../');
 
-const hccrawler = new HCCrawler({
+HCCrawler.launch({
   concurrency: 1,
   evaluatePage: (() => ({
     title: $('title').text(),
@@ -10,15 +10,11 @@ const hccrawler = new HCCrawler({
   onSuccess: (result => {
     console.log('onSuccess', result);
   }),
-});
-
-hccrawler.launch()
-  .then(() => {
-    hccrawler.queue({ url: 'https://example.com' }); // First queue will be requested first regardless of priority
-    hccrawler.queue({ url: 'https://example.net', priority: 1 });
-    hccrawler.queue({ url: 'https://example.org', priority: 2 }); // This queue is requested before the previous queue
-    return hccrawler.onIdle();
-  })
-  .then(() => {
-    hccrawler.close();
+})
+  .then(crawler => {
+    crawler.queue({ url: 'https://example.com' }); // First queue will be requested first regardless of priority
+    crawler.queue({ url: 'https://example.net', priority: 1 });
+    crawler.queue({ url: 'https://example.org', priority: 2 }); // This queue is requested before the previous queue
+    crawler.onIdle()
+      .then(() => crawler.close());
   });

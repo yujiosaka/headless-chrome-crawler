@@ -1,6 +1,6 @@
-const HCCrawler = require('../lib/hccrawler');
+const HCCrawler = require('../');
 
-const hccrawler = new HCCrawler({
+HCCrawler.launch({
   concurrency: 1, // Concurrency must be 1 when delay is set
   delay: 2000, // Delay 2000 millisecnds before each request is sent
   evaluatePage: (() => ({
@@ -11,15 +11,11 @@ const hccrawler = new HCCrawler({
   onSuccess: (result => {
     console.log('onSuccess', result);
   }),
-});
-
-hccrawler.launch()
-  .then(() => {
-    hccrawler.queue({ url: 'https://example.com' });
-    hccrawler.queue({ url: 'https://example.net' });
-    hccrawler.queue({ url: 'https://example.org' });
-    return hccrawler.onIdle();
-  })
-  .then(() => {
-    hccrawler.close();
+})
+  .then(crawler => {
+    crawler.queue({ url: 'https://example.com' });
+    crawler.queue({ url: 'https://example.net' });
+    crawler.queue({ url: 'https://example.org' });
+    crawler.onIdle()
+      .then(() => crawler.close());
   });

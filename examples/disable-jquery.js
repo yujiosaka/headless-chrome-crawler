@@ -1,6 +1,6 @@
-const HCCrawler = require('../lib/hccrawler');
+const HCCrawler = require('../');
 
-const hccrawler = new HCCrawler({
+HCCrawler.launch({
   jQuery: false, // jQuery script tag won't be added
   retryCount: 3, // Retry the same request up to 3 times
   retryDelay: 1000, // Wait 1000msecs before each retry
@@ -16,16 +16,9 @@ const hccrawler = new HCCrawler({
   onError: (err => {
     console.error('onError', err);
   }),
-});
-
-hccrawler.launch()
-  .then(() => {
-    hccrawler.queue('https://example.com');
-    return hccrawler.onIdle();
-  })
-  .catch(err => {
-    console.error(err);
-  })
-  .then(() => {
-    hccrawler.close();
+})
+  .then(crawler => {
+    crawler.queue('https://example.com');
+    crawler.onIdle()
+      .then(() => crawler.close());
   });
