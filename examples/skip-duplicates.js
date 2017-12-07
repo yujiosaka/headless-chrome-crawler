@@ -13,7 +13,7 @@ HCCrawler.launch({
     requestedObj[result.options.url] = true;
     console.log('onSuccess', result);
   }),
-  shouldRequest: (options => {
+  preRequest: (options => {
     if (requestedObj[options.url]) return false;
     return true;
   }),
