@@ -77,6 +77,7 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
   * [HCCrawler.launch([options])](#hccrawlerlaunchoptions)
 * [class: Crawler](#class-crawler)
   * [crawler.queue([options])](#crawlerqueueoptions)
+  * [crawler.close()](#crawlerclose)
   * [crawler.onIdle()](#crawleronidle)
   * [crawler.queueSize](#crawlerqueuesize)
 
@@ -88,6 +89,7 @@ HCCrawler provides a method to launch a crawler. It extends [Puppeteer class](ht
 
 * `options` <[Object]>
   * `concurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
+* returns: <Promise<Crawler>> Promise which resolves to Crawler instance.
 
 This method connects to an existing Chromium instance. The following options are passed straight to [Puppeteer.connect API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
 
@@ -107,6 +109,7 @@ url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username,
 
 * `options` <[Object]>
   * `concurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
+* returns: <Promise<Crawler>> Promise which resolves to Crawler instance.
 
 The method launches a Chromium instance. The following options are passed straight to [Puppeteer.launch API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
 
@@ -144,16 +147,20 @@ HCCrawler provides a method to queue a request. It extends [Puppeteer's Browser 
   * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
     * `response` <[Object]>
       * `status` <[String]> status code of the request.
-      * `options` <[Object]> Options merged with crawler.queue's options.
+      * `options` <[Object]> crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
       * `result` <[Serializable]> The result resolved from `evaluatePage()`.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
 
 The options can be either an object, an array, or a string. When it's an array, each item in the array will be executed. When it's a string, the options are transformed to an object with only url defined.
 
+#### hccrawler.close()
+
+returns: <[Promise]> Promise which is resolved when ther browser is closed.
+
 #### crawler.onIdle()
 
-- returns: <[Promise]> Promise is chained when queues become empty.
+- returns: <[Promise]> Promise which is resolved when queues become empty.
 
 #### crawler.queueSize
 
@@ -161,18 +168,17 @@ The options can be either an object, an array, or a string. When it's an array, 
 
 ## Debugging tips
 
-### Puppeteer.launch's options
+### Launch options
 
-[crawler.launch](#chcrawlerlaunchoptions)'s options are passed straight to [Puppeteer.launch API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
-It may be useful to set the `headless` and `slowMo` options so that you can see what is going on.
+[HCCrawler.launch([options])](#hccrawlerlaunchoptions)'s options are passed straight to [Puppeteer.launch API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions). It may be useful to set the `headless` and `slowMo` options so that you can see what is going on.
 
 ```js
-HCcrawler.launch({ headless: false, slowMo: 10 });
+HCCrawler.launch({ headless: false, slowMo: 10 });
 ```
 
 ### Enable debug logging
 
-All requests and browser's logs are logged via the [debug]'(https://github.com/visionmedia/debug)' module under the `hccrawler` namespace.
+All requests and browser's logs are logged via the [debug](https://github.com/visionmedia/debug) module under the `hccrawler` namespace.
 
 ```
 env DEBUG="hccrawler:*" node script.js
