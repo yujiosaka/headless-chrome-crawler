@@ -1,5 +1,5 @@
 # headless-chrome-crawler
-Headless Chrome crawler for Node.js Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer)
+Headless Chrome Crawler for Node.js Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer)
 
 ## Features
 
@@ -21,13 +21,14 @@ Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chro
 
 ```
 yarn add headless-chrome-crawler
+# or "npm i headless-chrome-crawler"
 ```
 
-> **Note**: headless-chrome-crawler is powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer). With installation, it automatically downloads a recent version of Chromium. To skip the download, see [Environment variables](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#environment-variables).
+> **Note**: headless-chrome-crawler is powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer). While installation, it automatically downloads a recent version of Chromium. To skip the download, see [Environment variables](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#environment-variables).
 
 ### Usage
 
-The API of headless-chrome-crawler is inspired by that of [node-crawler](https://github.com/bda-research/node-crawler), so the API design is very similar but not exactly compatible.
+The basic API of headless-chrome-crawler is inspired by that of [node-crawler](https://github.com/bda-research/node-crawler), so the API design is somewhat similar but not exactly compatible.
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
@@ -43,8 +44,11 @@ HCCrawler.launch({
   }),
 })
   .then(crawler => {
+    // Queue a single request
     crawler.queue('https://example.com');
+    // Queue multiple requests
     crawler.queue(['https://example.net', 'https://example.org']);
+    // Queue a query custom options
     crawler.queue({
       jQuery: false,
       url: 'https://example.com',
@@ -54,6 +58,7 @@ HCCrawler.launch({
         p: document.getElementsByTagName('p')[0].innerText
       })),
     });
+    // Called when no queue is left
     crawler.onIdle()
       .then(() => crawler.close());
   });
@@ -68,7 +73,8 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
 ### Table of Contents
 
 * [class: HCCrawler](#class-hccrawler)
-  * [hccrawler.launch([options])](#hccrawlerlaunchoptions)
+  * [HCCrawler.connect([options])](#hccrawlerconnectoptions)
+  * [HCCrawler.launch([options])](#hccrawlerlaunchoptions)
 * [class: Crawler](#class-crawler)
   * [crawler.queue([options])](#crawlerqueueoptions)
   * [crawler.onIdle()](#crawleronidle)
@@ -76,6 +82,12 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
   * [crawler.queueSize](#crawlerqueuesize)
 
 ### class: HCCrawler
+
+HCCrawler provides a static method to launch a crawler. It extends [Puppeteer class](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#class-puppeteer), so other static method like `executablePath` is available.
+
+#### HCCrawler.launch([options])
+
+The options are passed straight to [Puppeteer.launch API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
 
 You can pass the following options to the constructor.
 Concurrency can only be set in the constructor, but other options can be overridden by each [crawler.queue](#crawlerqueueoptions)'s options
@@ -110,15 +122,6 @@ Concurrency can only be set in the constructor, but other options can be overrid
     * `err` <[Error]> Error object.
 
 > **Note**: `url`, `timeout` are `waitUntil` options are passed to [Puppeteer](https://github.com/GoogleChrome/puppeteer). For updated information, see [Puppeteer's page.goto(url, options) API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)
-
-#### crawler.launch([options])
-
-The options are passed straight to [Puppeteer.launch API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
-Following options may be useful for debugging.
-
-- `options` <[Object]>
-  - `headless` <[boolean]> Whether to run Chromium in [headless mode](https://developers.google.com/web/updates/2017/04/headless-chrome), defaults to `true` unless the `devtools` option is `true`.
-  - `slowMo` <[number]> Slows down Puppeteer operations by the specified amount of milliseconds. Useful so that you can see what is going on.
 
 #### crawler.queue([options])
 
