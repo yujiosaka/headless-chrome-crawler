@@ -141,6 +141,7 @@ HCCrawler provides a method to queue a request. It extends [Puppeteer's Browser 
   * `device` <[String]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
   * `username` <[String]> Username required for Basic Authentication. pass `null` if it's not necessary.
   * `password` <[String]> Password required for Basic Authentication. pass `null` if it's not necessary.
+  * `extraHeaders` <[Object]> An object containing additional http headers to be sent with every request. All header values must be strings.
   * `preRequest(options)` <[Function]> Function to do anything like waiting and modifying options before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
@@ -151,6 +152,8 @@ HCCrawler provides a method to queue a request. It extends [Puppeteer's Browser 
       * `result` <[Serializable]> The result resolved from `evaluatePage()`.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
+
+> **Note**: `extraHeaders` options do not guarantee the order of headers in the outgoing requests.
 
 The options can be either an object, an array, or a string. When it's an array, each item in the array will be executed. When it's a string, the options are transformed to an object with only url defined.
 
