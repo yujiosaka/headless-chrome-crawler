@@ -147,13 +147,17 @@ HCCrawler provides a method to queue a request. It extends [Puppeteer's Browser 
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
   * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
     * `response` <[Object]>
-      * `status` <[String]> status code of the request.
+      * `response` <[Object]>
+        * `ok` <[boolean]> whether the status code in the range 200-299 or not.
+        * `status` <[String]> status code of the request.
+        * `url` <[String]> Last requested url.
+        * `headers` <[Object]> Response headers.
       * `options` <[Object]> crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
       * `result` <[Serializable]> The result resolved from `evaluatePage()`.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
 
-> **Note**: `extraHeaders` options do not guarantee the order of headers in the outgoing requests.
+> **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
 
 The options can be either an object, an array, or a string. When it's an array, each item in the array will be executed. When it's a string, the options are transformed to an object with only url defined.
 
