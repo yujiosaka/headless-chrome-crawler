@@ -1,5 +1,5 @@
 # headless-chrome-crawler
-Headless Chrome Crawler for Node.js Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer)
+Headless Chrome Crawler with [jQuery](https://jquery.com) Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer)
 
 ## Features
 
@@ -9,7 +9,7 @@ Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chro
 
 * Configure concurrency, delay and retries
 * Cancel requests by conditions
-* Insert jQuery automatically
+* Insert [jQuery](https://jquery.com) automatically
 * Priority queue
 * Device emulation
 * Basic authentication
@@ -137,7 +137,7 @@ HCCrawler provides a method to queue a request. It extends [Puppeteer's Browser 
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, concurrency must be `1`.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
-  * `jQuery` <[boolean]> Whether to automatically add jQuery tag to page, defaults to `true`.
+  * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
   * `device` <[String]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
   * `username` <[String]> Username required for Basic Authentication. pass `null` if it's not necessary.
   * `password` <[String]> Password required for Basic Authentication. pass `null` if it's not necessary.
