@@ -160,6 +160,26 @@ The options can be either an object, an array, or a string. When it's an array, 
 
 returns: <[Promise]> Promise which is resolved when ther browser is closed.
 
+See [Puppeteer's browser.disconnect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserdisconnect) for more details.
+
+#### hccrawler.disconnect()
+
+returns: <[Promise]> Promise which is resolved when ther browser is disconnected.
+
+See [Puppeteer's browser.close()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserclose) for more details.
+
+#### hccrawler.versions()
+
+returns: <[Promise]> Promise which is resolved with HeadlessChrome/Chromium version.
+
+See [Puppeteer's browser.version()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserversion) for more details.
+
+#### hccrawler.wsEndpoint()
+
+returns: <[Promise]> Promise which is resolved with websocket url.
+
+See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserwsendpoint) for more details.
+
 #### crawler.onIdle()
 
 - returns: <[Promise]> Promise which is resolved when queues become empty.
