@@ -77,9 +77,9 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
   * [HCCrawler.launch([options])](#hccrawlerlaunchoptions)
   * [crawler.queue([options])](#crawlerqueueoptions)
   * [crawler.close()](#crawlerclose)
-  * [crawler.disconnect()](#crawlerdisconnect)
-  * [crawler.version()](#crawlerversion)
-  * [crawler.wsEndpoint()](#crawlerwsendpoint)
+  * [crawler.disconnect()](#crawlerdisconnect)
+  * [crawler.version()](#crawlerversion)
+  * [crawler.wsEndpoint()](#crawlerwsendpoint)
   * [crawler.onIdle()](#crawleronidle)
   * [crawler.queueSize](#crawlerqueuesize)
 
