@@ -145,6 +145,7 @@ url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username,
   * `device` <[String]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
   * `username` <[String]> Username required for Basic Authentication. pass `null` if it's not necessary.
   * `password` <[String]> Password required for Basic Authentication. pass `null` if it's not necessary.
+  * `userAgent` <[String]> User agent string to use in this page.
   * `extraHeaders` <[Object]> An object containing additional http headers to be sent with every request. All header values must be strings.
   * `preRequest(options)` <[Function]> Function to do anything like waiting and modifying options before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
