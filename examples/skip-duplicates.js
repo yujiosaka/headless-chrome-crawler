@@ -3,7 +3,7 @@ const HCCrawler = require('../');
 const requestedObj = {};
 
 HCCrawler.launch({
-  concurrency: 1,
+  maxConcurrency: 1,
   evaluatePage: (() => ({
     title: $('title').text(),
     h1: $('h1').text(),
