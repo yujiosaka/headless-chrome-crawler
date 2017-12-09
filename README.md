@@ -1,5 +1,5 @@
 # headless-chrome-crawler
-Headless Chrome Crawler with [jQuery](https://jquery.com) Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer)
+Headless Chrome crawler with [jQuery](https://jquery.com) powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer)
 
 ## Features
 
