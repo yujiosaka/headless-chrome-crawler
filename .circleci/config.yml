@@ -5,6 +5,11 @@ jobs:
       - image: circleci/node:6.10
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install libgtk-3-0 libnss3 libxss1 libgconf-2-4 libasound2
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
