@@ -83,7 +83,8 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
   * [crawler.onIdle()](#crawleronidle)
   * [crawler.onEnd()](#crawleronend)
   * [crawler.queueSize](#crawlerqueuesize)
-  * [crawler.pendingQueueSize](#crawlerpendingQueueSize)
+  * [crawler.pendingQueueSize](#crawlerpendingqueuesize)
+  * [crawler.requestedCount](#crawlerrequestedcount)
 
 ### class: HCCrawler
 
