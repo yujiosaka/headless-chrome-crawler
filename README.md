@@ -1,4 +1,4 @@
-# headless-chrome-crawler
+# headless-chrome-crawler [![build](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master.svg?style=shield&circle-token=ba45f930aed7057b79f2ac09df6be3e1b8ee954b)](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master)
 Headless Chrome crawler with [jQuery](https://jquery.com) powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer)
 
 ## Features
