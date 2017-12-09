@@ -136,6 +136,7 @@ url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username,
 * `options` <[Object]>
   * `url` <[String]> Url to navigate to. The url should include scheme, e.g. `https://`.
   * `priority` <[number]> Basic priority of queues, defaults to `1`. Queues with larger priorities are preferred.
+  * `allowedDomains` <[Array]> List of domains that the crawler is allowed to request. `www.example.com` will be allowed if 'example.com' is added.
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, maxConcurrency must be `1`.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
@@ -202,6 +203,10 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 #### crawler.pendingQueueSize
 
 * returns: <[number]> The size of pending queues. This property is read only.
+
+#### crawler.requestedCount
+
+* returns: <[number]> The count of total requests. This property is read only.
 
 ## Debugging tips
 
