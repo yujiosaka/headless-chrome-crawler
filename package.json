@@ -39,6 +39,8 @@
     "chrome",
     "crawler",
     "crawling",
+    "jquery",
+    "promise",
     "puppeteer"
   ],
   "engines": {
