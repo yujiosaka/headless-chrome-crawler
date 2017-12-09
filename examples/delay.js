@@ -1,7 +1,7 @@
 const HCCrawler = require('../');
 
 HCCrawler.launch({
-  concurrency: 1, // Concurrency must be 1 when delay is set
+  maxConcurrency: 1, // Max concurrency must be 1 when delay is set
   delay: 2000, // Delay 2000 millisecnds before each request is sent
   evaluatePage: (() => ({
     title: $('title').text(),

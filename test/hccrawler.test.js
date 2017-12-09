@@ -67,7 +67,11 @@ describe('HCCrawler', () => {
 
     context('when launched with necessary options', () => {
       before(() => (
-        HCCrawler.launch({ evaluatePage: _.noop, onSuccess: _.noop, device: 'iPhone 6' })
+        HCCrawler.launch({
+          evaluatePage: _.noop,
+          onSuccess: _.noop,
+          device: 'iPhone 6',
+        })
           .then(_crawler => {
             crawler = _crawler;
           })
@@ -182,9 +186,13 @@ describe('HCCrawler', () => {
       });
     });
 
-    context('when launched with concurrency: 1', () => {
+    context('when launched with maxConcurrency: 1', () => {
       before(() => (
-        HCCrawler.launch({ evaluatePage: _.noop, onSuccess: _.noop, concurrency: 1 })
+        HCCrawler.launch({
+          evaluatePage: _.noop,
+          onSuccess: _.noop,
+          maxConcurrency: 1,
+        })
           .then(_crawler => {
             crawler = _crawler;
           })
@@ -217,6 +225,36 @@ describe('HCCrawler', () => {
           });
       });
     });
+
+    context('when launched with maxRequest option', () => {
+      before(() => (
+        HCCrawler.launch({
+          evaluatePage: _.noop,
+          onSuccess: _.noop,
+          maxConcurrency: 1,
+          maxRequest: 2,
+        })
+          .then(_crawler => {
+            crawler = _crawler;
+          })
+      ));
+
+      after(() => crawler.close());
+
+      it('requests until maxRequest', () => {
+        assert.doesNotThrow(() => {
+          crawler.queue({ url: URL1 });
+          crawler.queue({ url: URL2 });
+          crawler.queue({ url: URL3 });
+        });
+        return crawler.onEnd()
+          .then(() => {
+            assert.equal(crawler.queueSize, 1);
+            assert.equal(crawler.pendingQueueSize, 1);
+            assert.equal(Crawler.prototype.crawl.callCount, 2);
+          });
+      });
+    });
   });
 
   context('when crawl fails', () => {
@@ -226,7 +264,10 @@ describe('HCCrawler', () => {
 
     context('when launched with necessary options', () => {
       before(() => (
-        HCCrawler.launch({ evaluatePage: _.noop, onSuccess: _.noop })
+        HCCrawler.launch({
+          evaluatePage: _.noop,
+          onSuccess: _.noop,
+        })
           .then(_crawler => {
             crawler = _crawler;
           })
