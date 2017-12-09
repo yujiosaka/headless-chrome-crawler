@@ -77,6 +77,9 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
   * [HCCrawler.launch([options])](#hccrawlerlaunchoptions)
   * [crawler.queue([options])](#crawlerqueueoptions)
   * [crawler.close()](#crawlerclose)
+  * [crawler.disconnect()](#crawlerdisconnect)
+  * [crawler.version()](#crawlerversion)
+  * [crawler.wsEndpoint()](#crawlerwsendpoint)
   * [crawler.onIdle()](#crawleronidle)
   * [crawler.queueSize](#crawlerqueuesize)
 
@@ -156,25 +159,25 @@ url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username,
 
 The options can be either an object, an array, or a string. When it's an array, each item in the array will be executed. When it's a string, the options are transformed to an object with only url defined.
 
-#### hccrawler.close()
+#### crawler.close()
 
 returns: <[Promise]> Promise which is resolved when ther browser is closed.
 
 See [Puppeteer's browser.disconnect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserdisconnect) for more details.
 
-#### hccrawler.disconnect()
+#### crawler.disconnect()
 
 returns: <[Promise]> Promise which is resolved when ther browser is disconnected.
 
 See [Puppeteer's browser.close()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserclose) for more details.
 
-#### hccrawler.versions()
+#### crawler.version()
 
 returns: <[Promise]> Promise which is resolved with HeadlessChrome/Chromium version.
 
 See [Puppeteer's browser.version()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserversion) for more details.
 
-#### hccrawler.wsEndpoint()
+#### crawler.wsEndpoint()
 
 returns: <[Promise]> Promise which is resolved with websocket url.
 
