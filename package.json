@@ -1,7 +1,7 @@
 {
   "name": "headless-chrome-crawler",
-  "version": "1.0.0",
-  "description": "Headless Chrome Crawler with jQuery Powered by Puppeteer",
+  "version": "1.1.0",
+  "description": "Headless Chrome crawler with jQuery powered by Puppeteer",
   "main": "index.js",
   "license": "MIT",
   "author": "Yuji Isobe",
