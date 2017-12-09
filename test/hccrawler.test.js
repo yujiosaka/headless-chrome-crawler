@@ -4,9 +4,9 @@ const sinon = require('sinon');
 const HCCrawler = require('../');
 const Crawler = require('../lib/crawler');
 
-const URL1 = 'http://example.com/';
-const URL2 = 'http://example.net/';
-const URL3 = 'http://example.org/';
+const URL1 = 'http://www.example.com/';
+const URL2 = 'http://www.example.net/';
+const URL3 = 'http://www.example.org/';
 
 describe('HCCrawler', () => {
   let crawler;
@@ -178,6 +178,26 @@ describe('HCCrawler', () => {
 
         assert.doesNotThrow(() => {
           crawler.queue({ url: URL1, preRequest });
+        });
+        return crawler.onIdle()
+          .then(() => {
+            assert.equal(Crawler.prototype.crawl.callCount, 0);
+          });
+      });
+
+      it('requests when domain is allowed', () => {
+        assert.doesNotThrow(() => {
+          crawler.queue({ url: URL1, allowedDomains: ['example.com', 'example.net'] });
+        });
+        return crawler.onIdle()
+          .then(() => {
+            assert.equal(Crawler.prototype.crawl.callCount, 1);
+          });
+      });
+
+      it('skips request when domain is not allowed', () => {
+        assert.doesNotThrow(() => {
+          crawler.queue({ url: URL1, allowedDomains: ['example.net', 'example.org'] });
         });
         return crawler.onIdle()
           .then(() => {
