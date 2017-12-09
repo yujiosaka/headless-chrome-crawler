@@ -81,7 +81,9 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
   * [crawler.version()](#crawlerversion)
   * [crawler.wsEndpoint()](#crawlerwsendpoint)
   * [crawler.onIdle()](#crawleronidle)
+  * [crawler.onEnd()](#crawleronend)
   * [crawler.queueSize](#crawlerqueuesize)
+  * [crawler.pendingQueueSize](#crawlerpendingQueueSize)
 
 ### class: HCCrawler
 
@@ -90,7 +92,8 @@ HCCrawler provides method to launch or connect to a HeadlessChrome/Chromium. It 
 #### HCCrawler.connect([options])
 
 * `options` <[Object]>
-  * `concurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
+  * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
+  * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
 This method connects to an existing Chromium instance. The following options are passed straight to [puppeteer.connect([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
@@ -110,7 +113,8 @@ url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username,
 #### HCCrawler.launch([options])
 
 * `options` <[Object]>
-  * `concurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
+  * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
+  * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
 The method launches a HeadlessChrome/Chromium instance. The following options are passed straight to [puppeteer.launch([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
@@ -132,7 +136,7 @@ url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username,
 * `options` <[Object]>
   * `url` <[String]> Url to navigate to. The url should include scheme, e.g. `https://`.
   * `priority` <[number]> Basic priority of queues, defaults to `1`. Queues with larger priorities are preferred.
-  * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, concurrency must be `1`.
+  * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, maxConcurrency must be `1`.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
   * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
@@ -187,9 +191,17 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 
 - returns: <[Promise]> Promise which is resolved when queues become empty.
 
+#### crawler.onEnd()
+
+- returns: <[Promise]> Promise which is resolved when request reaches max.
+
 #### crawler.queueSize
 
 * returns: <[number]> The size of queues. This property is read only.
+
+#### crawler.pendingQueueSize
+
+* returns: <[number]> The size of pending queues. This property is read only.
 
 ## Debugging tips
 
