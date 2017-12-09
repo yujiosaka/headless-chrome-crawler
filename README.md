@@ -1,5 +1,5 @@
 # headless-chrome-crawler
-Headless Chrome Crawler for Node.js Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer)
+Headless Chrome crawler with [jQuery](https://jquery.com) powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer)
 
 ## Features
 
@@ -9,7 +9,7 @@ Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chro
 
 * Configure concurrency, delay and retries
 * Cancel requests by conditions
-* Insert jQuery automatically
+* Insert [jQuery](https://jquery.com) automatically
 * Priority queue
 * Device emulation
 * Basic authentication
@@ -75,23 +75,25 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
 * [class: HCCrawler](#class-hccrawler)
   * [HCCrawler.connect([options])](#hccrawlerconnectoptions)
   * [HCCrawler.launch([options])](#hccrawlerlaunchoptions)
-* [class: Crawler](#class-crawler)
   * [crawler.queue([options])](#crawlerqueueoptions)
   * [crawler.close()](#crawlerclose)
+  * [crawler.disconnect()](#crawlerdisconnect)
+  * [crawler.version()](#crawlerversion)
+  * [crawler.wsEndpoint()](#crawlerwsendpoint)
   * [crawler.onIdle()](#crawleronidle)
   * [crawler.queueSize](#crawlerqueuesize)
 
 ### class: HCCrawler
 
-HCCrawler provides a method to launch a crawler. It extends [Puppeteer class](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#class-puppeteer), so any methods like `HCCrawler.executablePath()` are available.
+HCCrawler provides method to launch or connect to a HeadlessChrome/Chromium. It also provides a `HCCrawler.executablePath()` method which behaves the same as [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerexecutablepath).
 
 #### HCCrawler.connect([options])
 
 * `options` <[Object]>
   * `concurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
-* returns: <Promise<Crawler>> Promise which resolves to Crawler instance.
+* returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
-This method connects to an existing Chromium instance. The following options are passed straight to [Puppeteer.connect API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
+This method connects to an existing Chromium instance. The following options are passed straight to [puppeteer.connect([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
 
 ```
 browserWSEndpoint, ignoreHTTPSErrors
@@ -109,9 +111,9 @@ url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username,
 
 * `options` <[Object]>
   * `concurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
-* returns: <Promise<Crawler>> Promise which resolves to Crawler instance.
+* returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
-The method launches a Chromium instance. The following options are passed straight to [Puppeteer.launch API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
+The method launches a HeadlessChrome/Chromium instance. The following options are passed straight to [puppeteer.launch([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
 
 ```
 ignoreHTTPSErrors, headless, executablePath, slowMo, args, handleSIGINT, handleSIGTERM, handleSIGHUP, timeout, dumpio, userDataDir, env, devtools
@@ -125,10 +127,6 @@ url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username,
 
 > **Note**: In practice, setting the options every time you queue the requests is not only redundant but also slow. Therefore, it's recommended to set the default values and override them depending on the necessity.
 
-### class: Crawler
-
-HCCrawler provides a method to queue a request. It extends [Puppeteer's Browser class](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#class-browser), so any methods like `crawler.close()` are available.
-
 #### crawler.queue([options])
 
 * `options` <[Object]>
@@ -137,7 +135,7 @@ HCCrawler provides a method to queue a request. It extends [Puppeteer's Browser 
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, concurrency must be `1`.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
-  * `jQuery` <[boolean]> Whether to automatically add jQuery tag to page, defaults to `true`.
+  * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
   * `device` <[String]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
   * `username` <[String]> Username required for Basic Authentication. pass `null` if it's not necessary.
   * `password` <[String]> Password required for Basic Authentication. pass `null` if it's not necessary.
@@ -147,19 +145,43 @@ HCCrawler provides a method to queue a request. It extends [Puppeteer's Browser 
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
   * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
     * `response` <[Object]>
-      * `status` <[String]> status code of the request.
+      * `response` <[Object]>
+        * `ok` <[boolean]> whether the status code in the range 200-299 or not.
+        * `status` <[String]> status code of the request.
+        * `url` <[String]> Last requested url.
+        * `headers` <[Object]> Response headers.
       * `options` <[Object]> crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
       * `result` <[Serializable]> The result resolved from `evaluatePage()`.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
 
-> **Note**: `extraHeaders` options do not guarantee the order of headers in the outgoing requests.
+> **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
 
 The options can be either an object, an array, or a string. When it's an array, each item in the array will be executed. When it's a string, the options are transformed to an object with only url defined.
 
-#### hccrawler.close()
+#### crawler.close()
 
 returns: <[Promise]> Promise which is resolved when ther browser is closed.
+
+See [Puppeteer's browser.disconnect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserdisconnect) for more details.
+
+#### crawler.disconnect()
+
+returns: <[Promise]> Promise which is resolved when ther browser is disconnected.
+
+See [Puppeteer's browser.close()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserclose) for more details.
+
+#### crawler.version()
+
+returns: <[Promise]> Promise which is resolved with HeadlessChrome/Chromium version.
+
+See [Puppeteer's browser.version()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserversion) for more details.
+
+#### crawler.wsEndpoint()
+
+returns: <[Promise]> Promise which is resolved with websocket url.
+
+See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserwsendpoint) for more details.
 
 #### crawler.onIdle()
 
@@ -173,7 +195,7 @@ returns: <[Promise]> Promise which is resolved when ther browser is closed.
 
 ### Launch options
 
-[HCCrawler.launch([options])](#hccrawlerlaunchoptions)'s options are passed straight to [Puppeteer.launch API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions). It may be useful to set the `headless` and `slowMo` options so that you can see what is going on.
+[HCCrawler.launch([options])](#hccrawlerlaunchoptions)'s options are passed straight to [puppeteer.launch([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions). It may be useful to set the `headless` and `slowMo` options so that you can see what is going on.
 
 ```js
 HCCrawler.launch({ headless: false, slowMo: 10 });
