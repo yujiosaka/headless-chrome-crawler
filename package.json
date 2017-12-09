@@ -1,6 +1,6 @@
 {
   "name": "headless-chrome-crawler",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Headless Chrome crawler with jQuery powered by Puppeteer",
   "main": "index.js",
   "license": "MIT",
