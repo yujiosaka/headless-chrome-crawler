@@ -70,13 +70,11 @@ HCCrawler.launch({
   });
 ```
 
-**Example** - Pause and resume with cache storage for large scale crawling
+**Example** - Use cache storage for large scale crawling
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
-
-// Passing no options expects Redis to be run in the local machine with default port.
-const cache = new HCCrawler.RedisCache();
+const RedisCache = require('headless-chrome-crawler/cache/redis');
 
 function launch() {
   return HCCrawler.launch({
@@ -90,22 +88,22 @@ function launch() {
       console.log('onSuccess', result);
     }),
     ensureClearCache: false, // Set false so that cache won't be cleared when closing the crawler
-    cache,
+    cache: new RedisCache(), // Passing no options expects Redis to be run in the local machine.
   });
 }
 
 launch()
   .then(crawler => {
-    crawler.queue({ url: 'https://example.com/' });
-    crawler.queue({ url: 'https://example.net/' });
-    crawler.queue({ url: 'https://example.org/' }); // The queue won't be requested due to maxRequest option
+    crawler.queue('https://example.com/');
+    crawler.queue('https://example.net/');
+    crawler.queue('https://example.org/'); // The queue won't be requested due to maxRequest option
     return crawler.onIdle()
       .then(() => crawler.close()); // Close the crawler but cache won't be cleared
   })
   .then(() => launch()) // Launch the crawler again
   .then(crawler => {
-    crawler.queue({ url: 'https://example.net/' }); // This queue won't be requested because cache remains
-    crawler.queue({ url: 'https://example.org/' });
+    crawler.queue('https://example.net/'); // This queue won't be requested because cache remains
+    crawler.queue('https://example.org/');
     return crawler.onIdle()
       .then(() => crawler.close());
   });
@@ -113,7 +111,11 @@ launch()
 
 ## Examples
 
-See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/examples).
+See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/examples) for examples. The examples can be run from the root folder as follows:
+
+```sh
+NODE_PATH=../ node examples/delay.js
+```
 
 ## API reference
 
