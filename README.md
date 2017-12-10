@@ -76,7 +76,7 @@ HCCrawler.launch({
 const HCCrawler = require('headless-chrome-crawler');
 const RedisCache = require('headless-chrome-crawler/cache/redis');
 
-const cache = new SessionRedis({ host: '127.0.0.1', port: 6379 });
+const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
 
 function launch() {
   return HCCrawler.launch({
@@ -317,7 +317,7 @@ Its constructing options are passed to [NodeRedis's redis.createClient([options]
 const HCCrawler = require('headless-chrome-crawler');
 const RedisCache = require('headless-chrome-crawler/cache/redis');
 
-const cache = new SessionRedis({ host: '127.0.0.1', port: 6379 });
+const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
 
 HCCrawler.launch({
   persistCache: true, // Set true so that cache won't be cleared when closing the crawler
