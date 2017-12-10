@@ -14,7 +14,6 @@ HCCrawler.launch({
   .then(crawler => {
     crawler.queue({ url: 'https://example.com/' });
     crawler.queue({ url: 'https://example.net/' });
-    crawler.queue({ url: 'https://example.org/' });
     crawler.onIdle()
       .then(() => crawler.close());
   });
