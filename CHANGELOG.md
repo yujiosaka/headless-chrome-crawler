@@ -6,28 +6,35 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.1.2] - 2017-12-09
+### Added
+
+- Support `maxRequest`, `allowedDomains` and `userAgent` option for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)
+- Support pluggable cache
+- Add [crawler.setMaxRequest(maxRequest)](https://github.com/yujiosaka/headless-chrome-crawler#crawlersetmaxrequestmaxrequest), [crawler.pause()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerpause) and [crawler.resume()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerresume) methods
+- Add [crawler.pendingQueueSize](https://github.com/yujiosaka/headless-chrome-crawler#crawlerpendingqueuesize) and [crawler.requestedCount](https://github.com/yujiosaka/headless-chrome-crawler#crawlerrequestedcount) read-only properties
+
 ## [1.1.1] - 2017-12-09
 ### Added
 
-- Automatically dismisses dialog
-- Add CHANGELOG.md
-- Enrich unit tests
+- Add [CHANGELOG.md](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/CHANGELOG.md) based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+- Add unit tests
 
 ### Changed
 
-- Refactor by separating HCCrawler and Crawler classes
-- Make preparation of pages parallel
+- Automatically dismisses dialog
+- Performance improvement by setting a page parallel
 
 ## [1.1.0] - 2017-12-08
 ### Added
 
-- Support `extraHeaders` option
+- Support `extraHeaders` option for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)
 - Add comment in [JSDoc](http://usejsdoc.org) style
 
 ### Changed
 
-- Public API to launch a browser has changed. Now you can launch browser by `HCCrawler.launch()`
-- Rename `shouldRequest` to `preRequest`
+- Public API to launch a browser has changed. Now you can launch browser by [HCCrawler.launch([options])](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions)
+- Rename `shouldRequest` to `preRequest` option for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)
 - Refactor by separating HCCrawler and Crawler classes
 - Refactor handlers for options
 
