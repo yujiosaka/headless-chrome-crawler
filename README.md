@@ -5,11 +5,12 @@ Headless Chrome crawler with [jQuery](https://jquery.com) powered by [Puppeteer]
 
 Crawlers based on simple requests to html files are generally fast. However, it sometimes end up capturing empty bodies, especially when the websites are built on such modern frontend frameworks as AngularJS, ReactJS and Vue.js.
 
-Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler allows you to scrape those single page applications with the following features:
+Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler allows you to crawl those single page applications with the following features:
 
 * Configure concurrency, delay and retries
 * Pluggable cache to skip duplicate requests
-* Cancel requests by conditions
+* Cancel requests by custom conditions
+* Restrict requests by domains
 * Pause and resume at any time
 * Insert [jQuery](https://jquery.com) automatically
 * Priority queue
@@ -32,6 +33,8 @@ yarn add headless-chrome-crawler
 
 The basic API of headless-chrome-crawler is inspired by that of [node-crawler](https://github.com/bda-research/node-crawler), so the API design is somewhat similar but not exactly compatible.
 
+**Example** - Queueing requests in different styles
+
 ```js
 const HCCrawler = require('headless-chrome-crawler');
 
@@ -51,18 +54,59 @@ HCCrawler.launch({
     crawler.queue('https://example.com/');
     // Queue multiple requests
     crawler.queue(['https://example.net/', 'https://example.org/']);
-    // Queue a query custom options
+    // Queue a request with custom options
     crawler.queue({
       jQuery: false,
       url: 'https://example.com/',
+      device: 'Nexus 6',
       evaluatePage: (() => ({
         title: document.title,
-        h1: document.getElementsByTagName('h1')[0].innerText,
-        p: document.getElementsByTagName('p')[0].innerText
+        userAgent: window.navigator.userAgent,
       })),
     });
     // Called when no queue is left
     crawler.onIdle()
+      .then(() => crawler.close());
+  });
+```
+
+**Example** - Pause and resume with cache storage for large scale crawling
+
+```js
+const HCCrawler = require('headless-chrome-crawler');
+
+// Passing no options expects Redis to be run in the local machine with default port.
+const cache = new HCCrawler.RedisCache();
+
+function launch() {
+  return HCCrawler.launch({
+    maxConcurrency: 1,
+    maxRequest: 2,
+    evaluatePage: (() => ({
+      title: $('title').text(),
+      h1: $('h1').text(),
+    })),
+    onSuccess: (result => {
+      console.log('onSuccess', result);
+    }),
+    ensureClearCache: false, // Set false so that cache won't be cleared when closing the crawler
+    cache,
+  });
+}
+
+launch()
+  .then(crawler => {
+    crawler.queue({ url: 'https://example.com/' });
+    crawler.queue({ url: 'https://example.net/' });
+    crawler.queue({ url: 'https://example.org/' }); // The queue won't be requested due to maxRequest option
+    return crawler.onIdle()
+      .then(() => crawler.close()); // Close the crawler but cache won't be cleared
+  })
+  .then(() => launch()) // Launch the crawler again
+  .then(crawler => {
+    crawler.queue({ url: 'https://example.net/' }); // This queue won't be requested because cache remains
+    crawler.queue({ url: 'https://example.org/' });
+    return crawler.onIdle()
       .then(() => crawler.close());
   });
 ```
@@ -78,7 +122,11 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
 * [class: HCCrawler](#class-hccrawler)
   * [HCCrawler.connect([options])](#hccrawlerconnectoptions)
   * [HCCrawler.launch([options])](#hccrawlerlaunchoptions)
+  * [HCCrawler.executablePath()](#hccrawlerexecutablepath)
   * [crawler.queue([options])](#crawlerqueueoptions)
+  * [crawler.setMaxRequest(maxRequest)](#crawlersetmaxrequestmaxrequest)
+  * [crawler.pause()](#crawlerpause)
+  * [crawler.resume()](#crawlerresume)
   * [crawler.close()](#crawlerclose)
   * [crawler.disconnect()](#crawlerdisconnect)
   * [crawler.version()](#crawlerversion)
@@ -90,7 +138,7 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
 
 ### class: HCCrawler
 
-HCCrawler provides method to launch or connect to a HeadlessChrome/Chromium. It also provides a `HCCrawler.executablePath()` method which behaves the same as [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerexecutablepath).
+HCCrawler provides method to launch or connect to a HeadlessChrome/Chromium.
 
 #### HCCrawler.connect([options])
 
@@ -111,7 +159,7 @@ Also, the following options can be set as default values when [crawler.queue([op
 url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, shouldRequest, evaluatePage, onSuccess, onError
 ```
 
-> **Note**: In practice, setting the options every time you queue the requests is not only redundant but also slow. Therefore, it's recommended to set the default values and override them depending on the necessity.
+> **Note**: In practice, setting the options every time you queue equests is not only redundant but also slow. Therefore, it's recommended to set the default values and override them depending on the necessity.
 
 #### HCCrawler.launch([options])
 
@@ -134,21 +182,29 @@ url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username,
 
 > **Note**: In practice, setting the options every time you queue the requests is not only redundant but also slow. Therefore, it's recommended to set the default values and override them depending on the necessity.
 
+#### HCCrawler.executablePath()
+
+* returns: <string> An expected path to find bundled Chromium.
+
+See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerexecutablepath) for more details.
+
 #### crawler.queue([options])
 
 * `options` <[Object]>
   * `url` <[String]> Url to navigate to. The url should include scheme, e.g. `https://`.
-  * `priority` <[number]> Basic priority of queues, defaults to `1`. Queues with larger priorities are preferred.
-  * `allowedDomains` <[Array]> List of domains that the crawler is allowed to request. `www.example.com` will be allowed if 'example.com' is added.
+  * `priority` <[number]> Basic priority of queues, defaults to `1`. Priority with larger number is preferred.
+  * `allowedDomains` <[Array]> List of domains allowed to request. `www.example.com` will be allowed if `example.com` is listed.
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, maxConcurrency must be `1`.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
   * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
   * `device` <[String]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
-  * `username` <[String]> Username required for Basic Authentication. pass `null` if it's not necessary.
-  * `password` <[String]> Password required for Basic Authentication. pass `null` if it's not necessary.
+  * `username` <[String]> Username Basic Authentication. pass `null` if it's not necessary.
+  * `password` <[String]> Password Basic Authentication. pass `null` if it's not necessary.
   * `userAgent` <[String]> User agent string to use in this page.
   * `extraHeaders` <[Object]> An object containing additional http headers to be sent with every request. All header values must be strings.
+  * `cache` <[Cache]> A cache object which extends BaseCache to remember and skip duplicate requests, defaults to `SessionCache`. Pass `null` if you don't want to skip duplicate requests.
+  * `ensureClearCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `true`.
   * `preRequest(options)` <[Function]> Function to do anything like waiting and modifying options before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
@@ -159,14 +215,32 @@ url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username,
         * `status` <[String]> status code of the request.
         * `url` <[String]> Last requested url.
         * `headers` <[Object]> Response headers.
-      * `options` <[Object]> crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
-      * `result` <[Serializable]> The result resolved from `evaluatePage()`.
+      * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
+      * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
 
 > **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
 
+The following options are passed straight to [Puppeteer's page.goto(url, options)](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s options'.
+
+```
+timeout, waitUntil
+```
+
 The options can be either an object, an array, or a string. When it's an array, each item in the array will be executed. When it's a string, the options are transformed to an object with only url defined.
+
+#### crawler.setMaxRequest(maxRequest)
+
+This method allows you to modify `maxRequest` option you passed to [HCCrawler.connect([options])](#hccrawlerconnectoptions) or [HCCrawler.launch([options])](#hccrawlerlaunchoptions).
+
+#### crawler.pause()
+
+This method allows you to pause processing queues. You can resume the queue by calling [crawler.resume()](#crawlerresume).
+
+#### crawler.resume()
+
+This method allows you to resume processing queues. This method may be used after the crawler is intentionally closed by calling [crawler.pause()](#crawlerpause) or request count reached `maxRequest` option.
 
 #### crawler.close()
 
@@ -194,7 +268,11 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 
 #### crawler.onIdle()
 
-- returns: <[Promise]> Promise which is resolved when queues become empty.
+- returns: <[Promise]> Promise which is resolved when queues become empty or paused.
+
+#### crawler.isPaused
+
+* returns: <[boolean]> Whether the queue is paused. This property is read only.
 
 #### crawler.queueSize
 
@@ -207,6 +285,10 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 #### crawler.requestedCount
 
 * returns: <[number]> The count of total requests. This property is read only.
+
+#### crawler.cache
+
+* returns: <[number]> The cache set to skip duplicate requests. This property is read only.
 
 ## Debugging tips
 
