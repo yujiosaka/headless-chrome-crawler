@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [1.1.2] - 2017-12-09
+## [1.1.2] - 2017-12-10
 ### Added
 
 - Support `maxRequest`, `allowedDomains` and `userAgent` option for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)
