@@ -153,6 +153,8 @@ HCCrawler provides method to launch or connect to a HeadlessChrome/Chromium.
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
+  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache) to remember and skip duplicate requests, defaults to [SessionCache](#class-sessioncache). Pass `null` if you don't want to skip duplicate requests.
+  * `ensureClearCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `true`.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
 This method connects to an existing Chromium instance. The following options are passed straight to [puppeteer.connect([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
@@ -174,6 +176,8 @@ url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username,
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
+  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache) to remember and skip duplicate requests, defaults to [SessionCache](#class-sessioncache). Pass `null` if you don't want to skip duplicate requests.
+  * `ensureClearCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `true`.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
 The method launches a HeadlessChrome/Chromium instance. The following options are passed straight to [puppeteer.launch([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
@@ -211,8 +215,6 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
   * `password` <[String]> Password Basic Authentication. pass `null` if it's not necessary.
   * `userAgent` <[String]> User agent string to use in this page.
   * `extraHeaders` <[Object]> An object containing additional http headers to be sent with every request. All header values must be strings.
-  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache) to remember and skip duplicate requests, defaults to [SessionCache](#class-sessioncache). Pass `null` if you don't want to skip duplicate requests.
-  * `ensureClearCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `true`.
   * `preRequest(options)` <[Function]> Function to do anything like waiting and modifying options before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
@@ -298,9 +300,9 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 
 ### class: RedisCache
 
-Using RedisCache allows you to persist requested urls in Redis and prevents from requesting same urls in a distributed servers' environment.
+Passing a RedisCache object to [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s options allows you to persist requested urls in Redis and prevents from requesting same urls in a distributed servers' environment. It also works well with its `ensureClearCache` option to be false.
 
-The constructing options are passed to [NodeRedis's redis.createClient([options])](https://github.com/NodeRedis/node_redis#rediscreateclient)'s options.
+Its constructing options are passed to [NodeRedis's redis.createClient([options])](https://github.com/NodeRedis/node_redis#rediscreateclient)'s options.
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
