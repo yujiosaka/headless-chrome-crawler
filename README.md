@@ -342,35 +342,35 @@ const FILE = resolve(__dirname, '../tmp/fs-cache.json');
 // Create a new cache by extending BaseCache interface
 class FsCache extends BaseCache {
   init() {
-    fs.writeFileSync(FILE, '{}');
+    fs.writeFileSync(this._settings.file, '{}');
     return Promise.resolve();
   }
   clear() {
-    fs.unlinkSync(FILE);
+    fs.unlinkSync(this._settings.file);
     return Promise.resolve();
   }
   close() {
     return Promise.resolve();
   }
   exists(options) {
-    const obj = JSON.parse(fs.readFileSync(FILE));
+    const obj = JSON.parse(fs.readFileSync(this._settings.file));
     return Promise.resolve(obj[FsCache.key(options)] || false);
   }
   set(options) {
-    const obj = JSON.parse(fs.readFileSync(FILE));
+    const obj = JSON.parse(fs.readFileSync(this._settings.file));
     obj[FsCache.key(options)] = true;
-    fs.writeFileSync(FILE, JSON.stringify(obj));
+    fs.writeFileSync(this._settings.file, JSON.stringify(obj));
     return Promise.resolve();
   }
   remove(options) {
-    const obj = JSON.parse(fs.readFileSync(FILE));
+    const obj = JSON.parse(fs.readFileSync(this._settings.file));
     delete obj[FsCache.key(options)];
     fs.writeFileSync(FILE, JSON.stringify(obj));
     return Promise.resolve();
   }
 }
 
-HCCrawler.launch({ cache: new FsCache() });
+HCCrawler.launch({ cache: new FsCache({ file: FILE }) });
 // ...
 ```
 
