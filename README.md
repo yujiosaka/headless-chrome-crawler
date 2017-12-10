@@ -139,7 +139,7 @@ NODE_PATH=../ node examples/delay.js
   * [crawler.pendingQueueSize](#crawlerpendingqueuesize)
   * [crawler.requestedCount](#crawlerrequestedcount)
 * [class: SessionCache](#class-sessioncache)
-* [class: SessionCache](#class-rediscache)
+* [class: RedisCache](#class-rediscache)
 * [class: BaseCache](#class-basecache)
 
 ### class: HCCrawler
@@ -209,7 +209,7 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
   * `password` <[String]> Password Basic Authentication. pass `null` if it's not necessary.
   * `userAgent` <[String]> User agent string to use in this page.
   * `extraHeaders` <[Object]> An object containing additional http headers to be sent with every request. All header values must be strings.
-  * `cache` <[Cache]> A cache object which extends BaseCache to remember and skip duplicate requests, defaults to `SessionCache`. Pass `null` if you don't want to skip duplicate requests.
+  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache) to remember and skip duplicate requests, defaults to [SessionCache](#class-sessioncache). Pass `null` if you don't want to skip duplicate requests.
   * `ensureClearCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `true`.
   * `preRequest(options)` <[Function]> Function to do anything like waiting and modifying options before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
