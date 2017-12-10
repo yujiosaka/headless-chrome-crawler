@@ -6,11 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.2.0] - 2017-12-11
+### Changed
+
+- Rename `ensureCacheClear` to `persistCache` for [HCCrawler.connect([options])](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerconnectoptions) and [HCCrawler.launch([options])](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions)'s options
+
 ## [1.1.2] - 2017-12-10
 ### Added
 
-- Support `maxRequest`, `allowedDomains` and `userAgent` option for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)
-- Support pluggable cache
+- Support `maxRequest` for [HCCrawler.connect([options])](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerconnectoptions) and [HCCrawler.launch([options])](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions)'s options
+- Support `allowedDomains` and `userAgent` for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options'
+- Support SessionCache, RedisCache for Pluggable cache and provide a BaseCache interface for customizing caches
 - Add [crawler.setMaxRequest(maxRequest)](https://github.com/yujiosaka/headless-chrome-crawler#crawlersetmaxrequestmaxrequest), [crawler.pause()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerpause) and [crawler.resume()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerresume) methods
 - Add [crawler.pendingQueueSize](https://github.com/yujiosaka/headless-chrome-crawler#crawlerpendingqueuesize) and [crawler.requestedCount](https://github.com/yujiosaka/headless-chrome-crawler#crawlerrequestedcount) read-only properties
 
@@ -28,14 +34,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.1.0] - 2017-12-08
 ### Added
 
-- Support `extraHeaders` option for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)
+- Support `extraHeaders` for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options
 - Add comment in [JSDoc](http://usejsdoc.org) style
 
 ### Changed
 
 - Public API to launch a browser has changed. Now you can launch browser by [HCCrawler.launch([options])](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions)
-- Rename `shouldRequest` to `preRequest` option for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)
-- Refactor by separating HCCrawler and Crawler classes
+- Rename `shouldRequest` to `preRequest` for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options
+- Refactor by separating `HCCrawler` and `Crawler` classes
 - Refactor handlers for options
 
 ## [1.0.0] - 2017-12-05
