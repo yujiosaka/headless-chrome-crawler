@@ -76,6 +76,8 @@ HCCrawler.launch({
 const HCCrawler = require('headless-chrome-crawler');
 const RedisCache = require('headless-chrome-crawler/cache/redis');
 
+const cache = new SessionRedis({ host: '127.0.0.1', port: 6379 });
+
 function launch() {
   return HCCrawler.launch({
     maxConcurrency: 1,
@@ -88,8 +90,8 @@ function launch() {
       console.log('onSuccess', result);
     }),
     ensureClearCache: false, // Set false so that cache won't be cleared when closing the crawler
-    cache: new RedisCache(), // Passing no options expects Redis to be run in the local machine.
-  });
+    cache,
+  });
 }
 
 launch()
@@ -295,6 +297,23 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 ### class: SessionCache
 
 ### class: RedisCache
+
+Using RedisCache allows you to persist requested urls in Redis and prevents from requesting same urls in a distributed servers' environment.
+
+The constructing options are passed to [NodeRedis's redis.createClient([options])](https://github.com/NodeRedis/node_redis#rediscreateclient)'s options.
+
+```js
+const HCCrawler = require('headless-chrome-crawler');
+const RedisCache = require('headless-chrome-crawler/cache/redis');
+
+const cache = new SessionRedis({ host: '127.0.0.1', port: 6379 });
+
+HCCrawler.launch({
+  ensureClearCache: false, // Set false so that cache won't be cleared when closing the crawler
+  cache,
+});
+// ...
+```
 
 ### class: BaseCache
 
