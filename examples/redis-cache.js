@@ -12,7 +12,7 @@ function launch() {
     onSuccess: (result => {
       console.log('onSuccess', result);
     }),
-    ensureClearCache: false, // Set false so that cache won't be cleared when closing the crawler
+    persistCache: true, // Set true so that cache won't be cleared when closing the crawler
     cache: new RedisCache(), // Passing no options expects Redis to be run in the local machine.
   });
 }
