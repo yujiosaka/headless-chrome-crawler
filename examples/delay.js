@@ -1,4 +1,4 @@
-const HCCrawler = require('../');
+const HCCrawler = require('headless-chrome-crawler');
 
 HCCrawler.launch({
   maxConcurrency: 1, // Max concurrency must be 1 when delay is set
