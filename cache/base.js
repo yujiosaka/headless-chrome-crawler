@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const { hash, jsonStableReplacer } = require('../helper');
+const { hash, jsonStableReplacer } = require('../lib/helper');
 
 const OMITTED_HASH_FIELDS = [
   'priority',

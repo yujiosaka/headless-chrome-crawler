@@ -1,4 +1,4 @@
-const HCCrawler = require('../');
+const HCCrawler = require('headless-chrome-crawler');
 
 HCCrawler.launch({
   jQuery: false, // jQuery script tag won't be added
