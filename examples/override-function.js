@@ -11,11 +11,10 @@ HCCrawler.launch({
 })
   .then(crawler => {
     crawler.queue({
-      url: 'https://example.com',
+      url: 'https://example.com/',
       evaluatePage: (() => ({
         title: $('title').text(),
         h1: $('h1').text(),
-        p: $('p').text(),
       })),
       onSuccess: (result => {
         console.log('onSuccess', result);

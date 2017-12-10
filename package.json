@@ -23,7 +23,8 @@
     "jquery": "3.2.1",
     "lodash": "4.17.4",
     "p-queue": "2.3.0",
-    "puppeteer": "0.13.0"
+    "puppeteer": "0.13.0",
+    "redis": "2.8.0"
   },
   "devDependencies": {
     "eslint": "4.11.0",

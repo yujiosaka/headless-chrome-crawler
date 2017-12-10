@@ -1,7 +1,5 @@
 const HCCrawler = require('../');
 
-const requestedObj = {};
-
 HCCrawler.launch({
   maxConcurrency: 1,
   evaluatePage: (() => ({
@@ -10,18 +8,16 @@ HCCrawler.launch({
     p: $('p').text(),
   })),
   onSuccess: (result => {
-    requestedObj[result.options.url] = true;
     console.log('onSuccess', result);
   }),
   preRequest: (options => {
-    if (requestedObj[options.url]) return false;
+    if (options.url === 'https://example.net/') return false;
     return true;
   }),
 })
   .then(crawler => {
-    crawler.queue('https://example.com');
-    crawler.queue('https://example.net');
-    crawler.queue('https://example.com'); // The queue won't be requested
+    crawler.queue('https://example.com/');
+    crawler.queue('https://example.net/');
     crawler.onIdle()
       .then(() => crawler.close());
   });

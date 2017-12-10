@@ -1,8 +1,8 @@
 const HCCrawler = require('../');
 
 HCCrawler.launch({
-  maxConcurrency: 1, // Max concurrency must be 1 when delay is set
-  delay: 2000, // Delay 2000 millisecnds before each request is sent
+  maxConcurrency: 1,
+  maxRequest: 2,
   evaluatePage: (() => ({
     title: $('title').text(),
     h1: $('h1').text(),
@@ -14,7 +14,12 @@ HCCrawler.launch({
   .then(crawler => {
     crawler.queue({ url: 'https://example.com/' });
     crawler.queue({ url: 'https://example.net/' });
-    crawler.queue({ url: 'https://example.org/' });
+    crawler.queue({ url: 'https://example.org/' }); // The queue won't be requested until resumed
     crawler.onIdle()
+      .then(() => {
+        crawler.setMaxRequest(3);
+        crawler.resume();
+        return crawler.onIdle();
+      })
       .then(() => crawler.close());
   });
