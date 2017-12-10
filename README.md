@@ -138,6 +138,9 @@ NODE_PATH=../ node examples/delay.js
   * [crawler.queueSize](#crawlerqueuesize)
   * [crawler.pendingQueueSize](#crawlerpendingqueuesize)
   * [crawler.requestedCount](#crawlerrequestedcount)
+* [class: SessionCache](#class-sessioncache)
+* [class: SessionCache](#class-rediscache)
+* [class: BaseCache](#class-basecache)
 
 ### class: HCCrawler
 
@@ -288,6 +291,12 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 #### crawler.requestedCount
 
 * returns: <[number]> The count of total requests. This property is read only.
+
+### class: SessionCache
+
+### class: RedisCache
+
+### class: BaseCache
 
 ## Debugging tips
 
