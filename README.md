@@ -134,7 +134,7 @@ NODE_PATH=../ node examples/delay.js
   * [crawler.version()](#crawlerversion)
   * [crawler.wsEndpoint()](#crawlerwsendpoint)
   * [crawler.onIdle()](#crawleronidle)
-  * [crawler.isPaused()](#crawlerispaused)
+  * [crawler.isPaused](#crawlerispaused)
   * [crawler.queueSize](#crawlerqueuesize)
   * [crawler.pendingQueueSize](#crawlerpendingqueuesize)
   * [crawler.requestedCount](#crawlerrequestedcount)
