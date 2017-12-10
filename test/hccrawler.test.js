@@ -21,14 +21,14 @@ describe('HCCrawler', () => {
     });
 
     context('when launched without necessary options', () => {
-      before(() => (
+      beforeEach(() => (
         HCCrawler.launch()
           .then(_crawler => {
             crawler = _crawler;
           })
       ));
 
-      after(() => crawler.close());
+      afterEach(() => crawler.close());
 
       it('throws error when queueing null', () => {
         assert.throws(() => {
@@ -66,7 +66,7 @@ describe('HCCrawler', () => {
     });
 
     context('when launched with necessary options', () => {
-      before(() => (
+      beforeEach(() => (
         HCCrawler.launch({
           evaluatePage: _.noop,
           onSuccess: _.noop,
@@ -77,7 +77,7 @@ describe('HCCrawler', () => {
           })
       ));
 
-      after(() => crawler.close());
+      afterEach(() => crawler.close());
 
       it('crawls with single string options', () => {
         assert.doesNotThrow(() => {
@@ -207,7 +207,7 @@ describe('HCCrawler', () => {
     });
 
     context('when launched with maxConcurrency: 1', () => {
-      before(() => (
+      beforeEach(() => (
         HCCrawler.launch({
           evaluatePage: _.noop,
           onSuccess: _.noop,
@@ -218,7 +218,7 @@ describe('HCCrawler', () => {
           })
       ));
 
-      after(() => crawler.close());
+      afterEach(() => crawler.close());
 
       it('obeys priority order', () => {
         assert.doesNotThrow(() => {
@@ -292,7 +292,7 @@ describe('HCCrawler', () => {
     });
 
     context('when launched with session cache', () => {
-      before(() => (
+      beforeEach(() => (
         HCCrawler.launch({
           evaluatePage: _.noop,
           onSuccess: _.noop,
@@ -305,7 +305,7 @@ describe('HCCrawler', () => {
           })
       ));
 
-      after(() => crawler.close());
+      afterEach(() => crawler.close());
 
       it('does not requested already cached url', () => {
         assert.doesNotThrow(() => {
@@ -321,7 +321,7 @@ describe('HCCrawler', () => {
     });
 
     context('when launched with redis cache', () => {
-      before(() => (
+      beforeEach(() => (
         HCCrawler.launch({
           evaluatePage: _.noop,
           onSuccess: _.noop,
@@ -334,7 +334,7 @@ describe('HCCrawler', () => {
           })
       ));
 
-      after(() => crawler.close());
+      afterEach(() => crawler.close());
 
       it('does not requested already cached url', () => {
         assert.doesNotThrow(() => {
@@ -356,7 +356,7 @@ describe('HCCrawler', () => {
     });
 
     context('when launched with necessary options', () => {
-      before(() => (
+      beforeEach(() => (
         HCCrawler.launch({
           evaluatePage: _.noop,
           onSuccess: _.noop,
@@ -366,7 +366,7 @@ describe('HCCrawler', () => {
           })
       ));
 
-      after(() => crawler.close());
+      afterEach(() => crawler.close());
 
       it('retries and gives up', () => {
         assert.doesNotThrow(() => {

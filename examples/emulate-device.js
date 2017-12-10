@@ -3,7 +3,7 @@ const HCCrawler = require('../');
 HCCrawler.launch({
   evaluatePage: (() => ({
     title: $('title').text(),
-    h1: $('h1').text(),
+    userAgent: window.navigator.userAgent,
   })),
   onSuccess: (result => {
     console.log('onSuccess', result);
@@ -12,6 +12,7 @@ HCCrawler.launch({
   .then(crawler => {
     crawler.queue({ url: 'https://example.com/', device: 'iPhone 6 Plus' });
     crawler.queue({ url: 'https://example.com/', device: 'Nexus 7' });
+    crawler.queue({ url: 'https://example.com/', userAgent: 'Awesome Crawler' }); // Only override userAgent
     crawler.onIdle()
       .then(() => crawler.close());
   });

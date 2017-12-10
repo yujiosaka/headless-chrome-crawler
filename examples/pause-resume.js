@@ -17,6 +17,7 @@ HCCrawler.launch({
     crawler.queue({ url: 'https://example.org/' }); // The queue won't be requested until resumed
     crawler.onIdle()
       .then(() => {
+        // Lift the max request limit so that it doesn't right after resume called
         crawler.setMaxRequest(3);
         crawler.resume();
         return crawler.onIdle();
