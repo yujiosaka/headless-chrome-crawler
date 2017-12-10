@@ -300,7 +300,7 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 
 ### class: RedisCache
 
-Passing a RedisCache object to [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s options allows you to persist requested urls in Redis and prevents from requesting same urls in a distributed servers' environment. It also works well with its `ensureClearCache` option to be false.
+Passing a RedisCache object to [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s cache options allows you to persist requested urls in Redis and prevents from requesting same urls in a distributed servers' environment. It also works well with its `ensureClearCache` option to be false.
 
 Its constructing options are passed to [NodeRedis's redis.createClient([options])](https://github.com/NodeRedis/node_redis#rediscreateclient)'s options.
 
@@ -318,6 +318,53 @@ HCCrawler.launch({
 ```
 
 ### class: BaseCache
+
+You can create your own cache by extending the [BaseCache's interfaces](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/cache/base.js) and pass its object to [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s cache options. 
+
+Here is an example of creating a file based cache.
+
+```js
+const fs = require('fs');
+const { resolve } = require('path');
+const HCCrawler = require('headless-chrome-crawler');
+const BaseCache = require('headless-chrome-crawler/cache/base');
+
+const FILE = resolve(__dirname, '../tmp/fs-cache.json');
+
+// Create a new cache by extending BaseCache interface
+class FsCache extends BaseCache {
+  init() {
+    fs.writeFileSync(FILE, '{}');
+    return Promise.resolve();
+  }
+  clear() {
+    fs.unlinkSync(FILE);
+    return Promise.resolve();
+  }
+  close() {
+    return Promise.resolve();
+  }
+  exists(options) {
+    const obj = JSON.parse(fs.readFileSync(FILE));
+    return Promise.resolve(obj[FsCache.key(options)] || false);
+  }
+  set(options) {
+    const obj = JSON.parse(fs.readFileSync(FILE));
+    obj[FsCache.key(options)] = true;
+    fs.writeFileSync(FILE, JSON.stringify(obj));
+    return Promise.resolve();
+  }
+  remove(options) {
+    const obj = JSON.parse(fs.readFileSync(FILE));
+    delete obj[FsCache.key(options)];
+    fs.writeFileSync(FILE, JSON.stringify(obj));
+    return Promise.resolve();
+  }
+}
+
+HCCrawler.launch({ cache: new FsCache() });
+// ...
+```
 
 ## Debugging tips
 
