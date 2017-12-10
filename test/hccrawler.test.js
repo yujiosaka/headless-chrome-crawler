@@ -247,7 +247,7 @@ describe('HCCrawler', () => {
     });
 
     context('when launched with maxRequest option', () => {
-      before(() => (
+      beforeEach(() => (
         HCCrawler.launch({
           evaluatePage: _.noop,
           onSuccess: _.noop,
@@ -259,7 +259,7 @@ describe('HCCrawler', () => {
           })
       ));
 
-      after(() => crawler.close());
+      afterEach(() => crawler.close());
 
       it('requests until maxRequest', () => {
         assert.doesNotThrow(() => {
@@ -267,10 +267,83 @@ describe('HCCrawler', () => {
           crawler.queue({ url: URL2 });
           crawler.queue({ url: URL3 });
         });
-        return crawler.onEnd()
+        return crawler.onIdle()
           .then(() => {
-            assert.equal(crawler.queueSize, 1);
-            assert.equal(crawler.pendingQueueSize, 1);
+            assert.equal(Crawler.prototype.crawl.callCount, 2);
+          });
+      });
+
+      it('resumes after maxRequest', () => {
+        assert.doesNotThrow(() => {
+          crawler.queue({ url: URL1 });
+          crawler.queue({ url: URL2 });
+          crawler.queue({ url: URL3 });
+        });
+        return crawler.onIdle()
+          .then(() => {
+            crawler.setMaxRequest(3);
+            crawler.resume();
+            return crawler.onIdle();
+          })
+          .then(() => {
+            assert.equal(Crawler.prototype.crawl.callCount, 3);
+          });
+      });
+    });
+
+    context('when launched with session cache', () => {
+      before(() => (
+        HCCrawler.launch({
+          evaluatePage: _.noop,
+          onSuccess: _.noop,
+          maxConcurrency: 1,
+          maxRequest: 2,
+          cache: new HCCrawler.SessionCache(),
+        })
+          .then(_crawler => {
+            crawler = _crawler;
+          })
+      ));
+
+      after(() => crawler.close());
+
+      it('does not requested already cached url', () => {
+        assert.doesNotThrow(() => {
+          crawler.queue({ url: URL1 });
+          crawler.queue({ url: URL2 });
+          crawler.queue({ url: URL1 }); // The queue won't be requested
+        });
+        return crawler.onIdle()
+          .then(() => {
+            assert.equal(Crawler.prototype.crawl.callCount, 2);
+          });
+      });
+    });
+
+    context('when launched with redis cache', () => {
+      before(() => (
+        HCCrawler.launch({
+          evaluatePage: _.noop,
+          onSuccess: _.noop,
+          maxConcurrency: 1,
+          maxRequest: 2,
+          cache: new HCCrawler.RedisCache(),
+        })
+          .then(_crawler => {
+            crawler = _crawler;
+          })
+      ));
+
+      after(() => crawler.close());
+
+      it('does not requested already cached url', () => {
+        assert.doesNotThrow(() => {
+          crawler.queue({ url: URL1 });
+          crawler.queue({ url: URL2 });
+          crawler.queue({ url: URL1 }); // The queue won't be requested
+        });
+        return crawler.onIdle()
+          .then(() => {
             assert.equal(Crawler.prototype.crawl.callCount, 2);
           });
       });

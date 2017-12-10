@@ -1,23 +1,20 @@
 const HCCrawler = require('../');
 
 HCCrawler.launch({
-  jQuery: false, // jQuery script tag won't be added
-  retryCount: 3, // Retry the same request up to 3 times
-  retryDelay: 1000, // Wait 1000msecs before each retry
+  maxConcurrency: 1,
   evaluatePage: (() => ({
-    // $ is undefined so that causes an error
     title: $('title').text(),
     h1: $('h1').text(),
   })),
   onSuccess: (result => {
     console.log('onSuccess', result);
   }),
-  onError: (err => {
-    console.error('onError', err);
-  }),
+  cache: new HCCrawler.SessionCache(),
 })
   .then(crawler => {
     crawler.queue('https://example.com/');
+    crawler.queue('https://example.net/');
+    crawler.queue('https://example.com/'); // The queue won't be requested
     crawler.onIdle()
       .then(() => crawler.close());
   });
