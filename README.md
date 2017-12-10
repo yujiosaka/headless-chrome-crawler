@@ -76,6 +76,8 @@ HCCrawler.launch({
 const HCCrawler = require('headless-chrome-crawler');
 const RedisCache = require('headless-chrome-crawler/cache/redis');
 
+const cache = new SessionRedis({ host: '127.0.0.1', port: 6379 });
+
 function launch() {
   return HCCrawler.launch({
     maxConcurrency: 1,
@@ -88,8 +90,8 @@ function launch() {
       console.log('onSuccess', result);
     }),
     ensureClearCache: false, // Set false so that cache won't be cleared when closing the crawler
-    cache: new RedisCache(), // Passing no options expects Redis to be run in the local machine.
-  });
+    cache,
+  });
 }
 
 launch()
@@ -138,6 +140,9 @@ NODE_PATH=../ node examples/delay.js
   * [crawler.queueSize](#crawlerqueuesize)
   * [crawler.pendingQueueSize](#crawlerpendingqueuesize)
   * [crawler.requestedCount](#crawlerrequestedcount)
+* [class: SessionCache](#class-sessioncache)
+* [class: RedisCache](#class-rediscache)
+* [class: BaseCache](#class-basecache)
 
 ### class: HCCrawler
 
@@ -148,6 +153,8 @@ HCCrawler provides method to launch or connect to a HeadlessChrome/Chromium.
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
+  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache) to remember and skip duplicate requests, defaults to [SessionCache](#class-sessioncache). Pass `null` if you don't want to skip duplicate requests.
+  * `ensureClearCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `true`.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
 This method connects to an existing Chromium instance. The following options are passed straight to [puppeteer.connect([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
@@ -169,6 +176,8 @@ url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username,
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
+  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache) to remember and skip duplicate requests, defaults to [SessionCache](#class-sessioncache). Pass `null` if you don't want to skip duplicate requests.
+  * `ensureClearCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `true`.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
 The method launches a HeadlessChrome/Chromium instance. The following options are passed straight to [puppeteer.launch([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
@@ -206,8 +215,6 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
   * `password` <[String]> Password Basic Authentication. pass `null` if it's not necessary.
   * `userAgent` <[String]> User agent string to use in this page.
   * `extraHeaders` <[Object]> An object containing additional http headers to be sent with every request. All header values must be strings.
-  * `cache` <[Cache]> A cache object which extends BaseCache to remember and skip duplicate requests, defaults to `SessionCache`. Pass `null` if you don't want to skip duplicate requests.
-  * `ensureClearCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `true`.
   * `preRequest(options)` <[Function]> Function to do anything like waiting and modifying options before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
@@ -288,6 +295,84 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 #### crawler.requestedCount
 
 * returns: <[number]> The count of total requests. This property is read only.
+
+### class: SessionCache
+
+`SessionCache` is the default cache option to [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s `cache` option. By default, the crawler remembers already requested urls on its memory. Pass `null` to the option in order to disable it.
+
+```js
+const HCCrawler = require('headless-chrome-crawler');
+
+HCCrawler.launch({ cache: null });
+```
+
+### class: RedisCache
+
+Passing a `RedisCache` object to the [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s `cache` options allows you to persist requested urls in Redis and prevents from requesting same urls in a distributed servers' environment. It also works well with its `ensureClearCache` option to be false.
+
+Its constructing options are passed to [NodeRedis's redis.createClient([options])](https://github.com/NodeRedis/node_redis#rediscreateclient)'s options.
+
+```js
+const HCCrawler = require('headless-chrome-crawler');
+const RedisCache = require('headless-chrome-crawler/cache/redis');
+
+const cache = new SessionRedis({ host: '127.0.0.1', port: 6379 });
+
+HCCrawler.launch({
+  ensureClearCache: false, // Set false so that cache won't be cleared when closing the crawler
+  cache,
+});
+// ...
+```
+
+### class: BaseCache
+
+You can create your own cache by extending the [BaseCache's interfaces](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/cache/base.js) and pass its object to the [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s `cache` options. 
+
+Here is an example of creating a file based cache.
+
+```js
+const fs = require('fs');
+const { resolve } = require('path');
+const HCCrawler = require('headless-chrome-crawler');
+const BaseCache = require('headless-chrome-crawler/cache/base');
+
+const FILE = resolve(__dirname, '../tmp/fs-cache.json');
+
+// Create a new cache by extending BaseCache interface
+class FsCache extends BaseCache {
+  init() {
+    fs.writeFileSync(this._settings.file, '{}');
+    return Promise.resolve();
+  }
+  clear() {
+    fs.unlinkSync(this._settings.file);
+    return Promise.resolve();
+  }
+  close() {
+    return Promise.resolve();
+  }
+  exists(options) {
+    const obj = JSON.parse(fs.readFileSync(this._settings.file));
+    return Promise.resolve(obj[FsCache.key(options)] || false);
+  }
+  set(options) {
+    const obj = JSON.parse(fs.readFileSync(this._settings.file));
+    obj[FsCache.key(options)] = true;
+    fs.writeFileSync(this._settings.file, JSON.stringify(obj));
+    return Promise.resolve();
+  }
+  remove(options) {
+    const obj = JSON.parse(fs.readFileSync(this._settings.file));
+    delete obj[FsCache.key(options)];
+    fs.writeFileSync(FILE, JSON.stringify(obj));
+    return Promise.resolve();
+  }
+}
+
+HCCrawler.launch({ cache: new FsCache({ file: FILE }) });
+// ...
+```
 
 ## Debugging tips
 
