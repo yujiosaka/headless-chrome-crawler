@@ -298,12 +298,13 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 
 ### class: SessionCache
 
-`SessionCache` is the default cache option to [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s `cache` option. By default, the crawler remembers already requested urls on its memory. Pass `null` to the option in order to disable it.
+`SessionCache` is the [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s default `cache` option. By default, the crawler remembers already requested urls on its memory. Pass `null` to the option in order to disable it.
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
 
 HCCrawler.launch({ cache: null });
+// ...
 ```
 
 ### class: RedisCache
