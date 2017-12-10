@@ -134,6 +134,7 @@ NODE_PATH=../ node examples/delay.js
   * [crawler.version()](#crawlerversion)
   * [crawler.wsEndpoint()](#crawlerwsendpoint)
   * [crawler.onIdle()](#crawleronidle)
+  * [crawler.isPaused()](#crawlerispaused)
   * [crawler.queueSize](#crawlerqueuesize)
   * [crawler.pendingQueueSize](#crawlerpendingqueuesize)
   * [crawler.requestedCount](#crawlerrequestedcount)
@@ -287,10 +288,6 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 #### crawler.requestedCount
 
 * returns: <[number]> The count of total requests. This property is read only.
-
-#### crawler.cache
-
-* returns: <[number]> The cache set to skip duplicate requests. This property is read only.
 
 ## Debugging tips
 
