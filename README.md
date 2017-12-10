@@ -298,9 +298,17 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 
 ### class: SessionCache
 
+`SessionCache` is the default cache option to [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s `cache` option. By default, the crawler remembers already requested urls on its memory. Pass `null` to the option in order to disable it.
+
+```js
+const HCCrawler = require('headless-chrome-crawler');
+
+HCCrawler.launch({ cache: null });
+```
+
 ### class: RedisCache
 
-Passing a RedisCache object to [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s cache options allows you to persist requested urls in Redis and prevents from requesting same urls in a distributed servers' environment. It also works well with its `ensureClearCache` option to be false.
+Passing a `RedisCache` object to the [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s `cache` options allows you to persist requested urls in Redis and prevents from requesting same urls in a distributed servers' environment. It also works well with its `ensureClearCache` option to be false.
 
 Its constructing options are passed to [NodeRedis's redis.createClient([options])](https://github.com/NodeRedis/node_redis#rediscreateclient)'s options.
 
@@ -319,7 +327,7 @@ HCCrawler.launch({
 
 ### class: BaseCache
 
-You can create your own cache by extending the [BaseCache's interfaces](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/cache/base.js) and pass its object to [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s cache options. 
+You can create your own cache by extending the [BaseCache's interfaces](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/cache/base.js) and pass its object to the [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s `cache` options. 
 
 Here is an example of creating a file based cache.
 
