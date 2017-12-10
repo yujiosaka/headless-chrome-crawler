@@ -8,7 +8,9 @@ Crawlers based on simple requests to html files are generally fast. However, it 
 Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler allows you to scrape those single page applications with the following features:
 
 * Configure concurrency, delay and retries
+* Pluggable cache to skip duplicate requests
 * Cancel requests by conditions
+* Pause and resume at any time
 * Insert [jQuery](https://jquery.com) automatically
 * Priority queue
 * Device emulation
@@ -34,24 +36,25 @@ The basic API of headless-chrome-crawler is inspired by that of [node-crawler](h
 const HCCrawler = require('headless-chrome-crawler');
 
 HCCrawler.launch({
+  // Function to be evaluated in browsers
   evaluatePage: (() => ({
     title: $('title').text(),
     h1: $('h1').text(),
-    p: $('p').text(),
   })),
+  // Function to be called with evaluated results from browsers
   onSuccess: (result => {
-    console.log('onSuccess', result); // resolves status, options and evaluated result.
+    console.log('onSuccess', result);
   }),
 })
   .then(crawler => {
     // Queue a single request
-    crawler.queue('https://example.com');
+    crawler.queue('https://example.com/');
     // Queue multiple requests
-    crawler.queue(['https://example.net', 'https://example.org']);
+    crawler.queue(['https://example.net/', 'https://example.org/']);
     // Queue a query custom options
     crawler.queue({
       jQuery: false,
-      url: 'https://example.com',
+      url: 'https://example.com/',
       evaluatePage: (() => ({
         title: document.title,
         h1: document.getElementsByTagName('h1')[0].innerText,
@@ -81,7 +84,6 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/exam
   * [crawler.version()](#crawlerversion)
   * [crawler.wsEndpoint()](#crawlerwsendpoint)
   * [crawler.onIdle()](#crawleronidle)
-  * [crawler.onEnd()](#crawleronend)
   * [crawler.queueSize](#crawlerqueuesize)
   * [crawler.pendingQueueSize](#crawlerpendingqueuesize)
   * [crawler.requestedCount](#crawlerrequestedcount)
@@ -192,10 +194,6 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 #### crawler.onIdle()
 
 - returns: <[Promise]> Promise which is resolved when queues become empty.
-
-#### crawler.onEnd()
-
-- returns: <[Promise]> Promise which is resolved when request reaches max.
 
 #### crawler.queueSize
 
