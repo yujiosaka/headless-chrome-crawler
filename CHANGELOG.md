@@ -6,10 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.2.0] - 2017-12-11
+### Changed
+
+- Rename `ensureCacheClear` to `persistCache` option for [HCCrawler.connect([options])](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerconnectoptions) and [HCCrawler.launch([options])](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions) options
+
 ## [1.1.2] - 2017-12-10
 ### Added
 
-- Support `maxRequest`, `allowedDomains` and `userAgent` option for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)
+- Support `maxRequest` option for [HCCrawler.connect([options])](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerconnectoptions) and [HCCrawler.launch([options])](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions) options
+- Support `allowedDomains` and `userAgent` option for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)
 - Support pluggable cache
 - Add [crawler.setMaxRequest(maxRequest)](https://github.com/yujiosaka/headless-chrome-crawler#crawlersetmaxrequestmaxrequest), [crawler.pause()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerpause) and [crawler.resume()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerresume) methods
 - Add [crawler.pendingQueueSize](https://github.com/yujiosaka/headless-chrome-crawler#crawlerpendingqueuesize) and [crawler.requestedCount](https://github.com/yujiosaka/headless-chrome-crawler#crawlerrequestedcount) read-only properties
