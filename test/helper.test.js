@@ -3,6 +3,7 @@ const {
   delay,
   jsonStableReplacer,
   hash,
+  generateKey,
   debugRequest,
   debugBrowser,
 } = require('../lib/helper');
@@ -39,17 +40,25 @@ describe('Helper', () => {
     });
   });
 
+  describe('Helper.generateKey', () => {
+    it('returns the same results for same objects with different orders', () => {
+      const key1 = generateKey({ a: 3, b: [{ x: 4, y: 5, z: 6 }, 7], c: 8 });
+      const key2 = generateKey({ c: 8, b: [{ z: 6, y: 5, x: 4 }, 7], a: 3 });
+      assert.equal(key1, key2);
+    });
+  });
+
   describe('Helper.jsonStableReplacer', () => {
-    it('sorts key by order', () => {
-      const json = { c: 8, b: [{ z: 6, y: 5, x: 4 }, 7], a: 3 };
+    it('sorts keys by order', () => {
+      const obj = { c: 8, b: [{ z: 6, y: 5, x: 4 }, 7], a: 3 };
       const actual = '{"a":3,"b":[{"x":4,"y":5,"z":6},7],"c":8}';
-      const expected = JSON.stringify(json, jsonStableReplacer);
+      const expected = JSON.stringify(obj, jsonStableReplacer);
       assert.equal(actual, expected);
     });
   });
 
   describe('Helper.debugRequest', () => {
-    it('does not throw errors', () => {
+    it('does not throw an error', () => {
       assert.doesNotThrow(() => {
         debugRequest('Start requesting http://example.com/');
       });
@@ -57,7 +66,7 @@ describe('Helper', () => {
   });
 
   describe('Helper.debugBrowser', () => {
-    it('does not throw errors', () => {
+    it('does not throw an error', () => {
       assert.doesNotThrow(() => {
         debugBrowser('Console log init.. http://example.com/');
       });

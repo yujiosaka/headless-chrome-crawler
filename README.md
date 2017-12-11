@@ -1,21 +1,18 @@
-# headless-chrome-crawler [![build](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master.svg?style=shield&circle-token=ba45f930aed7057b79f2ac09df6be3e1b8ee954b)](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master) [![npm](https://badge.fury.io/js/headless-chrome-crawler.svg)](https://www.npmjs.com/package/headless-chrome-crawler) [![Greenkeeper badge](https://badges.greenkeeper.io/yujiosaka/headless-chrome-crawler.svg)](https://greenkeeper.io/)
-Headless Chrome crawler with [jQuery](https://jquery.com) powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer)
+# headless-chrome-crawler [![npm](https://badge.fury.io/js/headless-chrome-crawler.svg)](https://www.npmjs.com/package/headless-chrome-crawler) [![build](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master.svg?style=shield&circle-token=ba45f930aed7057b79f2ac09df6be3e1b8ee954b)](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master) [![Greenkeeper badge](https://badges.greenkeeper.io/yujiosaka/headless-chrome-crawler.svg)](https://greenkeeper.io/)
+Headless Chrome crawls with [jQuery](https://jquery.com) support, powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer)
 
 ## Features
 
-Crawlers based on simple requests to html files are generally fast. However, it sometimes end up capturing empty bodies, especially when the websites are built on such modern frontend frameworks as AngularJS, ReactJS and Vue.js.
+Crawlers based on simple requests to HTML files are generally fast. However, it sometimes ends up capturing empty bodies, especially when the websites are built on such modern frontend frameworks as [AngularJS](https://angularjs.org), [React](https://reactjs.org) and [Vue.js](https://jp.vuejs.org/index.html).
 
-Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler allows you to crawl those single page applications with the following features:
+Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler provides simple APIs to manupluate Headless Chrome/Chromium and allows you to crawl these single page applications with the following features:
 
-* Configure concurrency, delay and retries
-* Pluggable cache to skip duplicate requests
-* Cancel requests by custom conditions
-* Restrict requests by domains
+* Configure concurrency, delay and retry
+* Pluggable cache such as [Redis](https://redis.io) to skip duplicate requests
 * Pause and resume at any time
 * Insert [jQuery](https://jquery.com) automatically
+* Emulate device
 * Priority queue
-* Device emulation
-* Basic authentication
 * Promise support
 
 ## Getting Started
@@ -50,27 +47,24 @@ HCCrawler.launch({
   }),
 })
   .then(crawler => {
-    // Queue a single request
-    crawler.queue('https://example.com/');
-    // Queue multiple requests
-    crawler.queue(['https://example.net/', 'https://example.org/']);
+    crawler.queue('https://example.com/'); // Queue a request
+    crawler.queue(['https://example.net/', 'https://example.org/']); // Queue multiple requests
     // Queue a request with custom options
     crawler.queue({
       jQuery: false,
       url: 'https://example.com/',
-      device: 'Nexus 6',
+      // Override an already defined evaluatePage option
       evaluatePage: (() => ({
         title: document.title,
         userAgent: window.navigator.userAgent,
       })),
     });
-    // Called when no queue is left
-    crawler.onIdle()
-      .then(() => crawler.close());
+    crawler.onIdle() // Resolved when no queue is left
+      .then(() => crawler.close()); // Close the crawler
   });
 ```
 
-**Example** - Use cache storage for large scale crawling
+**Example** - Use [Redis](https://redis.io) cache for large scale crawling
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
@@ -78,10 +72,8 @@ const RedisCache = require('headless-chrome-crawler/cache/redis');
 
 const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
 
-function launch() {
+function launch(persistCache) {
   return HCCrawler.launch({
-    maxConcurrency: 1,
-    maxRequest: 2,
     evaluatePage: (() => ({
       title: $('title').text(),
       h1: $('h1').text(),
@@ -89,20 +81,19 @@ function launch() {
     onSuccess: (result => {
       console.log('onSuccess', result);
     }),
-    persistCache: true, // Set true so that cache won't be cleared when closing the crawler
-    cache,
-  });
+    cache,
+    persistCache, // Cache won't be cleared when closing the crawler if set true
+  });
 }
 
-launch()
+launch(true) // Launch the crawler with persisting cache
   .then(crawler => {
     crawler.queue('https://example.com/');
     crawler.queue('https://example.net/');
-    crawler.queue('https://example.org/'); // The queue won't be requested due to maxRequest option
     return crawler.onIdle()
       .then(() => crawler.close()); // Close the crawler but cache won't be cleared
   })
-  .then(() => launch()) // Launch the crawler again
+  .then(() => launch(false)) // Launch the crawler again without persisting cache
   .then(crawler => {
     crawler.queue('https://example.net/'); // This queue won't be requested because cache remains
     crawler.queue('https://example.org/');
@@ -113,10 +104,14 @@ launch()
 
 ## Examples
 
-See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/examples) for examples. The examples can be run from the root folder as follows:
+* [Priority queue](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/priority-queue.js)
+* [Pause and resume](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/pause-resume.js)
+* [Emulate device](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/emulate-device.js)
+
+See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/examples) for the examples list. The examples can be run from the root folder as follows:
 
 ```sh
-NODE_PATH=../ node examples/delay.js
+NODE_PATH=../ node examples/priority-queue.js
 ```
 
 ## API reference
@@ -131,6 +126,7 @@ NODE_PATH=../ node examples/delay.js
   * [crawler.setMaxRequest(maxRequest)](#crawlersetmaxrequestmaxrequest)
   * [crawler.pause()](#crawlerpause)
   * [crawler.resume()](#crawlerresume)
+  * [crawler.clearCache()](#crawlerclearcache)
   * [crawler.close()](#crawlerclose)
   * [crawler.disconnect()](#crawlerdisconnect)
   * [crawler.version()](#crawlerversion)
@@ -146,14 +142,33 @@ NODE_PATH=../ node examples/delay.js
 
 ### class: HCCrawler
 
-HCCrawler provides method to launch or connect to a HeadlessChrome/Chromium.
+HCCrawler provides methods to launch or connect to a HeadlessChrome/Chromium.
+
+```js
+const HCCrawler = require('headless-chrome-crawler');
+
+HCCrawler.launch({
+  evaluatePage: (() => ({
+    title: $('title').text(),
+    h1: $('h1').text(),
+  })),
+  onSuccess: (result => {
+    console.log('onSuccess', result);
+  }),
+})
+  .then(crawler => {
+    crawler.queue('https://example.com/');
+    crawler.onIdle()
+      .then(() => crawler.close());
+  });
+```
 
 #### HCCrawler.connect([options])
 
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
-  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache) to remember and skip duplicate requests, defaults to [SessionCache](#class-sessioncache). Pass `null` if you don't want to skip duplicate requests.
+  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object. Pass `null` if you don't want to skip duplicate requests.
   * `persistCache` <[boolean]> Whether to persist cache on closing or disconnecting from the browser, defaults to `false`.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
@@ -176,7 +191,7 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
-  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache) to remember and skip duplicate requests, defaults to [SessionCache](#class-sessioncache). Pass `null` if you don't want to skip duplicate requests.
+  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object. Pass `null` if you don't want to skip duplicate requests.
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `false`.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
@@ -211,11 +226,11 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
   * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
   * `device` <[String]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
-  * `username` <[String]> Username Basic Authentication. pass `null` if it's not necessary.
-  * `password` <[String]> Password Basic Authentication. pass `null` if it's not necessary.
-  * `userAgent` <[String]> User agent string to use in this page.
-  * `extraHeaders` <[Object]> An object containing additional http headers to be sent with every request. All header values must be strings.
-  * `preRequest(options)` <[Function]> Function to do anything like waiting and modifying options before each request. You can also return `false` if you want to skip the request.
+  * `username` <[String]> Username for basic authentication. pass `null` if it's not necessary.
+  * `password` <[String]> Password for basic authentication. pass `null` if it's not necessary.
+  * `userAgent` <[String]> User agent string to override in this page.
+  * `extraHeaders` <[Object]> An object containing additional headers to be sent with every request. All header values must be strings.
+  * `preRequest(options)` <[Function]> Function to do anything like modifying `options` before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
   * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
@@ -246,39 +261,45 @@ This method allows you to modify `maxRequest` option you passed to [HCCrawler.co
 
 #### crawler.pause()
 
-This method allows you to pause processing queues. You can resume the queue by calling [crawler.resume()](#crawlerresume).
+This method pauses processing queues. You can resume the queue by calling [crawler.resume()](#crawlerresume).
 
 #### crawler.resume()
 
-This method allows you to resume processing queues. This method may be used after the crawler is intentionally closed by calling [crawler.pause()](#crawlerpause) or request count reached `maxRequest` option.
+This method resumes processing queues. This method may be used after the crawler is intentionally closed by calling [crawler.pause()](#crawlerpause) or request count reached `maxRequest` option.
+
+#### crawler.clearCache()
+
+returns: <[Promise]> Promise resolved when the cache is cleared.
+
+This method clears the cache when it's used.
 
 #### crawler.close()
 
-returns: <[Promise]> Promise which is resolved when ther browser is closed.
-
-See [Puppeteer's browser.disconnect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserdisconnect) for more details.
-
-#### crawler.disconnect()
-
-returns: <[Promise]> Promise which is resolved when ther browser is disconnected.
+returns: <[Promise]> Promise resolved when ther browser is closed.
 
 See [Puppeteer's browser.close()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserclose) for more details.
 
+#### crawler.disconnect()
+
+returns: <[Promise]> Promise resolved when ther browser is disconnected.
+
+See [Puppeteer's browser.disconnect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserdisconnect) for more details.
+
 #### crawler.version()
 
-returns: <[Promise]> Promise which is resolved with HeadlessChrome/Chromium version.
+returns: <[Promise]> Promise resolved with HeadlessChrome/Chromium version.
 
 See [Puppeteer's browser.version()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserversion) for more details.
 
 #### crawler.wsEndpoint()
 
-returns: <[Promise]> Promise which is resolved with websocket url.
+returns: <[Promise]> Promise resolved with websocket url.
 
 See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserwsendpoint) for more details.
 
 #### crawler.onIdle()
 
-- returns: <[Promise]> Promise which is resolved when queues become empty or paused.
+- returns: <[Promise]> Promise resolved when queues become empty or paused.
 
 #### crawler.isPaused
 
@@ -354,19 +375,19 @@ class FsCache extends BaseCache {
   close() {
     return Promise.resolve();
   }
-  exists(options) {
+  exists(key) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
-    return Promise.resolve(obj[FsCache.key(options)] || false);
+    return Promise.resolve(obj[key] || false);
   }
-  set(options) {
+  set(key) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
-    obj[FsCache.key(options)] = true;
+    obj[key] = true;
     fs.writeFileSync(this._settings.file, JSON.stringify(obj));
     return Promise.resolve();
   }
-  remove(options) {
+  remove(key) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
-    delete obj[FsCache.key(options)];
+    delete obj[key];
     fs.writeFileSync(FILE, JSON.stringify(obj));
     return Promise.resolve();
   }
@@ -395,3 +416,15 @@ env DEBUG="hccrawler:*" node script.js
 env DEBUG="hccrawler:request" node script.js
 env DEBUG="hccrawler:browser" node script.js
 ```
+
+## FAQ
+
+### How is this different from other crawlers?
+
+There are roughly two types of crawlers. One is static and the other is dynamic.
+
+The static crawlers are based on simple requests to HTML files. They are generally fast, but fail scraping the contents when the HTML dynamically changes on browsers.
+
+Dynamic crawlers based on [PhantomJS](http://phantomjs.org) and [Selenium](http://www.seleniumhq.org) work magically on such dynamic applications. However, [PhantomJS's maintainer has stepped down and recommended to switch to Headless Chrome](https://groups.google.com/forum/#!topic/phantomjs/9aI5d-LDuNE), which is fast and stable. [Selenium](http://www.seleniumhq.org) is still a well-maintained cross browser platform which runs on Chrome, Safari, IE and so on. However, crawlers do not need such cross browsers support.
+
+ This crawler is dynamic and based on Headless Chrome.
