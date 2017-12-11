@@ -1,6 +1,8 @@
 const HCCrawler = require('headless-chrome-crawler');
 const RedisCache = require('headless-chrome-crawler/cache/redis');
 
+const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
+
 function launch(persistCache) {
   return HCCrawler.launch({
     evaluatePage: (() => ({
@@ -10,7 +12,7 @@ function launch(persistCache) {
     onSuccess: (result => {
       console.log('onSuccess', result);
     }),
-    cache: new RedisCache(), // Passing no options expects Redis to be run in the local machine.
+    cache,
     persistCache, // Cache won't be cleared when closing the crawler if set true
   });
 }
