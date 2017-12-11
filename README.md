@@ -3,9 +3,9 @@ Headless Chrome crawls with [jQuery](https://jquery.com) support, powered by [Pu
 
 ## Features
 
-Crawlers based on simple requests to html files are generally fast. However, it sometimes ends up capturing empty bodies, especially when the websites are built on such modern frontend frameworks as [AngularJS](https://angularjs.org), [React](https://reactjs.org) and [Vue.js](https://jp.vuejs.org/index.html).
+Crawlers based on simple requests to HTML files are generally fast. However, it sometimes ends up capturing empty bodies, especially when the websites are built on such modern frontend frameworks as [AngularJS](https://angularjs.org), [React](https://reactjs.org) and [Vue.js](https://jp.vuejs.org/index.html).
 
-Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler provides simple APIs and allows you to crawl these single page applications with the following features:
+Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler provides simple APIs to manupluate Headless Chrome/Chromium and allows you to crawl these single page applications with the following features:
 
 * Configure concurrency, delay and retry
 * Pluggable cache such as [Redis](https://redis.io) to skip duplicate requests
@@ -417,3 +417,15 @@ env DEBUG="hccrawler:*" node script.js
 env DEBUG="hccrawler:request" node script.js
 env DEBUG="hccrawler:browser" node script.js
 ```
+
+## FAQ
+
+### How is this different from other crawlers?
+
+There are roughly two types of crawlers. One is static and the other is dynamic.
+
+The static crawlers are based on simple requests to HTML files. They are generally fast, but fail scraping the contents when the HTML dynamically changes on browsers.
+
+Dynamic crawlers based on [PhantomJS](http://phantomjs.org) and [Selenium](http://www.seleniumhq.org) work magically on such dynamic applications. However, [PhantomJS's maintainer has stepped down and recommended to switch to Headless Chrome](https://groups.google.com/forum/#!topic/phantomjs/9aI5d-LDuNE), which is fast and stable. [Selenium](http://www.seleniumhq.org) is still a well-maintained cross browser platform which runs on Chrome, Safari, IE and so on. However, crawlers do not need such cross browsers support.
+
+ This crawler is dynamic and based on Headless Chrome.
