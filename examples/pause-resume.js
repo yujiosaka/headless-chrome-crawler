@@ -12,9 +12,9 @@ HCCrawler.launch({
   }),
 })
   .then(crawler => {
-    crawler.queue({ url: 'https://example.com/' });
-    crawler.queue({ url: 'https://example.net/' });
-    crawler.queue({ url: 'https://example.org/' }); // The queue won't be requested until resumed
+    crawler.queue('https://example.com/');
+    crawler.queue('https://example.net/');
+    crawler.queue('https://example.org/'); // The queue won't be requested until resumed
     crawler.onIdle()
       .then(() => {
         // Lift the max request limit so that it doesn't right after resume called

@@ -10,8 +10,9 @@ HCCrawler.launch({
   }),
 })
   .then(crawler => {
-    crawler.queue('https://example.com/'); // one URL
-    crawler.queue(['https://example.net/', { url: 'https://example.org/' }]); // multiple URLs in different styles.
+    crawler.queue('https://example.com/'); // Queue a request
+    // Queue multiple requests in different styles
+    crawler.queue(['https://example.net/', { url: 'https://example.org/' }]);
     crawler.onIdle()
       .then(() => crawler.close());
   });
