@@ -37,25 +37,25 @@ describe('HCCrawler', () => {
         });
       });
 
-      it('throws an error when queueing without URL option', () => {
+      it('throws an error when queueing options without URL', () => {
         assert.throws(() => {
           crawler.queue({ evaluatePage: _.noop, onSuccess: _.noop });
         });
       });
 
-      it('throws an error when queueing without evaluatePage option', () => {
+      it('throws an error when queueing options without evaluatePage', () => {
         assert.throws(() => {
           crawler.queue({ url: URL1, onSuccess: _.noop });
         });
       });
 
-      it('throws an error when queueing without onSuccess option', () => {
+      it('throws an error when queueing options without onSuccess', () => {
         assert.throws(() => {
           crawler.queue({ url: URL1, evaluatePage: _.noop });
         });
       });
 
-      it('crawls with necessary options', () => {
+      it('crawls when queueing necessary options', () => {
         assert.doesNotThrow(() => {
           crawler.queue({ url: URL1, evaluatePage: _.noop, onSuccess: _.noop });
         });
@@ -79,7 +79,7 @@ describe('HCCrawler', () => {
 
       afterEach(() => crawler.close());
 
-      it('crawls with single string', () => {
+      it('crawls when queueing a string', () => {
         assert.doesNotThrow(() => {
           crawler.queue(URL1);
         });
@@ -89,7 +89,7 @@ describe('HCCrawler', () => {
           });
       });
 
-      it('crawls with multiple strings', () => {
+      it('crawls when queueing multiple strings', () => {
         assert.doesNotThrow(() => {
           crawler.queue([URL1, URL2, URL3]);
         });
@@ -99,7 +99,7 @@ describe('HCCrawler', () => {
           });
       });
 
-      it('crawls with single object', () => {
+      it('crawls when queueing an object', () => {
         assert.doesNotThrow(() => {
           crawler.queue({ url: URL1 });
         });
@@ -109,7 +109,7 @@ describe('HCCrawler', () => {
           });
       });
 
-      it('crawls with multiple objects', () => {
+      it('crawls when queueing multiple objects', () => {
         assert.doesNotThrow(() => {
           crawler.queue([{ url: URL1 }, { url: URL2 }, { url: URL3 }]);
         });
@@ -119,7 +119,7 @@ describe('HCCrawler', () => {
           });
       });
 
-      it('crawls with mixed styles', () => {
+      it('crawls when queueing mixed styles', () => {
         assert.doesNotThrow(() => {
           crawler.queue([URL1, { url: URL2 }]);
           crawler.queue(URL3);
@@ -130,7 +130,7 @@ describe('HCCrawler', () => {
           });
       });
 
-      it('throws an error with unavailable device', () => {
+      it('throws an error when queueing options with unavailable device', () => {
         assert.throws(() => {
           crawler.queue({ url: URL1, device: 'do-not-exist' });
         });
@@ -142,7 +142,7 @@ describe('HCCrawler', () => {
         });
       });
 
-      it('does not skip request when preRequest returns true', () => {
+      it('does not skip crawling when queueing options with preRequest returns true', () => {
         function preRequest() {
           return Promise.resolve(true);
         }
@@ -155,7 +155,7 @@ describe('HCCrawler', () => {
           });
       });
 
-      it('skips requests when preRequest returns false', () => {
+      it('skips crawling when queueing options with preRequest returns false', () => {
         function preRequest() {
           return Promise.resolve(false);
         }
@@ -178,7 +178,7 @@ describe('HCCrawler', () => {
           });
       });
 
-      it('skips requests when the requested domain is not allowed', () => {
+      it('skips crawling when the requested domain is not allowed', () => {
         assert.doesNotThrow(() => {
           crawler.queue({ url: URL1, allowedDomains: ['example.net', 'example.org'] });
         });
@@ -203,7 +203,7 @@ describe('HCCrawler', () => {
 
       afterEach(() => crawler.close());
 
-      it('overrides device option', () => {
+      it('overrides device by queueing options', () => {
         assert.doesNotThrow(() => {
           crawler.queue({ url: URL1, device: 'Nexus 6' });
         });
@@ -215,7 +215,7 @@ describe('HCCrawler', () => {
       });
     });
 
-    context('when the crawler is launched with maxConcurrency 1', () => {
+    context('when the crawler is launched with maxConcurrency = 1', () => {
       beforeEach(() => (
         HCCrawler.launch({
           evaluatePage: _.noop,
@@ -244,7 +244,7 @@ describe('HCCrawler', () => {
           });
       });
 
-      it('does not throw an error when delay is set', () => {
+      it('does not throw an error when delay option is set', () => {
         assert.doesNotThrow(() => {
           crawler.queue({ url: URL1, delay: 100 });
         });
@@ -270,7 +270,7 @@ describe('HCCrawler', () => {
 
       afterEach(() => crawler.close());
 
-      it('requests until maxRequest', () => {
+      it('pauses at maxRequest option', () => {
         assert.doesNotThrow(() => {
           crawler.queue(URL1);
           crawler.queue(URL2);
@@ -282,7 +282,7 @@ describe('HCCrawler', () => {
           });
       });
 
-      it('resumes after maxRequest', () => {
+      it('resumes from maxRequest option', () => {
         assert.doesNotThrow(() => {
           crawler.queue(URL1);
           crawler.queue(URL2);
@@ -300,7 +300,7 @@ describe('HCCrawler', () => {
       });
     });
 
-    context('when the crawler is launched with default session cache', () => {
+    context('when the crawler is launched with default cache', () => {
       beforeEach(() => (
         HCCrawler.launch({
           evaluatePage: _.noop,
@@ -314,7 +314,7 @@ describe('HCCrawler', () => {
 
       afterEach(() => crawler.close());
 
-      it('does not request already cached url', () => {
+      it('does not crawl already cached url', () => {
         assert.doesNotThrow(() => {
           crawler.queue(URL1);
           crawler.queue(URL2);
@@ -328,30 +328,58 @@ describe('HCCrawler', () => {
     });
 
     context('when the crawler is launched with redis cache', () => {
-      beforeEach(() => (
-        HCCrawler.launch({
-          evaluatePage: _.noop,
-          onSuccess: _.noop,
-          maxConcurrency: 1,
-          cache: new RedisCache(),
-        })
-          .then(_crawler => {
-            crawler = _crawler;
+      context('for the fist time with persistCache = true', () => {
+        beforeEach(() => (
+          HCCrawler.launch({
+            evaluatePage: _.noop,
+            onSuccess: _.noop,
+            cache: new RedisCache(),
+            persistCache: true,
           })
-      ));
+            .then(_crawler => {
+              crawler = _crawler;
+              return crawler.clearCache();
+            })
+        ));
 
-      afterEach(() => crawler.close());
+        afterEach(() => crawler.close());
 
-      it('does not request already cached url', () => {
-        assert.doesNotThrow(() => {
-          crawler.queue(URL1);
-          crawler.queue(URL2);
-          crawler.queue(URL1); // The queue won't be requested
-        });
-        return crawler.onIdle()
-          .then(() => {
-            assert.equal(Crawler.prototype.crawl.callCount, 2);
+        it('crawls all queued urls', () => {
+          assert.doesNotThrow(() => {
+            crawler.queue(URL1);
+            crawler.queue(URL2);
           });
+          return crawler.onIdle()
+            .then(() => {
+              assert.equal(Crawler.prototype.crawl.callCount, 2);
+            });
+        });
+      });
+
+      context('for the second time', () => {
+        beforeEach(() => (
+          HCCrawler.launch({
+            evaluatePage: _.noop,
+            onSuccess: _.noop,
+            cache: new RedisCache(),
+          })
+            .then(_crawler => {
+              crawler = _crawler;
+            })
+        ));
+
+        afterEach(() => crawler.close());
+
+        it('does not crawl already cached url', () => {
+          assert.doesNotThrow(() => {
+            crawler.queue(URL2);
+            crawler.queue(URL3);
+          });
+          return crawler.onIdle()
+            .then(() => {
+              assert.equal(Crawler.prototype.crawl.callCount, 1);
+            });
+        });
       });
     });
 
@@ -370,7 +398,7 @@ describe('HCCrawler', () => {
 
       afterEach(() => crawler.close());
 
-      it('requests duplicate urls', () => {
+      it('crawls duplicate urls', () => {
         assert.doesNotThrow(() => {
           crawler.queue(URL1);
           crawler.queue(URL2);

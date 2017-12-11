@@ -49,7 +49,7 @@ describe('Helper', () => {
   });
 
   describe('Helper.jsonStableReplacer', () => {
-    it('sorts key by order', () => {
+    it('sorts keys by order', () => {
       const obj = { c: 8, b: [{ z: 6, y: 5, x: 4 }, 7], a: 3 };
       const actual = '{"a":3,"b":[{"x":4,"y":5,"z":6},7],"c":8}';
       const expected = JSON.stringify(obj, jsonStableReplacer);
@@ -58,7 +58,7 @@ describe('Helper', () => {
   });
 
   describe('Helper.debugRequest', () => {
-    it('does not throw errors', () => {
+    it('does not throw an error', () => {
       assert.doesNotThrow(() => {
         debugRequest('Start requesting http://example.com/');
       });
@@ -66,7 +66,7 @@ describe('Helper', () => {
   });
 
   describe('Helper.debugBrowser', () => {
-    it('does not throw errors', () => {
+    it('does not throw an error', () => {
       assert.doesNotThrow(() => {
         debugBrowser('Console log init.. http://example.com/');
       });
