@@ -18,19 +18,19 @@ class FsCache extends BaseCache {
   close() {
     return Promise.resolve();
   }
-  exists(options) {
+  exists(key) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
-    return Promise.resolve(obj[FsCache.key(options)] || false);
+    return Promise.resolve(obj[key] || false);
   }
-  set(options) {
+  set(key) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
-    obj[FsCache.key(options)] = true;
+    obj[key] = true;
     fs.writeFileSync(this._settings.file, JSON.stringify(obj));
     return Promise.resolve();
   }
-  remove(options) {
+  remove(key) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
-    delete obj[FsCache.key(options)];
+    delete obj[key];
     fs.writeFileSync(FILE, JSON.stringify(obj));
     return Promise.resolve();
   }
