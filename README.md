@@ -80,8 +80,6 @@ const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
 
 function launch(persistCache) {
   return HCCrawler.launch({
-    maxConcurrency: 1,
-    maxRequest: 2,
     evaluatePage: (() => ({
       title: $('title').text(),
       h1: $('h1').text(),
@@ -98,7 +96,6 @@ launch(true) // Launch the crawler with persisting cache
   .then(crawler => {
     crawler.queue('https://example.com/');
     crawler.queue('https://example.net/');
-    crawler.queue('https://example.org/'); // The queue won't be requested due to maxRequest option
     return crawler.onIdle()
       .then(() => crawler.close()); // Close the crawler but cache won't be cleared
   })
