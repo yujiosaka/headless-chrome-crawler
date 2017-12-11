@@ -1,24 +1,3 @@
-const _ = require('lodash');
-const { hash, jsonStableReplacer } = require('../lib/helper');
-
-const OMITTED_HASH_FIELDS = [
-  'priority',
-  'allowedDomains',
-  'delay',
-  'retryCount',
-  'retryDelay',
-  'jQuery',
-  'username',
-  'password',
-  'preRequest',
-  'evaluatePage',
-  'onSuccess',
-  'onError',
-  'timeout',
-  'waitUntil',
-];
-const MAX_LENGTH = 10;
-
 class BaseCache {
   constructor(settings) {
     this._settings = settings;
@@ -53,7 +32,7 @@ class BaseCache {
 
   /**
    * Method to check whether the requested options already exists in the cache storage
-   * @param {Object} options
+   * @param {string} key
    * @return {Promise} resolves whether the requested options already exists
    * @interface
    */
@@ -63,7 +42,7 @@ class BaseCache {
 
   /**
    * Method to set the requested options to the cache storage
-   * @param {Object} options
+   * @param {string} key
    * @return {Promise} resolves when set operation completed
    * @interface
    */
@@ -73,23 +52,12 @@ class BaseCache {
 
   /**
    * Method to remove already requested option from the cache storage
-   * @param {Object} options
+   * @param {string} key
    * @return {Promise} resolves when remove operation completed
    * @interface
    */
   remove() {
     throw new Error('Remove is not overridden!');
-  }
-
-  /**
-   * Method to check whether the requested options already exists in the cache storage
-   * @param {Object} options
-   * @return {String} session cache key for the option
-   * @static
-   */
-  static key(options) {
-    const json = JSON.stringify(_.omit(options, OMITTED_HASH_FIELDS), jsonStableReplacer);
-    return hash(json).substring(0, MAX_LENGTH);
   }
 }
 

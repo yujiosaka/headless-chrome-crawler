@@ -28,23 +28,23 @@ class SessionCache extends BaseCache {
   /**
    * @override
    */
-  exists(options) {
-    return Promise.resolve(this._storage[BaseCache.key(options)] || false);
+  exists(key) {
+    return Promise.resolve(this._storage[key] || false);
   }
 
   /**
    * @override
    */
-  set(options) {
-    this._storage[BaseCache.key(options)] = true;
+  set(key) {
+    this._storage[key] = true;
     return Promise.resolve();
   }
 
   /**
    * @override
    */
-  remove(options) {
-    delete this._storage[BaseCache.key(options)];
+  remove(key) {
+    delete this._storage[key];
     return Promise.resolve();
   }
 }
