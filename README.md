@@ -1,4 +1,6 @@
 # headless-chrome-crawler [![build](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master.svg?style=shield&circle-token=ba45f930aed7057b79f2ac09df6be3e1b8ee954b)](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master) [![npm](https://badge.fury.io/js/headless-chrome-crawler.svg)](https://www.npmjs.com/package/headless-chrome-crawler)
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/yujiosaka/headless-chrome-crawler.svg)](https://greenkeeper.io/)
 Headless Chrome crawler with [jQuery](https://jquery.com) powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer)
 
 ## Features
