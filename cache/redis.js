@@ -36,9 +36,9 @@ class RedisCache extends BaseCache {
   /**
    * @override
    */
-  exists(options) {
+  exists(key) {
     return new Promise((resolve, reject) => {
-      this._client.exists(BaseCache.key(options), (error, exists) => {
+      this._client.exists(key, (error, exists) => {
         if (error) {
           reject(error);
           return;
@@ -51,9 +51,9 @@ class RedisCache extends BaseCache {
   /**
    * @override
    */
-  set(options) {
+  set(key) {
     return new Promise((resolve, reject) => {
-      this._client.set(BaseCache.key(options), '1', error => {
+      this._client.set(key, '1', error => {
         if (error) {
           reject(error);
           return;
@@ -66,9 +66,9 @@ class RedisCache extends BaseCache {
   /**
    * @override
    */
-  remove(options) {
+  remove(key) {
     return new Promise((resolve, reject) => {
-      this._client.del(BaseCache.key(options), error => {
+      this._client.del(key, error => {
         if (error) {
           reject(error);
           return;
