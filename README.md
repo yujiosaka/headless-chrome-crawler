@@ -166,7 +166,7 @@ browserWSEndpoint, ignoreHTTPSErrors
 Also, the following options can be set as default values when [crawler.queue([options])](#crawlerqueueoptions) are executed.
 
 ```
-url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, shouldRequest, evaluatePage, onSuccess, onError
+url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, shouldRequest, evaluatePage, onSuccess, onError
 ```
 
 > **Note**: In practice, setting the options every time you queue equests is not only redundant but also slow. Therefore, it's recommended to set the default values and override them depending on the necessity.
@@ -189,7 +189,7 @@ ignoreHTTPSErrors, headless, executablePath, slowMo, args, handleSIGINT, handleS
 Also, the following options can be set as default values when [crawler.queue([options])](#crawlerqueueoptions) are executed.
 
 ```
-url, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, shouldRequest, evaluatePage, onSuccess, onError
+url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, shouldRequest, evaluatePage, onSuccess, onError
 ```
 
 > **Note**: In practice, setting the options every time you queue the requests is not only redundant but also slow. Therefore, it's recommended to set the default values and override them depending on the necessity.
