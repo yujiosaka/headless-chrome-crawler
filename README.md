@@ -303,6 +303,7 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 ```js
 const HCCrawler = require('headless-chrome-crawler');
 
+// Pass null to the cache option to disable it.
 HCCrawler.launch({ cache: null });
 // ...
 ```
