@@ -12,7 +12,6 @@ Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chro
 * Pause and resume at any time
 * Insert [jQuery](https://jquery.com) automatically
 * Emulate device
-* Screenshot
 * Priority queue
 * Promise support
 
