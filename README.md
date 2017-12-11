@@ -78,7 +78,7 @@ const RedisCache = require('headless-chrome-crawler/cache/redis');
 
 const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
 
-function launch() {
+function launch(persistCache) {
   return HCCrawler.launch({
     maxConcurrency: 1,
     maxRequest: 2,
@@ -89,12 +89,12 @@ function launch() {
     onSuccess: (result => {
       console.log('onSuccess', result);
     }),
-    persistCache: true, // Set true so that cache won't be cleared when closing the crawler
-    cache,
-  });
+    cache: new RedisCache(), // Passing no options expects Redis to be run in the local machine.
+    persistCache, // Cache won't be cleared when closing the crawler if set true
+  });
 }
 
-launch()
+launch(true) // Launch the crawler with persisting cache
   .then(crawler => {
     crawler.queue('https://example.com/');
     crawler.queue('https://example.net/');
@@ -102,7 +102,7 @@ launch()
     return crawler.onIdle()
       .then(() => crawler.close()); // Close the crawler but cache won't be cleared
   })
-  .then(() => launch()) // Launch the crawler again
+  .then(() => launch(false)) // Launch the crawler again without persisting cache
   .then(crawler => {
     crawler.queue('https://example.net/'); // This queue won't be requested because cache remains
     crawler.queue('https://example.org/');
