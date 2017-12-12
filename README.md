@@ -11,6 +11,7 @@ Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chro
 * Pluggable cache such as [Redis](https://redis.io) to skip duplicate requests
 * Pause and resume at any time
 * Insert [jQuery](https://jquery.com) automatically
+* Screenshot
 * Emulate device
 * Priority queue
 * Promise support
