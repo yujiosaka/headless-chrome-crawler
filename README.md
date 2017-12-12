@@ -196,7 +196,7 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
   * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
   * `device` <[String]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
   * `username` <[String]> Username for basic authentication. pass `null` if it's not necessary.
-  * `screenshot` <[Object|Function]> This option can be either an object or a function, defaults to `null`. The function is called with the argument of [crawler.queue([options])](#crawlerqueueoptions)'s options and you can conditionally return an object. The object is passed to [Puppeteer's page.screenshot([options])]'s options to capture screenshot.
+  * `screenshot` <[Object|Function]> This option can be either an object or a function, defaults to `null`. The function is called with the argument of [crawler.queue([options])](#crawlerqueueoptions)'s options and you can conditionally return an object. The object is passed to [Puppeteer's page.screenshot([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagescreenshotoptions)'s options to capture screenshot.
   * `password` <[String]> Password for basic authentication. pass `null` if it's not necessary.
   * `userAgent` <[String]> User agent string to override in this page.
   * `extraHeaders` <[Object]> An object containing additional headers to be sent with every request. All header values must be strings.
