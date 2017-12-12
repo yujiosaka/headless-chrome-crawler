@@ -39,11 +39,10 @@ HCCrawler.launch({
   // Function to be evaluated in browsers
   evaluatePage: (() => ({
     title: $('title').text(),
-    h1: $('h1').text(),
   })),
   // Function to be called with evaluated results from browsers
   onSuccess: (result => {
-    console.log('onSuccess', result);
+    console.log(result);
   }),
 })
   .then(crawler => {
@@ -56,49 +55,10 @@ HCCrawler.launch({
       // Override an already defined evaluatePage option
       evaluatePage: (() => ({
         title: document.title,
-        userAgent: window.navigator.userAgent,
       })),
     });
     crawler.onIdle() // Resolved when no queue is left
       .then(() => crawler.close()); // Close the crawler
-  });
-```
-
-**Example** - Use [Redis](https://redis.io) cache for large scale crawling
-
-```js
-const HCCrawler = require('headless-chrome-crawler');
-const RedisCache = require('headless-chrome-crawler/cache/redis');
-
-const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
-
-function launch(persistCache) {
-  return HCCrawler.launch({
-    evaluatePage: (() => ({
-      title: $('title').text(),
-      h1: $('h1').text(),
-    })),
-    onSuccess: (result => {
-      console.log('onSuccess', result);
-    }),
-    cache,
-    persistCache, // Cache won't be cleared when closing the crawler if set true
-  });
-}
-
-launch(true) // Launch the crawler with persisting cache
-  .then(crawler => {
-    crawler.queue('https://example.com/');
-    crawler.queue('https://example.net/');
-    return crawler.onIdle()
-      .then(() => crawler.close()); // Close the crawler but cache won't be cleared
-  })
-  .then(() => launch(false)) // Launch the crawler again without persisting cache
-  .then(crawler => {
-    crawler.queue('https://example.net/'); // This queue won't be requested because cache remains
-    crawler.queue('https://example.org/');
-    return crawler.onIdle()
-      .then(() => crawler.close());
   });
 ```
 
@@ -107,6 +67,7 @@ launch(true) // Launch the crawler with persisting cache
 * [Priority queue](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/priority-queue.js)
 * [Pause and resume](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/pause-resume.js)
 * [Emulate device](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/emulate-device.js)
+* [Redis cache](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/redis-cache.js)
 
 See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/examples) for the examples list. The examples can be run from the root folder as follows:
 
@@ -150,10 +111,9 @@ const HCCrawler = require('headless-chrome-crawler');
 HCCrawler.launch({
   evaluatePage: (() => ({
     title: $('title').text(),
-    h1: $('h1').text(),
   })),
   onSuccess: (result => {
-    console.log('onSuccess', result);
+    console.log(result);
   }),
 })
   .then(crawler => {
