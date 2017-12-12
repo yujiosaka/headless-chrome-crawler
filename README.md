@@ -316,11 +316,10 @@ Here is an example of creating a file based cache.
 
 ```js
 const fs = require('fs');
-const { resolve } = require('path');
 const HCCrawler = require('headless-chrome-crawler');
 const BaseCache = require('headless-chrome-crawler/cache/base');
 
-const FILE = resolve(__dirname, '../tmp/fs-cache.json');
+const FILE = './tmp/fs-cache.json';
 
 // Create a new cache by extending BaseCache interface
 class FsCache extends BaseCache {
