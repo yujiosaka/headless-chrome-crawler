@@ -218,7 +218,7 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
 
 > **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
 
-> **Note**: Screenshot will be enabled if `screenshot` option is an empty object. Pass `null` or leave as default to disable screenshot.
+> **Note**: Screenshot will be enabled if `screenshot` option is an empty object. Pass `null` or leave default to disable screenshot.
 
 The following options are passed straight to [Puppeteer's page.goto(url, options)](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s options'.
 
