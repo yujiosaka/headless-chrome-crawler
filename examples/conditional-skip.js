@@ -5,10 +5,9 @@ HCCrawler.launch({
   maxConcurrency: 1,
   evaluatePage: (() => ({
     title: $('title').text(),
-    h1: $('h1').text(),
   })),
   onSuccess: (result => {
-    console.log('onSuccess', result);
+    console.log(result);
   }),
   preRequest: (options => {
     if (options.customSkip) return false;

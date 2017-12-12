@@ -5,14 +5,15 @@ Headless Chrome crawls with [jQuery](https://jquery.com) support, powered by [Pu
 
 Crawlers based on simple requests to HTML files are generally fast. However, it sometimes ends up capturing empty bodies, especially when the websites are built on such modern frontend frameworks as [AngularJS](https://angularjs.org), [React](https://reactjs.org) and [Vue.js](https://jp.vuejs.org/index.html).
 
-Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler provides simple APIs to manupluate Headless Chrome/Chromium and allows you to crawl these single page applications with the following features:
+Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler provides [simple APIs](#api-reference) to manupluate Headless Chrome and allows you to crawl these dynamic websites with the following features:
 
 * Configure concurrency, delay and retry
 * Pluggable cache such as [Redis](https://redis.io) to skip duplicate requests
-* Pause and resume at any time
-* Insert [jQuery](https://jquery.com) automatically
-* Emulate device
-* Priority queue
+* Pause at the max request and resume at any time
+* Insert [jQuery](https://jquery.com) automatically for scraping
+* Save screenshot for the crawling evidence
+* Emulate device and user agent
+* Priority queue for crawling efficiency
 * Promise support
 
 ## Getting Started
@@ -30,8 +31,6 @@ yarn add headless-chrome-crawler
 
 The basic API of headless-chrome-crawler is inspired by that of [node-crawler](https://github.com/bda-research/node-crawler), so the API design is somewhat similar but not exactly compatible.
 
-**Example** - Queueing requests in different styles
-
 ```js
 const HCCrawler = require('headless-chrome-crawler');
 
@@ -39,76 +38,47 @@ HCCrawler.launch({
   // Function to be evaluated in browsers
   evaluatePage: (() => ({
     title: $('title').text(),
-    h1: $('h1').text(),
   })),
   // Function to be called with evaluated results from browsers
   onSuccess: (result => {
-    console.log('onSuccess', result);
+    console.log(result);
   }),
 })
   .then(crawler => {
-    crawler.queue('https://example.com/'); // Queue a request
-    crawler.queue(['https://example.net/', 'https://example.org/']); // Queue multiple requests
+    // Queue a request
+    crawler.queue('https://example.com/');
+    // Queue multiple requests
+    crawler.queue(['https://example.net/', 'https://example.org/']);
     // Queue a request with custom options
     crawler.queue({
+      url: 'https://www.example.com/',
+      // Disable jQuery only for this request
       jQuery: false,
-      url: 'https://example.com/',
       // Override an already defined evaluatePage option
       evaluatePage: (() => ({
         title: document.title,
-        userAgent: window.navigator.userAgent,
       })),
+      // Emulate a tablet device
+      device: 'Nexus 7',
+      // Enable screenshot by passing options
+      screenshot: {
+        path: './tmp/www-example-com.png'
+      },
     });
     crawler.onIdle() // Resolved when no queue is left
       .then(() => crawler.close()); // Close the crawler
   });
 ```
 
-**Example** - Use [Redis](https://redis.io) cache for large scale crawling
-
-```js
-const HCCrawler = require('headless-chrome-crawler');
-const RedisCache = require('headless-chrome-crawler/cache/redis');
-
-const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
-
-function launch(persistCache) {
-  return HCCrawler.launch({
-    evaluatePage: (() => ({
-      title: $('title').text(),
-      h1: $('h1').text(),
-    })),
-    onSuccess: (result => {
-      console.log('onSuccess', result);
-    }),
-    cache,
-    persistCache, // Cache won't be cleared when closing the crawler if set true
-  });
-}
-
-launch(true) // Launch the crawler with persisting cache
-  .then(crawler => {
-    crawler.queue('https://example.com/');
-    crawler.queue('https://example.net/');
-    return crawler.onIdle()
-      .then(() => crawler.close()); // Close the crawler but cache won't be cleared
-  })
-  .then(() => launch(false)) // Launch the crawler again without persisting cache
-  .then(crawler => {
-    crawler.queue('https://example.net/'); // This queue won't be requested because cache remains
-    crawler.queue('https://example.org/');
-    return crawler.onIdle()
-      .then(() => crawler.close());
-  });
-```
-
 ## Examples
 
-* [Priority queue](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/priority-queue.js)
-* [Pause and resume](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/pause-resume.js)
-* [Emulate device](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/emulate-device.js)
+* [Priority queue for crawling efficiency](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/priority-queue.js)
+* [Pause at the max request and resume at any time](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/pause-resume.js)
+* [Emulate device and user agent](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/emulate-device.js)
+* [Redis cache to skip duplicate requests](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/redis-cache.js)
+* [Conditionally saving screenshot](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/conditional-screenshot.js)
 
-See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/examples) for the examples list. The examples can be run from the root folder as follows:
+See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/examples) for the full examples list. The examples can be run from the root folder as follows:
 
 ```sh
 NODE_PATH=../ node examples/priority-queue.js
@@ -150,10 +120,9 @@ const HCCrawler = require('headless-chrome-crawler');
 HCCrawler.launch({
   evaluatePage: (() => ({
     title: $('title').text(),
-    h1: $('h1').text(),
   })),
   onSuccess: (result => {
-    console.log('onSuccess', result);
+    console.log(result);
   }),
 })
   .then(crawler => {
@@ -227,6 +196,7 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
   * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
   * `device` <[String]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
   * `username` <[String]> Username for basic authentication. pass `null` if it's not necessary.
+  * `screenshot` <[Object|Function]> This option can be either an object or a function, defaults to `null`. The function is called with the argument, which is the [crawler.queue([options])](#crawlerqueueoptions)'s options and you can conditionally return an object. The object is passed to [Puppeteer's page.screenshot([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagescreenshotoptions)'s options to capture screenshot.
   * `password` <[String]> Password for basic authentication. pass `null` if it's not necessary.
   * `userAgent` <[String]> User agent string to override in this page.
   * `extraHeaders` <[Object]> An object containing additional headers to be sent with every request. All header values must be strings.
@@ -242,10 +212,13 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
         * `headers` <[Object]> Response headers.
       * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
       * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
+      * `screenshot` <[Buffer]> Buffer with captured screenshot, which is `null` when screenshot is disabled.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
 
 > **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
+
+> **Note**: Screenshot will be enabled if `screenshot` option is an empty object. Pass `null` or leave default to disable screenshot.
 
 The following options are passed straight to [Puppeteer's page.goto(url, options)](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s options'.
 
@@ -356,11 +329,10 @@ Here is an example of creating a file based cache.
 
 ```js
 const fs = require('fs');
-const { resolve } = require('path');
 const HCCrawler = require('headless-chrome-crawler');
 const BaseCache = require('headless-chrome-crawler/cache/base');
 
-const FILE = resolve(__dirname, '../tmp/fs-cache.json');
+const FILE = './tmp/fs-cache.json';
 
 // Create a new cache by extending BaseCache interface
 class FsCache extends BaseCache {
