@@ -5,7 +5,7 @@ Headless Chrome crawls with [jQuery](https://jquery.com) support, powered by [Pu
 
 Crawlers based on simple requests to HTML files are generally fast. However, it sometimes ends up capturing empty bodies, especially when the websites are built on such modern frontend frameworks as [AngularJS](https://angularjs.org), [React](https://reactjs.org) and [Vue.js](https://jp.vuejs.org/index.html).
 
-Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler provides simple APIs to manupluate Headless Chrome/Chromium and allows you to crawl these single page applications with the following features:
+Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler provides [simple APIs](#api-reference) to manupluate Headless Chrome/Chromium and allows you to crawl these single page applications with the following features:
 
 * Configure concurrency, delay and retry
 * Pluggable cache such as [Redis](https://redis.io) to skip duplicate requests
