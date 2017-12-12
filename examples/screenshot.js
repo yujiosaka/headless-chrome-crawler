@@ -8,7 +8,7 @@ HCCrawler.launch({
     title: $('title').text(),
   })),
   onSuccess: (result => {
-    console.log(`Screenshot is saved as ${PATH}`);
+    console.log(`Screenshot is saved as ${PATH}`, result);
   }),
   screenshot: {
     path: PATH,
