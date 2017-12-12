@@ -72,12 +72,12 @@ HCCrawler.launch({
 
 ## Examples
 
-* [Priority queue](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/priority-queue.js)
-* [Pause and resume](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/pause-resume.js)
-* [Emulate device](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/emulate-device.js)
-* [Redis cache](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/redis-cache.js)
+* [Priority queue for crawling efficiency](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/priority-queue.js)
+* [Pause at the max request and resume at any time](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/pause-resume.js)
+* [Emulate device and user agent](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/emulate-device.js)
+* [Redis cache to skip duplicate requests](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/redis-cache.js)
 
-See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/examples) for the examples list. The examples can be run from the root folder as follows:
+See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/examples) for the full examples list. The examples can be run from the root folder as follows:
 
 ```sh
 NODE_PATH=../ node examples/priority-queue.js
