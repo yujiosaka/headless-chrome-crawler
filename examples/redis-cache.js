@@ -7,10 +7,9 @@ function launch(persistCache) {
   return HCCrawler.launch({
     evaluatePage: (() => ({
       title: $('title').text(),
-      h1: $('h1').text(),
     })),
     onSuccess: (result => {
-      console.log('onSuccess', result);
+      console.log(result);
     }),
     cache,
     persistCache, // Cache won't be cleared when closing the crawler if set true

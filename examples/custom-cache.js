@@ -1,9 +1,8 @@
 const fs = require('fs');
-const { resolve } = require('path');
 const HCCrawler = require('headless-chrome-crawler');
 const BaseCache = require('headless-chrome-crawler/cache/base');
 
-const FILE = resolve(__dirname, '../tmp/fs-cache.json');
+const FILE = './tmp/fs-cache.json';
 
 // Create a new cache by extending BaseCache interface
 class FsCache extends BaseCache {
@@ -40,10 +39,9 @@ HCCrawler.launch({
   maxConcurrency: 1,
   evaluatePage: (() => ({
     title: $('title').text(),
-    h1: $('h1').text(),
   })),
   onSuccess: (result => {
-    console.log('onSuccess', result);
+    console.log(result);
   }),
   cache: new FsCache({ file: FILE }),
 })
