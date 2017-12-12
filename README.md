@@ -5,15 +5,15 @@ Headless Chrome crawls with [jQuery](https://jquery.com) support, powered by [Pu
 
 Crawlers based on simple requests to HTML files are generally fast. However, it sometimes ends up capturing empty bodies, especially when the websites are built on such modern frontend frameworks as [AngularJS](https://angularjs.org), [React](https://reactjs.org) and [Vue.js](https://jp.vuejs.org/index.html).
 
-Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler provides [simple APIs](#api-reference) to manupluate Headless Chrome/Chromium and allows you to crawl these dynamic websites with the following features:
+Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler provides [simple APIs](#api-reference) to manupluate Headless Chrome and allows you to crawl these dynamic websites with the following features:
 
 * Configure concurrency, delay and retry
 * Pluggable cache such as [Redis](https://redis.io) to skip duplicate requests
-* Pause and resume at any time
-* Insert [jQuery](https://jquery.com) automatically
-* Screenshot
-* Emulate device
-* Priority queue
+* Pause at the max request and resume at any time
+* Insert [jQuery](https://jquery.com) automatically for scraping
+* Save screenshot for the crawling evidence
+* Emulate device and user agent
+* Priority queue for crawling efficiency
 * Promise support
 
 ## Getting Started
@@ -31,8 +31,6 @@ yarn add headless-chrome-crawler
 
 The basic API of headless-chrome-crawler is inspired by that of [node-crawler](https://github.com/bda-research/node-crawler), so the API design is somewhat similar but not exactly compatible.
 
-**Example** - Queueing requests in different styles
-
 ```js
 const HCCrawler = require('headless-chrome-crawler');
 
@@ -47,16 +45,25 @@ HCCrawler.launch({
   }),
 })
   .then(crawler => {
-    crawler.queue('https://example.com/'); // Queue a request
-    crawler.queue(['https://example.net/', 'https://example.org/']); // Queue multiple requests
+    // Queue a request
+    crawler.queue('https://example.com/');
+    // Queue multiple requests
+    crawler.queue(['https://example.net/', 'https://example.org/']);
     // Queue a request with custom options
     crawler.queue({
+      url: 'https://www.example.com/',
+      // Disable jQuery only for this request
       jQuery: false,
-      url: 'https://example.com/',
       // Override an already defined evaluatePage option
       evaluatePage: (() => ({
         title: document.title,
       })),
+      // Emulate a tablet device
+      device: 'Nexus 7',
+      // Enable screenshot by passing options
+      screenshot: {
+        path: './tmp/www-example-com.png'
+      },
     });
     crawler.onIdle() // Resolved when no queue is left
       .then(() => crawler.close()); // Close the crawler
