@@ -1,5 +1,4 @@
 const HCCrawler = require('headless-chrome-crawler');
-const { resolve } = require('path');
 
 const PATH = './tmp/';
 
