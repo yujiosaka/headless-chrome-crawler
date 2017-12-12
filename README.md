@@ -195,6 +195,7 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
   * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
   * `device` <[String]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
   * `username` <[String]> Username for basic authentication. pass `null` if it's not necessary.
+  * `screenshot` <[Object|Function]> This option can be either an object or a function, defaults to `null`. The function is called with the argument of [crawler.queue([options])](#crawlerqueueoptions)'s options and you can conditionally return an object. The object is passed to [Puppeteer's page.screenshot([options])]'s options to capture screenshot.
   * `password` <[String]> Password for basic authentication. pass `null` if it's not necessary.
   * `userAgent` <[String]> User agent string to override in this page.
   * `extraHeaders` <[Object]> An object containing additional headers to be sent with every request. All header values must be strings.
@@ -210,10 +211,13 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
         * `headers` <[Object]> Response headers.
       * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
       * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
+      * `screenshot` <[Buffer]> Buffer with captured screenshot, which is `null` when screenshot is disabled.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
 
 > **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
+
+> **Note**: Screenshot will be enabled if `screenshot` option is an empty object. Pass `null` or leave as default to disable screenshot.
 
 The following options are passed straight to [Puppeteer's page.goto(url, options)](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s options'.
 
