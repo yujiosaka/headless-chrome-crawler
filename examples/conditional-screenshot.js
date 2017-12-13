@@ -11,13 +11,13 @@ HCCrawler.launch({
   }),
   preRequest: (options => {
     if (!options.saveAs) return false; // Skip the request by returning false
-    options.screenshot = { path: `${PATH}${options.saveAs}` }; /* eslint no-param-reassign: 0 */
+    options.screenshot = { path: `${PATH}${options.saveAs}` };
     return true;
   }),
 })
   .then(crawler => {
     crawler.queue({ url: 'https://example.com/' });
-    // saveAd is a custom option for preRequest to conditionally modify screenshot option and skip requests 
+    // saveAs is a custom option for preRequest to conditionally modify options and skip requests
     crawler.queue({ url: 'https://example.net/', saveAs: 'example-net.png' });
     crawler.queue({ url: 'https://example.org/', saveAs: 'example-org.png' });
     crawler.onIdle()

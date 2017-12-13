@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const { noop } = require('lodash');
 const assert = require('assert');
 const sinon = require('sinon');
 const HCCrawler = require('../');
@@ -18,7 +18,12 @@ describe('HCCrawler', () => {
 
   context('when crawling does not fails', () => {
     beforeEach(() => {
-      sinon.stub(Crawler.prototype, 'crawl').returns(Promise.resolve());
+      sinon.stub(Crawler.prototype, 'crawl').returns(Promise.resolve({
+        options: {},
+        result: { title: 'Example Domain' },
+        links: ['http://www.iana.org/domains/example'],
+        screenshot: null,
+      }));
     });
 
     context('when the crawler is launched without necessary options', () => {
@@ -39,25 +44,25 @@ describe('HCCrawler', () => {
 
       it('throws an error when queueing options without URL', () => {
         assert.throws(() => {
-          crawler.queue({ evaluatePage: _.noop, onSuccess: _.noop });
+          crawler.queue({ evaluatePage: noop, onSuccess: noop });
         });
       });
 
       it('throws an error when queueing options without evaluatePage', () => {
         assert.throws(() => {
-          crawler.queue({ url: URL1, onSuccess: _.noop });
+          crawler.queue({ url: URL1, onSuccess: noop });
         });
       });
 
       it('throws an error when queueing options without onSuccess', () => {
         assert.throws(() => {
-          crawler.queue({ url: URL1, evaluatePage: _.noop });
+          crawler.queue({ url: URL1, evaluatePage: noop });
         });
       });
 
       it('crawls when queueing necessary options', () => {
         assert.doesNotThrow(() => {
-          crawler.queue({ url: URL1, evaluatePage: _.noop, onSuccess: _.noop });
+          crawler.queue({ url: URL1, evaluatePage: noop, onSuccess: noop });
         });
         return crawler.onIdle()
           .then(() => {
@@ -69,8 +74,8 @@ describe('HCCrawler', () => {
     context('when the crawler is launched with necessary options', () => {
       beforeEach(() => (
         HCCrawler.launch({
-          evaluatePage: _.noop,
-          onSuccess: _.noop,
+          evaluatePage: noop,
+          onSuccess: noop,
         })
           .then(_crawler => {
             crawler = _crawler;
@@ -171,7 +176,7 @@ describe('HCCrawler', () => {
       it('can modify options by preRequest option', () => {
         const path = './tmp/example.png';
         function preRequest(options) {
-          options.screenshot = { path }; /* eslint no-param-reassign: 0 */
+          options.screenshot = { path };
           return Promise.resolve(true);
         }
         assert.doesNotThrow(() => {
@@ -208,8 +213,8 @@ describe('HCCrawler', () => {
     context('when the crawler is launched with device option', () => {
       beforeEach(() => (
         HCCrawler.launch({
-          evaluatePage: _.noop,
-          onSuccess: _.noop,
+          evaluatePage: noop,
+          onSuccess: noop,
           device: 'iPhone 6',
         })
           .then(_crawler => {
@@ -231,11 +236,36 @@ describe('HCCrawler', () => {
       });
     });
 
+    context('when the crawler is launched with maxDepth = 2', () => {
+      beforeEach(() => (
+        HCCrawler.launch({
+          evaluatePage: noop,
+          onSuccess: noop,
+          maxDepth: 2,
+        })
+          .then(_crawler => {
+            crawler = _crawler;
+          })
+      ));
+
+      afterEach(() => crawler.close());
+
+      it('automatically follows links', () => {
+        assert.doesNotThrow(() => {
+          crawler.queue(URL1);
+        });
+        return crawler.onIdle()
+          .then(() => {
+            assert.equal(Crawler.prototype.crawl.callCount, 2);
+          });
+      });
+    });
+
     context('when the crawler is launched with maxConcurrency = 1', () => {
       beforeEach(() => (
         HCCrawler.launch({
-          evaluatePage: _.noop,
-          onSuccess: _.noop,
+          evaluatePage: noop,
+          onSuccess: noop,
           maxConcurrency: 1,
         })
           .then(_crawler => {
@@ -274,8 +304,8 @@ describe('HCCrawler', () => {
     context('when the crawler is launched with maxRequest option', () => {
       beforeEach(() => (
         HCCrawler.launch({
-          evaluatePage: _.noop,
-          onSuccess: _.noop,
+          evaluatePage: noop,
+          onSuccess: noop,
           maxConcurrency: 1,
           maxRequest: 2,
         })
@@ -319,8 +349,8 @@ describe('HCCrawler', () => {
     context('when the crawler is launched with default cache', () => {
       beforeEach(() => (
         HCCrawler.launch({
-          evaluatePage: _.noop,
-          onSuccess: _.noop,
+          evaluatePage: noop,
+          onSuccess: noop,
           maxConcurrency: 1,
         })
           .then(_crawler => {
@@ -347,8 +377,8 @@ describe('HCCrawler', () => {
       context('for the fist time with persistCache = true', () => {
         beforeEach(() => (
           HCCrawler.launch({
-            evaluatePage: _.noop,
-            onSuccess: _.noop,
+            evaluatePage: noop,
+            onSuccess: noop,
             cache: new RedisCache(),
             persistCache: true,
           })
@@ -375,8 +405,8 @@ describe('HCCrawler', () => {
       context('for the second time', () => {
         beforeEach(() => (
           HCCrawler.launch({
-            evaluatePage: _.noop,
-            onSuccess: _.noop,
+            evaluatePage: noop,
+            onSuccess: noop,
             cache: new RedisCache(),
           })
             .then(_crawler => {
@@ -402,8 +432,8 @@ describe('HCCrawler', () => {
     context('when the crawler is launched without cache', () => {
       beforeEach(() => (
         HCCrawler.launch({
-          evaluatePage: _.noop,
-          onSuccess: _.noop,
+          evaluatePage: noop,
+          onSuccess: noop,
           maxConcurrency: 1,
           cache: null,
         })
@@ -430,10 +460,11 @@ describe('HCCrawler', () => {
 
   context('when crawling fails', () => {
     beforeEach(() => {
-      sinon.stub(Crawler.prototype, 'crawl').returns(Promise.reject());
+      const error = new Error('Unexpected error occured while crawling!');
+      sinon.stub(Crawler.prototype, 'crawl').returns(Promise.reject(error));
       return HCCrawler.launch({
-        evaluatePage: _.noop,
-        onSuccess: _.noop,
+        evaluatePage: noop,
+        onSuccess: noop,
       })
         .then(_crawler => {
           crawler = _crawler;
