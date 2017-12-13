@@ -141,7 +141,7 @@ HCCrawler.launch({
   * `persistCache` <[boolean]> Whether to persist cache on closing or disconnecting from the browser, defaults to `false`.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
-This method connects to an existing Chromium instance. The following options are passed straight to [puppeteer.connect([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
+This method connects to an existing Chromium instance. The following options are passed to [puppeteer.connect([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
 
 ```
 browserWSEndpoint, ignoreHTTPSErrors
@@ -164,7 +164,7 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `false`.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
-The method launches a HeadlessChrome/Chromium instance. The following options are passed straight to [puppeteer.launch([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
+The method launches a HeadlessChrome/Chromium instance. The following options are passed to [puppeteer.launch([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
 
 ```
 ignoreHTTPSErrors, headless, executablePath, slowMo, args, handleSIGINT, handleSIGTERM, handleSIGHUP, timeout, dumpio, userDataDir, env, devtools
@@ -218,7 +218,7 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
 
 > **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
 
-The following options are passed straight to [Puppeteer's page.goto(url, options)](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s options'.
+The following options are passed to [Puppeteer's page.goto(url, options)](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s options'.
 
 ```
 timeout, waitUntil
@@ -371,7 +371,7 @@ HCCrawler.launch({ cache: new FsCache({ file: FILE }) });
 
 ### Launch options
 
-[HCCrawler.launch([options])](#hccrawlerlaunchoptions)'s options are passed straight to [puppeteer.launch([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions). It may be useful to set the `headless` and `slowMo` options so that you can see what is going on.
+[HCCrawler.launch([options])](#hccrawlerlaunchoptions)'s options are passed to [puppeteer.launch([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions). It may be useful to set the `headless` and `slowMo` options so that you can see what is going on.
 
 ```js
 HCCrawler.launch({ headless: false, slowMo: 10 });
