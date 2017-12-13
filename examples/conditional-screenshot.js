@@ -7,13 +7,12 @@ HCCrawler.launch({
     title: $('title').text(),
   })),
   onSuccess: (result => {
-    if (!result.options.saveAs) return;
     console.log(`Screenshot is saved as ${PATH}${result.options.saveAs}`);
   }),
-  // Passing a function which resolves screenshot options
-  screenshot: (options => {
-    if (!options.saveAs) return null;
-    return { path: `${PATH}${options.saveAs}` };
+  preRequest: (options => {
+    if (!options.saveAs) return false;
+    options.screenshot = { path: `${PATH}${options.saveAs}` }; /* eslint no-param-reassign: 0 */
+    return true;
   }),
 })
   .then(crawler => {
