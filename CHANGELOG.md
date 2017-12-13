@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Support `screenshot` option
 
+## [1.2.1] - 2017-12-13
+### Added
+
+- Support `screenshot` for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options
+
 ## [1.2.0] - 2017-12-11
 ### Changed
 
@@ -17,7 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Support `maxRequest` for [HCCrawler.connect([options])](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerconnectoptions) and [HCCrawler.launch([options])](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions)'s options
-- Support `allowedDomains` and `userAgent` for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options'
+- Support `allowedDomains` and `userAgent` for [crawler.queue([options])](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options
 - Support SessionCache, RedisCache for Pluggable cache and provide a BaseCache interface for customizing caches
 - Add [crawler.setMaxRequest(maxRequest)](https://github.com/yujiosaka/headless-chrome-crawler#crawlersetmaxrequestmaxrequest), [crawler.pause()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerpause) and [crawler.resume()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerresume) methods
 - Add [crawler.pendingQueueSize](https://github.com/yujiosaka/headless-chrome-crawler#crawlerpendingqueuesize) and [crawler.requestedCount](https://github.com/yujiosaka/headless-chrome-crawler#crawlerrequestedcount) read-only properties
