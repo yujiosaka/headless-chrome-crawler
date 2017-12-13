@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Support `maxRequest` for [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions)'s options.
 - Support `allowedDomains` and `userAgent` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
-- Support SessionCache, RedisCache for Pluggable cache and provide a BaseCache interface for customizing caches.
+- Support pluggable cache such as [SessionCache](https://github.com/yujiosaka/headless-chrome-crawler#class-sessioncache), [RedisCache](https://github.com/yujiosaka/headless-chrome-crawler#class-rediscache) and [BaseCache](https://github.com/yujiosaka/headless-chrome-crawler#class-basecache) interface for customizing caches.
 - Add [crawler.setMaxRequest()](https://github.com/yujiosaka/headless-chrome-crawler#crawlersetmaxrequestmaxrequest), [crawler.pause()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerpause) and [crawler.resume()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerresume) methods.
 - Add [crawler.pendingQueueSize](https://github.com/yujiosaka/headless-chrome-crawler#crawlerpendingqueuesize) and [crawler.requestedCount](https://github.com/yujiosaka/headless-chrome-crawler#crawlerrequestedcount) read-only properties.
 
