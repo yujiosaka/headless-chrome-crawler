@@ -11,7 +11,7 @@ HCCrawler.launch({
   }),
   preRequest: (options => {
     if (!options.saveAs) return false;
-    options.screenshot = { path: `${PATH}${options.saveAs}` };
+    options.screenshot = { path: `${PATH}${options.saveAs}` }; /* eslint no-param-reassign: 0 */
     return true;
   }),
 })

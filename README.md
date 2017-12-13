@@ -190,13 +190,13 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
   * `url` <[String]> Url to navigate to. The url should include scheme, e.g. `https://`.
   * `priority` <[number]> Basic priority of queues, defaults to `1`. Priority with larger number is preferred.
   * `allowedDomains` <[Array]> List of domains allowed to request. `www.example.com` will be allowed if `example.com` is listed.
-  * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, maxConcurrency must be `1`.
+  * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, `maxConcurrency` option must be `1`.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
   * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
   * `device` <[String]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
   * `username` <[String]> Username for basic authentication. pass `null` if it's not necessary.
-  * `screenshot` <[Object|Function]> This option can be either an object or a function, defaults to `null`. The function is called with the argument, which is the [crawler.queue([options])](#crawlerqueueoptions)'s options and you can conditionally return an object. The object is passed to [Puppeteer's page.screenshot([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagescreenshotoptions)'s options to capture screenshot.
+  * `screenshot` <[Object]> Screenshot option, defaults to `null`. This option is used for [Puppeteer's page.screenshot([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagescreenshotoptions). Pass `null` or leave default to disable screenshot.
   * `password` <[String]> Password for basic authentication. pass `null` if it's not necessary.
   * `userAgent` <[String]> User agent string to override in this page.
   * `extraHeaders` <[Object]> An object containing additional headers to be sent with every request. All header values must be strings.
@@ -212,13 +212,11 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
         * `headers` <[Object]> Response headers.
       * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
       * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
-      * `screenshot` <[Buffer]> Buffer with captured screenshot, which is `null` when screenshot is disabled.
+      * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
 
 > **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
-
-> **Note**: Screenshot will be enabled if `screenshot` option is an empty object. Pass `null` or leave default to disable screenshot.
 
 The following options are passed straight to [Puppeteer's page.goto(url, options)](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s options'.
 
