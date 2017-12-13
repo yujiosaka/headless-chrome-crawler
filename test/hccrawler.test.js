@@ -168,6 +168,22 @@ describe('HCCrawler', () => {
           });
       });
 
+      it('can modify options by preRequest option', () => {
+        const path = './tmp/example.png';
+        function preRequest(options) {
+          options.screenshot = { path }; /* eslint no-param-reassign: 0 */
+          return Promise.resolve(true);
+        }
+        assert.doesNotThrow(() => {
+          crawler.queue({ url: URL1, preRequest });
+        });
+        return crawler.onIdle()
+          .then(() => {
+            const { screenshot } = Crawler.prototype.crawl.firstCall.thisValue._options;
+            assert.deepEqual(screenshot, { path });
+          });
+      });
+
       it('crawls when the requested domain is allowed', () => {
         assert.doesNotThrow(() => {
           crawler.queue({ url: URL1, allowedDomains: ['example.com', 'example.net'] });
