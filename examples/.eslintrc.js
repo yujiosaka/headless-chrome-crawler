@@ -1,8 +1,7 @@
 module.exports = {
   "extends": "../.eslintrc.js",
-  'globals': {
+  "globals": {
     '$': true,
-    'window': true,
   },
   "rules": {
     "import/no-unresolved": 0,
