@@ -8,6 +8,7 @@ Crawlers based on simple requests to HTML files are generally fast. However, it 
 Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler provides [simple APIs](#api-reference) to manupluate Headless Chrome and allows you to crawl these dynamic websites with the following features:
 
 * Configure concurrency, delay and retry
+* Breadth-first search (BFS) to automatically following links
 * Pluggable cache such as [Redis](https://redis.io) to skip duplicate requests
 * Pause at the max request and resume at any time
 * Insert [jQuery](https://jquery.com) automatically for scraping
@@ -188,6 +189,7 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
 
 * `options` <[Object]>
   * `url` <[String]> Url to navigate to. The url should include scheme, e.g. `https://`.
+  * `maxDepth` <[number]> Maximum depth for the crawler to follow links automatically, default to 1. Leave default to disable following links.
   * `priority` <[number]> Basic priority of queues, defaults to `1`. Priority with larger number is preferred.
   * `allowedDomains` <[Array]> List of domains allowed to request. `www.example.com` will be allowed if `example.com` is listed.
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, `maxConcurrency` option must be `1`.
@@ -213,6 +215,7 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
       * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
       * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
       * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
+      * `links` <[Array]> List of links found in the requested page.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
 
