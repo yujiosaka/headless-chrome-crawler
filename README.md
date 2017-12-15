@@ -370,7 +370,7 @@ HCCrawler.launch({ cache: new FsCache({ file: FILE }) });
 // ...
 ```
 
-## Debugging tips
+## Tips
 
 ### Launch options
 
@@ -378,6 +378,12 @@ HCCrawler.launch({ cache: new FsCache({ file: FILE }) });
 
 ```js
 HCCrawler.launch({ headless: false, slowMo: 10 });
+```
+
+Also, the `args` option is passed to the browser instance. List of Chromium flags can be found [here](http://peter.sh/experiments/chromium-command-line-switches/). Setting the `--disable-web-security` flag is useful for crawling. If the flag is set true, links within iframes are collected as those of parent frames. If it's not, the iframes's sources are collected as the parent frames' links.
+
+```js
+HCCrawler.launch({ args: ['--disable-web-security'] });
 ```
 
 ### Enable debug logging
