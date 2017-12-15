@@ -8,7 +8,7 @@ Crawlers based on simple requests to HTML files are generally fast. However, it 
 Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler provides [simple APIs](#api-reference) to manupluate Headless Chrome and allows you to crawl these dynamic websites with the following features:
 
 * Configure concurrency, delay and retry
-* Breadth-first search (BFS) to automatically following links
+* Breadth-first search (BFS) to automatically follow links
 * Pluggable cache such as [Redis](https://redis.io) to skip duplicate requests
 * Pause at the max request and resume at any time
 * Insert [jQuery](https://jquery.com) automatically for scraping
