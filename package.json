@@ -42,7 +42,9 @@
     "crawling",
     "jquery",
     "promise",
-    "puppeteer"
+    "puppeteer",
+    "scraper",
+    "scraping"
   ],
   "engines": {
     "node": ">=6.4.0"
