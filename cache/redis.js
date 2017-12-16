@@ -1,9 +1,13 @@
 const BaseCache = require('./base');
 const redis = require('redis');
 
+/**
+ * @implements {BaseCache}
+ */
 class RedisCache extends BaseCache {
   /**
    * @override
+   * @return {Promise}
    */
   init() {
     this._client = redis.createClient(this._settings);
@@ -11,6 +15,7 @@ class RedisCache extends BaseCache {
   }
 
   /**
+   * @return {Promise}
    * @override
    */
   clear() {
@@ -26,6 +31,7 @@ class RedisCache extends BaseCache {
   }
 
   /**
+   * @return {Promise}
    * @override
    */
   close() {
@@ -34,6 +40,8 @@ class RedisCache extends BaseCache {
   }
 
   /**
+   * @param {!string} key
+   * @return {Promise}
    * @override
    */
   exists(key) {
@@ -49,6 +57,8 @@ class RedisCache extends BaseCache {
   }
 
   /**
+   * @param {!string} key
+   * @return {Promise}
    * @override
    */
   set(key) {
@@ -64,6 +74,8 @@ class RedisCache extends BaseCache {
   }
 
   /**
+   * @param {!string} key
+   * @return {Promise}
    * @override
    */
   remove(key) {
