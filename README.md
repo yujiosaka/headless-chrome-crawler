@@ -142,13 +142,13 @@ HCCrawler.launch({
   * `persistCache` <[boolean]> Whether to persist cache on closing or disconnecting from the browser, defaults to `false`.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
-This method connects to an existing Chromium instance. The following options are passed to [puppeteer.connect([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
+This method connects to an existing Chromium instance. The following options are passed to [puppeteer.connect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
 
 ```
 browserWSEndpoint, ignoreHTTPSErrors
 ```
 
-Also, the following options can be set as default values when [crawler.queue([options])](#crawlerqueueoptions) are executed.
+Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
 
 ```
 url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, shouldRequest, evaluatePage, onSuccess, onError
@@ -165,13 +165,13 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `false`.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
-The method launches a HeadlessChrome/Chromium instance. The following options are passed to [puppeteer.launch([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
+The method launches a HeadlessChrome/Chromium instance. The following options are passed to [puppeteer.launch()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
 
 ```
 ignoreHTTPSErrors, headless, executablePath, slowMo, args, handleSIGINT, handleSIGTERM, handleSIGHUP, timeout, dumpio, userDataDir, env, devtools
 ```
 
-Also, the following options can be set as default values when [crawler.queue([options])](#crawlerqueueoptions) are executed.
+Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
 
 ```
 url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, shouldRequest, evaluatePage, onSuccess, onError
@@ -198,12 +198,12 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
   * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
   * `device` <[String]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
   * `username` <[String]> Username for basic authentication. pass `null` if it's not necessary.
-  * `screenshot` <[Object]> Screenshot option, defaults to `null`. This option is passed to [Puppeteer's page.screenshot([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagescreenshotoptions). Pass `null` or leave default to disable screenshot.
+  * `screenshot` <[Object]> Screenshot option, defaults to `null`. This option is passed to [Puppeteer's page.screenshot()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagescreenshotoptions). Pass `null` or leave default to disable screenshot.
   * `password` <[String]> Password for basic authentication. pass `null` if it's not necessary.
   * `userAgent` <[String]> User agent string to override in this page.
   * `extraHeaders` <[Object]> An object containing additional headers to be sent with every request. All header values must be strings.
   * `preRequest(options)` <[Function]> Function to do anything like modifying `options` before each request. You can also return `false` if you want to skip the request.
-    * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
+    * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
   * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
     * `response` <[Object]>
@@ -212,7 +212,7 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
         * `status` <[String]> status code of the request.
         * `url` <[String]> Last requested url.
         * `headers` <[Object]> Response headers.
-      * `options` <[Object]> [crawler.queue([options])](#crawlerqueueoptions)'s options with default values.
+      * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
       * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
       * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
       * `links` <[Array]> List of links found in the requested page.
@@ -221,7 +221,7 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
 
 > **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
 
-The following options are passed to [Puppeteer's page.goto(url, options)](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s options'.
+The following options are passed to [Puppeteer's page.goto()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s options'.
 
 ```
 timeout, waitUntil
@@ -231,7 +231,7 @@ The options can be either an object, an array, or a string. When it's an array, 
 
 #### crawler.setMaxRequest(maxRequest)
 
-This method allows you to modify `maxRequest` option you passed to [HCCrawler.connect([options])](#hccrawlerconnectoptions) or [HCCrawler.launch([options])](#hccrawlerlaunchoptions).
+This method allows you to modify `maxRequest` option you passed to [HCCrawler.connect()](#hccrawlerconnectoptions) or [HCCrawler.launch()](#hccrawlerlaunchoptions).
 
 #### crawler.pause()
 
@@ -293,7 +293,7 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 
 ### class: SessionCache
 
-`SessionCache` is the [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s default `cache` option. By default, the crawler remembers already requested urls on its memory. Pass `null` to the option in order to disable it.
+`SessionCache` is the [HCCrawler.connect()](#hccrawlerconnectoptions)'s default `cache` option. By default, the crawler remembers already requested urls on its memory. Pass `null` to the option in order to disable it.
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
@@ -305,9 +305,9 @@ HCCrawler.launch({ cache: null });
 
 ### class: RedisCache
 
-Passing a `RedisCache` object to the [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s `cache` options allows you to persist requested urls in Redis and prevents from requesting same urls in a distributed servers' environment. It also works well with its `persistCache` option to be true.
+Passing a `RedisCache` object to the [HCCrawler.connect()](#hccrawlerconnectoptions)'s `cache` options allows you to persist requested urls in Redis and prevents from requesting same urls in a distributed servers' environment. It also works well with its `persistCache` option to be true.
 
-Its constructing options are passed to [NodeRedis's redis.createClient([options])](https://github.com/NodeRedis/node_redis#rediscreateclient)'s options.
+Its constructing options are passed to [NodeRedis's redis.createClient()](https://github.com/NodeRedis/node_redis#rediscreateclient)'s options.
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
@@ -324,7 +324,7 @@ HCCrawler.launch({
 
 ### class: BaseCache
 
-You can create your own cache by extending the [BaseCache's interfaces](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/cache/base.js) and pass its object to the [HCCrawler.connect([options])](#hccrawlerconnectoptions)'s `cache` options.
+You can create your own cache by extending the [BaseCache's interfaces](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/cache/base.js) and pass its object to the [HCCrawler.connect()](#hccrawlerconnectoptions)'s `cache` options.
 
 Here is an example of creating a file based cache.
 
@@ -374,13 +374,13 @@ HCCrawler.launch({ cache: new FsCache({ file: FILE }) });
 
 ### Launch options
 
-[HCCrawler.launch([options])](#hccrawlerlaunchoptions)'s options are passed to [puppeteer.launch([options])](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions). It may be useful to set the `headless` and `slowMo` options so that you can see what is going on.
+[HCCrawler.launch()](#hccrawlerlaunchoptions)'s options are passed to [puppeteer.launch()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions). It may be useful to set the `headless` and `slowMo` options so that you can see what is going on.
 
 ```js
 HCCrawler.launch({ headless: false, slowMo: 10 });
 ```
 
-Also, the `args` option is passed to the browser instance. List of Chromium flags can be found [here](http://peter.sh/experiments/chromium-command-line-switches/). Setting the `--disable-web-security` flag is useful for crawling. If the flag is set true, links within iframes are collected as those of parent frames. If it's not, the iframes's sources are collected as the parent frames' links.
+Also, the `args` option is passed to the browser instance. List of Chromium flags can be found [here](http://peter.sh/experiments/chromium-command-line-switches/). Passing `--disable-web-security` flag is useful for crawling. If the flag is set, links within iframes are collected as those of parent frames. If it's not, the source attributes of the iframes are collected as links.
 
 ```js
 HCCrawler.launch({ args: ['--disable-web-security'] });
