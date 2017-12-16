@@ -1,60 +1,54 @@
+/**
+ * @interface
+ */
 class BaseCache {
+  /**
+   * @param {!Object} settings
+   */
   constructor(settings) {
     this._settings = settings;
   }
 
   /**
-   * Initializing the cache storage
-   * @return {Promise} resolves when init operation completed
-   * @interface
+   * @return {Promise}
    */
   init() {
     throw new Error('Init is not overridden!');
   }
 
   /**
-   * Closing the cache storage
-   * @return {Promise} resolves when close operation completed
-   * @interface
+   * @return {Promise}
    */
   close() {
     throw new Error('Close is not overridden!');
   }
 
   /**
-   * Clearing the cache storage
-   * @return {Promise} resolves when clear operation completed
-   * @interface
+   * @return {Promise}
    */
   clear() {
     throw new Error('Clear is not overridden!');
   }
 
   /**
-   * Method to check whether the requested options already exists in the cache storage
-   * @param {string} key
-   * @return {Promise} resolves whether the requested options already exists
-   * @interface
+   * @param {!string} key
+   * @return {Promise}
    */
   exists() {
     throw new Error('Get is not overridden!');
   }
 
   /**
-   * Method to set the requested options to the cache storage
-   * @param {string} key
-   * @return {Promise} resolves when set operation completed
-   * @interface
+   * @param {!string} key
+   * @return {Promise}
    */
   set() {
     throw new Error('Set is not overridden!');
   }
 
   /**
-   * Method to remove already requested option from the cache storage
-   * @param {string} key
-   * @return {Promise} resolves when remove operation completed
-   * @interface
+   * @param {!string} key
+   * @return {Promise}
    */
   remove() {
     throw new Error('Remove is not overridden!');
