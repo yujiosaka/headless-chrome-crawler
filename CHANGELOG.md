@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-- Automatically collecting and following links.
+## [1.2.1] - 2017-12-16
+### Added
+
+- Automatically collect and follow links found in the requested page.
+- Support `maxDepth` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
 
 ## [1.2.1] - 2017-12-13
 ### Added
