@@ -1,13 +1,18 @@
-const { noop } = require('lodash');
+const { unlink, readFile } = require('fs');
 const assert = require('assert');
 const sinon = require('sinon');
 const HCCrawler = require('../');
 const RedisCache = require('../cache/redis');
+const CSVExporter = require('../exporter/csv');
+const JSONLineExporter = require('../exporter/json-line');
 const Crawler = require('../lib/crawler');
 
 const URL1 = 'http://www.example.com/';
 const URL2 = 'http://www.example.net/';
 const URL3 = 'http://www.example.org/';
+const CSV_FILE = './tmp/result.csv';
+const JSON_FILE = './tmp/result.json';
+const ENCODING = 'utf8';
 
 describe('HCCrawler', () => {
   let crawler;
@@ -44,25 +49,13 @@ describe('HCCrawler', () => {
 
       it('throws an error when queueing options without URL', () => {
         assert.throws(() => {
-          crawler.queue({ evaluatePage: noop, onSuccess: noop });
-        });
-      });
-
-      it('throws an error when queueing options without evaluatePage', () => {
-        assert.throws(() => {
-          crawler.queue({ url: URL1, onSuccess: noop });
-        });
-      });
-
-      it('throws an error when queueing options without onSuccess', () => {
-        assert.throws(() => {
-          crawler.queue({ url: URL1, evaluatePage: noop });
+          crawler.queue();
         });
       });
 
       it('crawls when queueing necessary options', () => {
         assert.doesNotThrow(() => {
-          crawler.queue({ url: URL1, evaluatePage: noop, onSuccess: noop });
+          crawler.queue({ url: URL1 });
         });
         return crawler.onIdle()
           .then(() => {
@@ -73,10 +66,7 @@ describe('HCCrawler', () => {
 
     context('when the crawler is launched with necessary options', () => {
       beforeEach(() => (
-        HCCrawler.launch({
-          evaluatePage: noop,
-          onSuccess: noop,
-        })
+        HCCrawler.launch()
           .then(_crawler => {
             crawler = _crawler;
           })
@@ -212,11 +202,7 @@ describe('HCCrawler', () => {
 
     context('when the crawler is launched with device option', () => {
       beforeEach(() => (
-        HCCrawler.launch({
-          evaluatePage: noop,
-          onSuccess: noop,
-          device: 'iPhone 6',
-        })
+        HCCrawler.launch({ device: 'iPhone 6' })
           .then(_crawler => {
             crawler = _crawler;
           })
@@ -238,11 +224,7 @@ describe('HCCrawler', () => {
 
     context('when the crawler is launched with maxDepth = 2', () => {
       beforeEach(() => (
-        HCCrawler.launch({
-          evaluatePage: noop,
-          onSuccess: noop,
-          maxDepth: 2,
-        })
+        HCCrawler.launch({ maxDepth: 2 })
           .then(_crawler => {
             crawler = _crawler;
           })
@@ -263,11 +245,7 @@ describe('HCCrawler', () => {
 
     context('when the crawler is launched with maxConcurrency = 1', () => {
       beforeEach(() => (
-        HCCrawler.launch({
-          evaluatePage: noop,
-          onSuccess: noop,
-          maxConcurrency: 1,
-        })
+        HCCrawler.launch({ maxConcurrency: 1 })
           .then(_crawler => {
             crawler = _crawler;
           })
@@ -303,12 +281,7 @@ describe('HCCrawler', () => {
 
     context('when the crawler is launched with maxRequest option', () => {
       beforeEach(() => (
-        HCCrawler.launch({
-          evaluatePage: noop,
-          onSuccess: noop,
-          maxConcurrency: 1,
-          maxRequest: 2,
-        })
+        HCCrawler.launch({ maxConcurrency: 1, maxRequest: 2 })
           .then(_crawler => {
             crawler = _crawler;
           })
@@ -346,13 +319,94 @@ describe('HCCrawler', () => {
       });
     });
 
+    context('when the crawler is launched with crawler option', () => {
+      function removeTemporaryFile(file) {
+        return new Promise(resolve => {
+          unlink(file, (() => void resolve()));
+        });
+      }
+
+      function readTemporaryFile(file) {
+        return new Promise((resolve, reject) => {
+          readFile(file, ENCODING, ((error, result) => {
+            if (error) return reject(error);
+            return resolve(result);
+          }));
+        });
+      }
+
+      afterEach(() => (
+        crawler.close()
+          .then(() => removeTemporaryFile(CSV_FILE))
+      ));
+
+      context('when the crawler is launched with exporter = CSVExporter', () => {
+        beforeEach(() => (
+          removeTemporaryFile(CSV_FILE)
+            .then(() => {
+              const exporter = new CSVExporter({
+                file: CSV_FILE,
+                fields: ['result.title'],
+              });
+              return HCCrawler.launch({ maxConcurrency: 1, exporter })
+                .then(_crawler => {
+                  crawler = _crawler;
+                });
+            })
+        ));
+
+        it('exports a CSV file', () => {
+          assert.doesNotThrow(() => {
+            crawler.queue(URL1);
+            crawler.queue(URL2);
+          });
+          return crawler.onIdle()
+            .then(() => readTemporaryFile(CSV_FILE))
+            .then(actual => {
+              const header = 'result.title\n';
+              const line1 = 'Example Domain\n';
+              const line2 = 'Example Domain\n';
+              const expected = header + line1 + line2;
+              assert.equal(actual, expected);
+            });
+        });
+      });
+
+      context('when the crawler is launched with exporter = JSONLineExporter', () => {
+        beforeEach(() => (
+          removeTemporaryFile(JSON_FILE)
+            .then(() => {
+              const exporter = new JSONLineExporter({
+                file: JSON_FILE,
+                fields: ['result.title'],
+              });
+              return HCCrawler.launch({ maxConcurrency: 1, exporter })
+                .then(_crawler => {
+                  crawler = _crawler;
+                });
+            })
+        ));
+
+        it('exports a json-line file', () => {
+          assert.doesNotThrow(() => {
+            crawler.queue(URL1);
+            crawler.queue(URL2);
+          });
+          return crawler.onIdle()
+            .then(() => readTemporaryFile(JSON_FILE))
+            .then(actual => {
+              const line1 = `${JSON.stringify({ result: { title: 'Example Domain' } })}\n`;
+              const line2 = `${JSON.stringify({ result: { title: 'Example Domain' } })}\n`;
+              const expected = line1 + line2;
+              assert.equal(actual, expected);
+            });
+        });
+      });
+    });
+
     context('when the crawler is launched with default cache', () => {
       beforeEach(() => (
-        HCCrawler.launch({
-          evaluatePage: noop,
-          onSuccess: noop,
-          maxConcurrency: 1,
-        })
+        HCCrawler.launch({ maxConcurrency: 1 })
           .then(_crawler => {
             crawler = _crawler;
           })
@@ -376,12 +430,7 @@ describe('HCCrawler', () => {
     context('when the crawler is launched with redis cache', () => {
       context('for the fist time with persistCache = true', () => {
         beforeEach(() => (
-          HCCrawler.launch({
-            evaluatePage: noop,
-            onSuccess: noop,
-            cache: new RedisCache(),
-            persistCache: true,
-          })
+          HCCrawler.launch({ cache: new RedisCache(), persistCache: true })
             .then(_crawler => {
               crawler = _crawler;
               return crawler.clearCache();
@@ -404,11 +453,7 @@ describe('HCCrawler', () => {
 
       context('for the second time', () => {
         beforeEach(() => (
-          HCCrawler.launch({
-            evaluatePage: noop,
-            onSuccess: noop,
-            cache: new RedisCache(),
-          })
+          HCCrawler.launch({ cache: new RedisCache() })
             .then(_crawler => {
               crawler = _crawler;
             })
@@ -431,12 +476,7 @@ describe('HCCrawler', () => {
 
     context('when the crawler is launched without cache', () => {
       beforeEach(() => (
-        HCCrawler.launch({
-          evaluatePage: noop,
-          onSuccess: noop,
-          maxConcurrency: 1,
-          cache: null,
-        })
+        HCCrawler.launch({ maxConcurrency: 1, cache: null })
           .then(_crawler => {
             crawler = _crawler;
           })
@@ -462,10 +502,7 @@ describe('HCCrawler', () => {
     beforeEach(() => {
       const error = new Error('Unexpected error occured while crawling!');
       sinon.stub(Crawler.prototype, 'crawl').returns(Promise.reject(error));
-      return HCCrawler.launch({
-        evaluatePage: noop,
-        onSuccess: noop,
-      })
+      return HCCrawler.launch()
         .then(_crawler => {
           crawler = _crawler;
         });

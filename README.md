@@ -9,11 +9,12 @@ Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chro
 
 * Configure concurrency, delay and retry
 * Breadth-first search (BFS) to automatically follow links
-* Pluggable cache such as [Redis](https://redis.io) to skip duplicate requests
+* Pluggable cache storages such as [Redis](https://redis.io) to skip duplicate requests
+* Support [CSV](https://tools.ietf.org/html/rfc4180) and [JSON Lines](http://jsonlines.org) formats for exporting results
 * Pause at the max request and resume at any time
 * Insert [jQuery](https://jquery.com) automatically for scraping
-* Save screenshot for the crawling evidence
-* Emulate device and user agent
+* Save screenshots for the crawling evidence
+* Emulate devices and user agents
 * Priority queue for crawling efficiency
 * Promise support
 
@@ -77,6 +78,7 @@ HCCrawler.launch({
 * [Pause at the max request and resume at any time](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/pause-resume.js)
 * [Emulate device and user agent](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/emulate-device.js)
 * [Redis cache to skip duplicate requests](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/redis-cache.js)
+* [Export a CSV file for crawled results](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/csv-exporter.js)
 * [Conditionally saving screenshots](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/conditional-screenshot.js)
 
 See [here](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/examples) for the full examples list. The examples can be run from the root folder as follows:
@@ -110,6 +112,9 @@ NODE_PATH=../ node examples/priority-queue.js
 * [class: SessionCache](#class-sessioncache)
 * [class: RedisCache](#class-rediscache)
 * [class: BaseCache](#class-basecache)
+* [class: CSVExporter](#class-csvexporter)
+* [class: JSONLineExporter](#class-jsonlineexporter)
+* [class: BaseExporter](#class-baseexporter)
 
 ### class: HCCrawler
 
@@ -305,7 +310,7 @@ HCCrawler.launch({ cache: null });
 
 ### class: RedisCache
 
-Passing a `RedisCache` object to the [HCCrawler.connect()](#hccrawlerconnectoptions)'s `cache` options allows you to persist requested urls in Redis and prevents from requesting same urls in a distributed servers' environment. It also works well with its `persistCache` option to be true.
+Passing a `RedisCache` object to the [HCCrawler.connect()](#hccrawlerconnectoptions)'s `cache` option allows you to persist requested urls in Redis and prevents from requesting same urls in a distributed servers' environment. It also works well with its `persistCache` option to be true.
 
 Its constructing options are passed to [NodeRedis's redis.createClient()](https://github.com/NodeRedis/node_redis#rediscreateclient)'s options.
 
@@ -324,51 +329,54 @@ HCCrawler.launch({
 
 ### class: BaseCache
 
-You can create your own cache by extending the [BaseCache's interfaces](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/cache/base.js) and pass its object to the [HCCrawler.connect()](#hccrawlerconnectoptions)'s `cache` options.
+You can create your own cache by extending the [BaseCache's interfaces](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/cache/base.js).
 
-Here is an example of creating a file based cache.
+See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/custom-cache.js) for example.
+
+### class: CSVExporter
+
+Both `file` and `fields` options are required. `separator` option is optional, defaults to `,`.
 
 ```js
-const fs = require('fs');
 const HCCrawler = require('headless-chrome-crawler');
-const BaseCache = require('headless-chrome-crawler/cache/base');
+const CSVExporter = require('headless-chrome-crawler/exporter/csv');
 
-const FILE = './tmp/fs-cache.json';
+const FILE = './tmp/result.csv';
 
-// Create a new cache by extending BaseCache interface
-class FsCache extends BaseCache {
-  init() {
-    fs.writeFileSync(this._settings.file, '{}');
-    return Promise.resolve();
-  }
-  clear() {
-    fs.unlinkSync(this._settings.file);
-    return Promise.resolve();
-  }
-  close() {
-    return Promise.resolve();
-  }
-  exists(key) {
-    const obj = JSON.parse(fs.readFileSync(this._settings.file));
-    return Promise.resolve(obj[key] || false);
-  }
-  set(key) {
-    const obj = JSON.parse(fs.readFileSync(this._settings.file));
-    obj[key] = true;
-    fs.writeFileSync(this._settings.file, JSON.stringify(obj));
-    return Promise.resolve();
-  }
-  remove(key) {
-    const obj = JSON.parse(fs.readFileSync(this._settings.file));
-    delete obj[key];
-    fs.writeFileSync(FILE, JSON.stringify(obj));
-    return Promise.resolve();
-  }
-}
+const exporter = new CSVExporter({
+  file: FILE,
+  fields: ['response.url', 'response.status', 'links.length'],
+  separator: '\t',
+});
 
-HCCrawler.launch({ cache: new FsCache({ file: FILE }) });
+HCCrawler.launch({ exporter })
 // ...
 ```
+
+### class: JSONLineExporter
+
+Only `file` option is required. You can also pass `fields` and `jsonReplacer` options. Passing `fields` option limits the fields of the results, and `jsonReplacer` is used for [JSON.stringify()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify)'s second argument, which is useful to sorts keys always in the same order.
+
+```js
+const HCCrawler = require('headless-chrome-crawler');
+const CSVExporter = require('headless-chrome-crawler/exporter/json-line');
+
+const FILE = './tmp/result.json';
+
+const exporter = new JSONLineExporter({
+  file: FILE,
+  fields: ['options', 'response'],
+});
+
+HCCrawler.launch({ exporter })
+// ...
+```
+
+### class: BaseExporter
+
+You can create your own exporter by extending the [BaseExporter's interfaces](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/exporter/base.js).
+
+See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/custom-exporter.js) for example.
 
 ## Tips
 
