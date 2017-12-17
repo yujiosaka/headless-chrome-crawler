@@ -6,7 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [1.2.1] - 2017-12-16
+## [1.2.3] - 2017-12-17
+
+### changed
+
+- Refactor by changing tye style of requiring cache directory.
+
+### Fixed
+
+- Fix a bug of starting too many crawlers more than maxConcurrency when requests fail.
+
+## [1.2.2] - 2017-12-16
 ### Added
 
 - Automatically collect and follow links found in the requested page.
