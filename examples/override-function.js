@@ -16,7 +16,7 @@ HCCrawler.launch({
         title: $('title').text(),
       })),
       onSuccess: (result => {
-        console.log(result);
+        console.log(`Got ${result.result.title} for ${result.options.url}.`);
       }),
     });
     crawler.onIdle()
