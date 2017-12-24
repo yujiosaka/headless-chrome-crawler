@@ -3,11 +3,8 @@ const HCCrawler = require('headless-chrome-crawler');
 const PATH = './tmp/';
 
 HCCrawler.launch({
-  evaluatePage: (() => ({
-    title: $('title').text(),
-  })),
   onSuccess: (result => {
-    console.log(`Screenshot is saved as ${PATH}${result.options.saveAs}`);
+    console.log(`Screenshot is saved as ${PATH}${result.options.saveAs} for ${result.options.url}.`);
   }),
   preRequest: (options => {
     if (!options.saveAs) return false; // Skip the request by returning false

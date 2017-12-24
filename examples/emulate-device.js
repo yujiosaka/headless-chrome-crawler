@@ -2,11 +2,10 @@ const HCCrawler = require('headless-chrome-crawler');
 
 HCCrawler.launch({
   evaluatePage: (() => ({
-    title: $('title').text(),
     userAgent: window.navigator.userAgent,
   })),
   onSuccess: (result => {
-    console.log(result);
+    console.log(`Emulated ${result.result.userAgent} for ${result.options.url}.`);
   }),
 })
   .then(crawler => {

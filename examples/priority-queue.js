@@ -2,11 +2,8 @@ const HCCrawler = require('headless-chrome-crawler');
 
 HCCrawler.launch({
   maxConcurrency: 1,
-  evaluatePage: (() => ({
-    title: $('title').text(),
-  })),
   onSuccess: (result => {
-    console.log(result);
+    console.log(`Requested ${result.options.url}.`);
   }),
 })
   .then(crawler => {

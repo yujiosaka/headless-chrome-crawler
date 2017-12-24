@@ -5,6 +5,7 @@ const {
   hash,
   generateKey,
   resolveUrl,
+  escapeQuotes,
   debugRequest,
   debugBrowser,
 } = require('../lib/helper');
@@ -101,6 +102,48 @@ describe('Helper', () => {
       const actual = resolveUrl('headless-chrome-crawler/settings', baseUrl);
       const expected = 'https://github.com/yujiosaka/headless-chrome-crawler/settings';
       assert.equal(actual, expected);
+    });
+  });
+
+  describe('Helper.escapeQuotes', () => {
+    context('when separator option is not set', () => {
+      it('does not escape value when no quote, comma or break is found', () => {
+        const actual = escapeQuotes('yujiosaka/headless-chrome-crawler');
+        const expected = 'yujiosaka/headless-chrome-crawler';
+        assert.equal(actual, expected);
+      });
+
+      it('escapes value when commas are found', () => {
+        const actual = escapeQuotes('Headless Chrome crawls with jQuery support, powered by Puppeteer');
+        const expected = '"Headless Chrome crawls with jQuery support, powered by Puppeteer"';
+        assert.equal(actual, expected);
+      });
+
+      it('escapes value when quotes are found', () => {
+        const actual = escapeQuotes('# or "npm i headless-chrome-crawler"');
+        const expected = '"# or ""npm i headless-chrome-crawler"""';
+        assert.equal(actual, expected);
+      });
+
+      it('escapes value when breaks are found', () => {
+        const actual = escapeQuotes('yujiosaka\nheadless-chrome-crawler');
+        const expected = '"yujiosaka\nheadless-chrome-crawler"';
+        assert.equal(actual, expected);
+      });
+    });
+
+    context('when separator is a tab', () => {
+      it('does not escape value when no quote, tab or break is found', () => {
+        const actual = escapeQuotes('Headless Chrome crawls with jQuery support, powered by Puppeteer', '\t');
+        const expected = 'Headless Chrome crawls with jQuery support, powered by Puppeteer';
+        assert.equal(actual, expected);
+      });
+
+      it('escapes value when tabs are found', () => {
+        const actual = escapeQuotes('Headless Chrome crawls with jQuery support\tpowered by Puppeteer', '\t');
+        const expected = '"Headless Chrome crawls with jQuery support\tpowered by Puppeteer"';
+        assert.equal(actual, expected);
+      });
     });
   });
 
