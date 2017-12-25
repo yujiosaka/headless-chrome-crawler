@@ -6,9 +6,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [1.2.3] - 2017-12-17
+## [1.2.4] - 2017-12-25
+### Added
 
-### changed
+- Support [CSV](https://tools.ietf.org/html/rfc4180) and [JSON Lines](http://jsonlines.org) formats for exporting results
+- Emit `requeststarted`, `requestskipped`, `requestfinished`, `requestfailed`, `maxdepthreached`, `maxrequestreached` and `disconnected` events.
+- Improve debug logs by tracing public APIs and events.
+
+### Changed
+
+- Allow `onSuccess` and `evaluatePage` options as `null`.
+- Change `crawler.isPaused`, `crawler.queueSize`, `crawler.pendingQueueSize` and `crawler.requestedCount` from read-only properties to methods.
+
+### Fixed
+
+- Fix a bug of ignoring maxDepth option.
+
+## [1.2.3] - 2017-12-17
+### Changed
 
 - Refactor by changing tye style of requiring cache directory.
 
