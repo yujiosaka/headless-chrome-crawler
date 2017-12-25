@@ -1,4 +1,5 @@
 const assert = require('assert');
+const { noop } = require('lodash');
 const {
   delay,
   jsonStableReplacer,
@@ -6,8 +7,9 @@ const {
   generateKey,
   resolveUrl,
   escapeQuotes,
-  debugRequest,
-  debugBrowser,
+  stringifyArgument,
+  debugConsole,
+  debugDialog,
 } = require('../lib/helper');
 
 describe('Helper', () => {
@@ -147,18 +149,68 @@ describe('Helper', () => {
     });
   });
 
-  describe('Helper.debugRequest', () => {
+  describe('Helper.stringifyArgument', () => {
+    it('stringifies undefined', () => {
+      const actual = stringifyArgument(undefined);
+      const expected = 'undefined';
+      assert.equal(actual, expected);
+    });
+
+    it('stringifies null', () => {
+      const actual = stringifyArgument(null);
+      const expected = 'null';
+      assert.equal(actual, expected);
+    });
+
+    it('stringifies boolean', () => {
+      const actual = stringifyArgument(false);
+      const expected = 'false';
+      assert.equal(actual, expected);
+    });
+
+    it('stringifies string', () => {
+      const actual = stringifyArgument('https://github.com/yujiosaka/headless-chrome-crawler');
+      const expected = "'https://github.com/yujiosaka/headless-chrome-crawler'";
+      assert.equal(actual, expected);
+    });
+
+    it('stringifies number', () => {
+      const actual = stringifyArgument(3);
+      const expected = '3';
+      assert.equal(actual, expected);
+    });
+
+    it('stringifies function', () => {
+      const actual = stringifyArgument(noop);
+      const expected = '[Function: noop]';
+      assert.equal(actual, expected);
+    });
+
+    it('stringifies object', () => {
+      const actual = stringifyArgument({
+        jQuery: false,
+        url: 'https://github.com/yujiosaka/headless-chrome-crawler',
+        retryCount: 3,
+        evaluatePage: noop,
+        cache: null,
+      });
+      const expected = "{ jQuery: false, url: 'https://github.com/yujiosaka/headless-chrome-crawler', retryCount: 3, evaluatePage: [Function: noop], cache: null }";
+      assert.equal(actual, expected);
+    });
+  });
+
+  describe('Helper.debugConsole', () => {
     it('does not throw an error', () => {
       assert.doesNotThrow(() => {
-        debugRequest('Start requesting https://github.com/yujiosaka/headless-chrome-crawler');
+        debugConsole('log init at https://github.com/yujiosaka/headless-chrome-crawler');
       });
     });
   });
 
-  describe('Helper.debugBrowser', () => {
+  describe('Helper.debugDialog', () => {
     it('does not throw an error', () => {
       assert.doesNotThrow(() => {
-        debugBrowser('Console log init https://github.com/yujiosaka/headless-chrome-crawler');
+        debugDialog('beforeUnload This page is asking you to confirm that you want to leave - data you have entered may not be saved. at https://github.com/yujiosaka/headless-chrome-crawler');
       });
     });
   });
