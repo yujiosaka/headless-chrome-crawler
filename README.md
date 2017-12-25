@@ -105,10 +105,17 @@ NODE_PATH=../ node examples/priority-queue.js
   * [crawler.version()](#crawlerversion)
   * [crawler.wsEndpoint()](#crawlerwsendpoint)
   * [crawler.onIdle()](#crawleronidle)
-  * [crawler.isPaused](#crawlerispaused)
-  * [crawler.queueSize](#crawlerqueuesize)
-  * [crawler.pendingQueueSize](#crawlerpendingqueuesize)
-  * [crawler.requestedCount](#crawlerrequestedcount)
+  * [crawler.isPaused()](#crawlerispaused)
+  * [crawler.queueSize()](#crawlerqueuesize)
+  * [crawler.pendingQueueSize()](#crawlerpendingqueuesize)
+  * [crawler.requestedCount()](#crawlerrequestedcount)
+  * [event: 'requeststarted'](#event-requeststarted)
+  * [event: 'requestskipped'](#event-requestskipped)
+  * [event: 'requestfinished'](#event-requestfinished)
+  * [event: 'requestfailed'](#event-requestfailed)
+  * [event: 'maxdepthreached'](#event-maxdepthreached)
+  * [event: 'maxrequestreached'](#event-maxrequestreached)
+  * [event: 'disconnected'](#event-disconnected)
 * [class: SessionCache](#class-sessioncache)
 * [class: RedisCache](#class-rediscache)
 * [class: BaseCache](#class-basecache)
@@ -278,23 +285,61 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 
 #### crawler.onIdle()
 
-- returns: <[Promise]> Promise resolved when queues become empty or paused.
+returns: <[Promise]> Promise resolved when queues become empty or paused.
 
-#### crawler.isPaused
+#### crawler.isPaused()
 
-* returns: <[boolean]> Whether the queue is paused. This property is read only.
+* returns: <[boolean]> Whether the queue is paused.
 
-#### crawler.queueSize
+#### crawler.queueSize()
 
-* returns: <[number]> The size of queues. This property is read only.
+* returns: <[number]> The size of queues.
 
-#### crawler.pendingQueueSize
+#### crawler.pendingQueueSize()
 
-* returns: <[number]> The size of pending queues. This property is read only.
+* returns: <[number]> The size of pending queues.
 
-#### crawler.requestedCount
+#### crawler.requestedCount()
 
-* returns: <[number]> The count of total requests. This property is read only.
+* returns: <[number]> The count of total requests.
+
+#### event: 'requeststarted'
+
+* `options` <[Object]>
+
+Emitted when a request started.
+
+#### event: 'requestskipped'
+
+* `options` <[Object]>
+
+Emitted when a request is skipped.
+
+#### event: 'requestfinished'
+
+* `options` <[Object]>
+
+Emitted when a request finished successfully.
+
+#### event: 'requestfailed'
+
+* `options` <[Object]>
+
+Emitted when a request failed.
+
+#### event: 'maxdepthreached'
+
+* `options` <[Object]>
+
+Emitted when a queue reached the [crawler.queue()](#crawlerqueueoptions)'s `maxDepth` option.
+
+#### event: 'maxrequestreached'
+
+Emitted when a queue reached the [HCCrawler.connect()](#hccrawlerconnectoptions) or [HCCrawler.launch()](#hccrawlerlaunchoptions)'s `maxRequest` option.
+
+#### event: 'disconnected'
+
+Emitted when the browser instance is disconnected.
 
 ### class: SessionCache
 
