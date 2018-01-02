@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Support `obeyRobotsTxt` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+
+### changed
+
+- Make `cache` to be required for [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions)'s options.
+- Provide `skipDuplicates` to remember and skip duplicate URLs, instead of passing `null` to `cache` option.
+- Modify `BaseCache` interface.
+
 ## [1.2.3] - 2017-12-17
 
 ### changed
