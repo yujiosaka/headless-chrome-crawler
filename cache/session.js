@@ -9,7 +9,7 @@ class SessionCache extends BaseCache {
    * @override
    */
   init() {
-    this._storage = {};
+    this._storage = new Map();
     return Promise.resolve();
   }
 
@@ -18,7 +18,7 @@ class SessionCache extends BaseCache {
    * @override
    */
   clear() {
-    this._storage = {};
+    this._storage.clear();
     return Promise.resolve();
   }
 
@@ -26,27 +26,25 @@ class SessionCache extends BaseCache {
    * @return {Promise}
    * @override
    */
-  close() {
-    this._storage = {};
-    return Promise.resolve();
-  }
+  close() {}
 
   /**
    * @param {!string} key
    * @return {Promise}
    * @override
    */
-  exists(key) {
-    return Promise.resolve(this._storage[key] || false);
+  get(key) {
+    return Promise.resolve(this._storage.get(key) || null);
   }
 
   /**
    * @param {!string} key
+   * @param {!string} value
    * @return {Promise}
    * @override
    */
-  set(key) {
-    this._storage[key] = true;
+  set(key, value) {
+    this._storage.set(key, value);
     return Promise.resolve();
   }
 
@@ -56,7 +54,7 @@ class SessionCache extends BaseCache {
    * @override
    */
   remove(key) {
-    delete this._storage[key];
+    delete this._storage.delete(key);
     return Promise.resolve();
   }
 }
