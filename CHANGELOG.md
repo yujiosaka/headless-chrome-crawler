@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Support `obeyRobotsTxt` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+- Support `persist` for [RedisCache](https://github.com/yujiosaka/headless-chrome-crawler#rediscache)'s constructing options.
 
 ### changed
 

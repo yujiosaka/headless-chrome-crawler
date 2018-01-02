@@ -3,28 +3,28 @@
  */
 class BaseCache {
   /**
-   * @param {!Object} settings
+   * @param {!Object=} settings
    */
   constructor(settings) {
-    this._settings = settings;
+    this._settings = settings || {};
   }
 
   /**
-   * @return {Promise}
+   * @return {!Promise}
    */
   init() {
     throw new Error('Init is not overridden!');
   }
 
   /**
-   * @return {Promise}
+   * @return {!Promise}
    */
   close() {
     throw new Error('Close is not overridden!');
   }
 
   /**
-   * @return {Promise}
+   * @return {!Promise}
    */
   clear() {
     throw new Error('Clear is not overridden!');
@@ -32,7 +32,7 @@ class BaseCache {
 
   /**
    * @param {!string} key
-   * @return {Promise}
+   * @return {!Promise}
    */
   get() {
     throw new Error('Get is not overridden!');
@@ -41,7 +41,7 @@ class BaseCache {
   /**
    * @param {!string} key
    * @param {!string} value
-   * @return {Promise}
+   * @return {!Promise}
    */
   set() {
     throw new Error('Set is not overridden!');
@@ -49,7 +49,7 @@ class BaseCache {
 
   /**
    * @param {!string} key
-   * @return {Promise}
+   * @return {!Promise}
    */
   remove() {
     throw new Error('Remove is not overridden!');
