@@ -16,6 +16,7 @@ Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chro
 * Save screenshots for the crawling evidence
 * Emulate devices and user agents
 * Priority queue for crawling efficiency
+* Obey [robots.txt](https://developers.google.com/search/reference/robots_txt)
 * Promise support
 
 ## Getting Started
@@ -150,8 +151,9 @@ HCCrawler.launch({
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
-  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object. Pass `null` if you don't want to skip duplicate requests.
-  * `persistCache` <[boolean]> Whether to persist cache on closing or disconnecting from the browser, defaults to `false`.
+  * `exporter` <[Exporter]> An exporter object which extends [BaseExporter](#class-baseexporter)'s interfaces to export result, default to `null`.
+  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object.
+  * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `false`.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
 This method connects to an existing Chromium instance. The following options are passed to [puppeteer.connect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
@@ -173,7 +175,8 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
-  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object. Pass `null` if you don't want to skip duplicate requests.
+  * `exporter` <[Exporter]> An exporter object which extends [BaseExporter](#class-baseexporter)'s interfaces to export result, default to `null`.
+  * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object.
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `false`.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
@@ -203,6 +206,8 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
   * `url` <[String]> Url to navigate to. The url should include scheme, e.g. `https://`.
   * `maxDepth` <[number]> Maximum depth for the crawler to follow links automatically, default to 1. Leave default to disable following links.
   * `priority` <[number]> Basic priority of queues, defaults to `1`. Priority with larger number is preferred.
+  * `skipDuplicates` <[boolean]> Whether to skip duplicate requests, default to `null`. The request is considered to be the same if `url`, `userAgent`, `device` and `extraHeaders` are strictly the same.
+  * `obeyRobotsTxt` <[boolean]> Whether to obey [robots.txt](https://developers.google.com/search/reference/robots_txt), default to `true`.
   * `allowedDomains` <[Array]> List of domains allowed to request. `www.example.com` will be allowed if `example.com` is listed.
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, `maxConcurrency` option must be `1`.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.

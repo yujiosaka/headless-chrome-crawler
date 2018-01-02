@@ -17,13 +17,13 @@ class FsCache extends BaseCache {
   close() {
     return Promise.resolve();
   }
-  exists(key) {
+  get(key) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
-    return Promise.resolve(obj[key] || false);
+    return Promise.resolve(obj[key] || null);
   }
-  set(key) {
+  set(key, value) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
-    obj[key] = true;
+    obj[key] = value;
     fs.writeFileSync(this._settings.file, JSON.stringify(obj));
     return Promise.resolve();
   }
