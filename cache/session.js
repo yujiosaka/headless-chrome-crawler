@@ -5,7 +5,7 @@ const BaseCache = require('./base');
  */
 class SessionCache extends BaseCache {
   /**
-   * @return {Promise}
+   * @return {!Promise}
    * @override
    */
   init() {
@@ -14,7 +14,7 @@ class SessionCache extends BaseCache {
   }
 
   /**
-   * @return {Promise}
+   * @return {!Promise}
    * @override
    */
   clear() {
@@ -23,14 +23,14 @@ class SessionCache extends BaseCache {
   }
 
   /**
-   * @return {Promise}
+   * @return {!Promise}
    * @override
    */
   close() {}
 
   /**
    * @param {!string} key
-   * @return {Promise}
+   * @return {!Promise}
    * @override
    */
   get(key) {
@@ -40,7 +40,7 @@ class SessionCache extends BaseCache {
   /**
    * @param {!string} key
    * @param {!string} value
-   * @return {Promise}
+   * @return {!Promise}
    * @override
    */
   set(key, value) {
@@ -50,7 +50,7 @@ class SessionCache extends BaseCache {
 
   /**
    * @param {!string} key
-   * @return {Promise}
+   * @return {!Promise}
    * @override
    */
   remove(key) {
