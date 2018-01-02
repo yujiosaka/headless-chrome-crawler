@@ -203,21 +203,21 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
 #### crawler.queue([options])
 
 * `options` <[Object]>
-  * `url` <[String]> Url to navigate to. The url should include scheme, e.g. `https://`.
+  * `url` <[string]> Url to navigate to. The url should include scheme, e.g. `https://`.
   * `maxDepth` <[number]> Maximum depth for the crawler to follow links automatically, default to 1. Leave default to disable following links.
   * `priority` <[number]> Basic priority of queues, defaults to `1`. Priority with larger number is preferred.
   * `skipDuplicates` <[boolean]> Whether to skip duplicate requests, default to `null`. The request is considered to be the same if `url`, `userAgent`, `device` and `extraHeaders` are strictly the same.
   * `obeyRobotsTxt` <[boolean]> Whether to obey [robots.txt](https://developers.google.com/search/reference/robots_txt), default to `true`.
-  * `allowedDomains` <[Array]> List of domains allowed to request. `www.example.com` will be allowed if `example.com` is listed.
+  * `allowedDomains` <[Array<string>]> List of domains allowed to request. `www.example.com` will be allowed if `example.com` is listed.
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, `maxConcurrency` option must be `1`.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
   * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
-  * `device` <[String]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
-  * `username` <[String]> Username for basic authentication. pass `null` if it's not necessary.
+  * `device` <[string]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
+  * `username` <[string]> Username for basic authentication. pass `null` if it's not necessary.
   * `screenshot` <[Object]> Screenshot option, defaults to `null`. This option is passed to [Puppeteer's page.screenshot()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagescreenshotoptions). Pass `null` or leave default to disable screenshot.
-  * `password` <[String]> Password for basic authentication. pass `null` if it's not necessary.
-  * `userAgent` <[String]> User agent string to override in this page.
+  * `password` <[string]> Password for basic authentication. pass `null` if it's not necessary.
+  * `userAgent` <[string]> User agent string to override in this page.
   * `extraHeaders` <[Object]> An object containing additional headers to be sent with every request. All header values must be strings.
   * `preRequest(options)` <[Function]> Function to do anything like modifying `options` before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
@@ -226,8 +226,8 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
     * `response` <[Object]>
       * `response` <[Object]>
         * `ok` <[boolean]> whether the status code in the range 200-299 or not.
-        * `status` <[String]> status code of the request.
-        * `url` <[String]> Last requested url.
+        * `status` <[string]> status code of the request.
+        * `url` <[string]> Last requested url.
         * `headers` <[Object]> Response headers.
       * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
       * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
@@ -348,7 +348,7 @@ Emitted when the browser instance is disconnected.
 
 ### class: SessionCache
 
-`SessionCache` is the [HCCrawler.connect()](#hccrawlerconnectoptions)'s default `cache` option. By default, the crawler remembers already requested urls on its memory. Pass `null` to the option in order to disable it.
+`SessionCache` is the [HCCrawler.connect()](#hccrawlerconnectoptions)'s default `cache` option. By default, the crawler remembers already requested urls on its memory.
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
@@ -360,9 +360,12 @@ HCCrawler.launch({ cache: null });
 
 ### class: RedisCache
 
-Passing a `RedisCache` object to the [HCCrawler.connect()](#hccrawlerconnectoptions)'s `cache` option allows you to persist requested urls in Redis and prevents from requesting same urls in a distributed servers' environment. It also works well with its `persistCache` option to be true.
+* `options` <[Object]>
+  * `expire` <[number]> Seconds to expires cache after setting each value, default to `null`.
 
-Its constructing options are passed to [NodeRedis's redis.createClient()](https://github.com/NodeRedis/node_redis#rediscreateclient)'s options.
+Passing a `RedisCache` object to the [HCCrawler.connect()](#hccrawlerconnectoptions)'s `cache` option allows you to persist requested urls and [robots.txt](https://developers.google.com/search/reference/robots_txt) in [Redis](https://redis.io) so that it prevent from requesting same urls in a distributed servers' environment. It also works well with its `persistCache` option to be true.
+
+Other constructing options are passed to [NodeRedis's redis.createClient()](https://github.com/NodeRedis/node_redis#rediscreateclient)'s options.
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
@@ -385,7 +388,10 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/exam
 
 ### class: CSVExporter
 
-Both `file` and `fields` options are required. `separator` option is optional, defaults to `,`.
+* `options` <[Object]>
+  * `file` <[string]> File path to export output.
+  * `fields` <[Array<string>]> List of fields to be used for columns. This option is also used for the headers.
+  * `separator` <string> Character to separate columns.
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
@@ -405,7 +411,10 @@ HCCrawler.launch({ exporter })
 
 ### class: JSONLineExporter
 
-Only `file` option is required. You can also pass `fields` and `jsonReplacer` options. Passing `fields` option limits the fields of the results, and `jsonReplacer` is used for [JSON.stringify()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify)'s second argument, which is useful to sorts keys always in the same order.
+* `options` <[Object]>
+  * `file` <[string]> File path to export output.
+  * `fields` <[Array<string>]> List of fields to be filtered in json, defaults to `null`. Leave default not to filter fields.
+  * `jsonReplacer` <[Function]> Function that alters the behavior of the stringification process, defaults to `null`. This is useful to sorts keys always in the same order.
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
