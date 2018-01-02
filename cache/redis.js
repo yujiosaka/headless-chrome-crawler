@@ -44,26 +44,27 @@ class RedisCache extends BaseCache {
    * @return {Promise}
    * @override
    */
-  exists(key) {
+  get(key) {
     return new Promise((resolve, reject) => {
-      this._client.exists(key, (error, exists) => {
+      this._client.get(key, (error, value) => {
         if (error) {
           reject(error);
           return;
         }
-        resolve(exists);
+        resolve(value || null);
       });
     });
   }
 
   /**
    * @param {!string} key
+   * @param {!string} value
    * @return {Promise}
    * @override
    */
-  set(key) {
+  set(key, value) {
     return new Promise((resolve, reject) => {
-      this._client.set(key, '1', error => {
+      this._client.set(key, value, error => {
         if (error) {
           reject(error);
           return;

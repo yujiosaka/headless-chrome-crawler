@@ -7,6 +7,7 @@ const {
   generateKey,
   resolveUrl,
   escapeQuotes,
+  getRobotsUrl,
   stringifyArgument,
   debugConsole,
   debugDialog,
@@ -146,6 +147,32 @@ describe('Helper', () => {
         const expected = '"Headless Chrome crawls with jQuery support\tpowered by Puppeteer"';
         assert.equal(actual, expected);
       });
+    });
+  });
+
+  describe('Helper.getRobotsUrl', () => {
+    it('locates robots.txt for standard http URL', () => {
+      const actual = getRobotsUrl('http://example.com/');
+      const expected = 'http://example.com/robots.txt';
+      assert.equal(actual, expected);
+    });
+
+    it('locates robots.txt for standard https URL', () => {
+      const actual = getRobotsUrl('https://example.com/');
+      const expected = 'https://example.com/robots.txt';
+      assert.equal(actual, expected);
+    });
+
+    it('locates robots.txt for non-standard http URL', () => {
+      const actual = getRobotsUrl('https://example.com:8080/');
+      const expected = 'https://example.com:8080/robots.txt';
+      assert.equal(actual, expected);
+    });
+
+    it('locates robots.txt for non-standard https URL', () => {
+      const actual = getRobotsUrl('https://example.com:8432/');
+      const expected = 'https://example.com:8432/robots.txt';
+      assert.equal(actual, expected);
     });
   });
 
