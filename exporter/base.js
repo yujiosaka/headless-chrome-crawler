@@ -6,7 +6,7 @@ const { createWriteStream } = require('fs');
  */
 class BaseExporter {
   /**
-   * @param {Object=} settings
+   * @param {!Object=} settings
    */
   constructor(settings) {
     this._settings = extend({ encoding: 'utf8' }, settings);
@@ -19,7 +19,7 @@ class BaseExporter {
   }
 
   /**
-   * @return {Promise}
+   * @return {!Promise}
    */
   onEnd() {
     return new Promise((resolve, reject) => {
