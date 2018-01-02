@@ -468,9 +468,9 @@ describe('HCCrawler', () => {
       });
     });
 
-    context('when the crawler is launched without cache', () => {
+    context('when the crawler is with skipDuplicates = false', () => {
       beforeEach(() => (
-        HCCrawler.launch({ maxConcurrency: 1, cache: null })
+        HCCrawler.launch({ maxConcurrency: 1, skipDuplicates: false })
           .then(_crawler => {
             crawler = _crawler;
           })

@@ -3,21 +3,22 @@ const SessionCache = require('../cache/session');
 const RedisCache = require('../cache/redis');
 
 const KEY = '35aa17374c';
+const VALUE = '1';
 
 describe('Cache', () => {
   let cache;
 
   function itPassesTestSuits() {
     it('passes test suites', () => (
-      cache.set(KEY)
-        .then(() => cache.exists(KEY))
-        .then(exists => void assert.ok(exists))
+      cache.set(KEY, VALUE)
+        .then(() => cache.get(KEY))
+        .then(get => void assert.equal(get, VALUE))
         .then(() => cache.remove(KEY))
-        .then(() => cache.exists(KEY))
-        .then(exists => void assert.ok(!exists))
-        .then(() => cache.set(KEY))
+        .then(() => cache.get(KEY))
+        .then(get => void assert.equal(get, null))
+        .then(() => cache.set(KEY, VALUE))
         .then(() => cache.clear())
-        .then(exists => void assert.ok(!exists))
+        .then(get => void assert.equal(get, null))
     ));
   }
 

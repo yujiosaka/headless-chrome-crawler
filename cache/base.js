@@ -34,12 +34,13 @@ class BaseCache {
    * @param {!string} key
    * @return {Promise}
    */
-  exists() {
+  get() {
     throw new Error('Get is not overridden!');
   }
 
   /**
    * @param {!string} key
+   * @param {!string} value
    * @return {Promise}
    */
   set() {
