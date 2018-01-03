@@ -10,5 +10,6 @@ module.exports = {
     "no-console": 0,
     "no-void": 0,
     "no-param-reassign": 0,
+    "no-bitwise": 0,
   },
 }

@@ -8,6 +8,7 @@ const {
   resolveUrl,
   escapeQuotes,
   getRobotsUrl,
+  lowerBound,
   stringifyArgument,
   debugConsole,
   debugDialog,
@@ -172,6 +173,44 @@ describe('Helper', () => {
     it('locates robots.txt for non-standard https URL', () => {
       const actual = getRobotsUrl('https://example.com:8432/');
       const expected = 'https://example.com:8432/robots.txt';
+      assert.equal(actual, expected);
+    });
+  });
+
+  describe('Helper.lowerBound', () => {
+    it('returns the first index for positive values', () => {
+      const queue = [
+        { priority: 4 },
+        { priority: 3 },
+        { priority: 1 },
+      ];
+      const item = { priority: 2 };
+      const actual = lowerBound(queue, item, (a, b) => b.priority - a.priority);
+      const expected = 2;
+      assert.equal(actual, expected);
+    });
+
+    it('returns the first index for negative values', () => {
+      const queue = [
+        { priority: -1 },
+        { priority: -2 },
+        { priority: -4 },
+      ];
+      const item = { priority: -3 };
+      const actual = lowerBound(queue, item, (a, b) => b.priority - a.priority);
+      const expected = 2;
+      assert.equal(actual, expected);
+    });
+
+    it('returns the first index for mixed values', () => {
+      const queue = [
+        { priority: 1 },
+        { priority: 0 },
+        { priority: -2 },
+      ];
+      const item = { priority: -1 };
+      const actual = lowerBound(queue, item, (a, b) => b.priority - a.priority);
+      const expected = 2;
       assert.equal(actual, expected);
     });
   });

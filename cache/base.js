@@ -49,6 +49,32 @@ class BaseCache {
 
   /**
    * @param {!string} key
+   * @param {!string} value
+   * @param {!number=} priority
+   * @return {!Promise}
+   */
+  enqueue() {
+    throw new Error('Enqueue is not overridden!');
+  }
+
+  /**
+   * @param {!string} key
+   * @return {!Promise}
+   */
+  dequeue() {
+    throw new Error('Dequeue is not overridden!');
+  }
+
+  /**
+   * @param {!string} key
+   * @return {!Promise<!number>}
+   */
+  size() {
+    throw new Error('Size is not overridden!');
+  }
+
+  /**
+   * @param {!string} key
    * @return {!Promise}
    */
   remove() {

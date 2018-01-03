@@ -113,6 +113,7 @@ NODE_PATH=../ node examples/priority-queue.js
   * [event: 'requeststarted'](#event-requeststarted)
   * [event: 'requestskipped'](#event-requestskipped)
   * [event: 'requestfinished'](#event-requestfinished)
+  * [event: 'requestretried'](#event-requestretried)
   * [event: 'requestfailed'](#event-requestfailed)
   * [event: 'maxdepthreached'](#event-maxdepthreached)
   * [event: 'maxrequestreached'](#event-maxrequestreached)
@@ -325,6 +326,12 @@ Emitted when a request is skipped.
 * `options` <[Object]>
 
 Emitted when a request finished successfully.
+
+#### event: 'requestretried'
+
+* `options` <[Object]>
+
+Emitted when a request is retried.
 
 #### event: 'requestfailed'
 
