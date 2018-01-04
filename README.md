@@ -168,7 +168,7 @@ Also, the following options can be set as default values when [crawler.queue()](
 url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, shouldRequest, evaluatePage, onSuccess, onError
 ```
 
-> **Note**: In practice, setting the options every time you queue equests is not only redundant but also slow. Therefore, it's recommended to set the default values and override them depending on the necessity.
+> **Note**: In practice, setting the options every time you queue equests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
 
 #### HCCrawler.launch([options])
 
@@ -192,7 +192,7 @@ Also, the following options can be set as default values when [crawler.queue()](
 url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, shouldRequest, evaluatePage, onSuccess, onError
 ```
 
-> **Note**: In practice, setting the options every time you queue the requests is not only redundant but also slow. Therefore, it's recommended to set the default values and override them depending on the necessity.
+> **Note**: In practice, setting the options every time you queue the requests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
 
 #### HCCrawler.executablePath()
 
