@@ -1,6 +1,7 @@
 const { unlink, readFile } = require('fs');
 const assert = require('assert');
 const sinon = require('sinon');
+const { noop } = require('lodash');
 const HCCrawler = require('../');
 const RedisCache = require('../cache/redis');
 const CSVExporter = require('../exporter/csv');
@@ -21,7 +22,7 @@ describe('HCCrawler', () => {
     Crawler.prototype.crawl.restore();
   });
 
-  context('when crawling does not fails', () => {
+  context('when crawling does not fail', () => {
     beforeEach(() => {
       sinon.stub(Crawler.prototype, 'crawl').returns(Promise.resolve({
         options: {},
@@ -113,6 +114,12 @@ describe('HCCrawler', () => {
           });
       });
 
+      it('throws an error when overriding onSuccess', () => {
+        assert.throws(() => {
+          crawler.queue({ url: URL1, onSuccess: noop });
+        });
+      });
+
       it('throws an error when queueing options with unavailable device', () => {
         assert.throws(() => {
           crawler.queue({ url: URL1, device: 'do-not-exist' });
@@ -125,80 +132,116 @@ describe('HCCrawler', () => {
         });
       });
 
-      it('does not skip crawling when queueing options with preRequest returns true', () => {
-        function preRequest() {
-          return Promise.resolve(true);
-        }
-        let requestskipped = false;
-        crawler.on('requestskipped', () => { requestskipped = true; });
-        crawler.queue({ url: URL1, preRequest });
-        return crawler.onIdle()
-          .then(() => {
-            assert.equal(requestskipped, false);
-            assert.equal(crawler.requestedCount(), 1);
-          });
-      });
-
-      it('skips crawling when queueing options with preRequest returns false', () => {
-        function preRequest() {
-          return Promise.resolve(false);
-        }
-        let requestskipped = false;
-        crawler.on('requestskipped', () => { requestskipped = true; });
-        crawler.queue({ url: URL1, preRequest });
-        return crawler.onIdle()
-          .then(() => {
-            assert.equal(requestskipped, true);
-            assert.equal(crawler.requestedCount(), 0);
-          });
-      });
-
-      it('can modify options by preRequest option', () => {
-        const path = './tmp/example.png';
-        function preRequest(options) {
-          options.screenshot = { path };
-          return Promise.resolve(true);
-        }
-        crawler.queue({ url: URL1, preRequest });
-        return crawler.onIdle()
-          .then(() => {
-            const { screenshot } = Crawler.prototype.crawl.firstCall.thisValue._options;
-            assert.deepEqual(screenshot, { path });
-          });
-      });
-
       it('crawls when the requested domain is allowed', () => {
-        let requestskipped = false;
-        crawler.on('requestskipped', () => { requestskipped = true; });
+        let requestskipped = 0;
+        crawler.on('requestskipped', () => { requestskipped += 1; });
         crawler.queue({ url: URL1, allowedDomains: ['example.com', 'example.net'] });
         return crawler.onIdle()
           .then(() => {
-            assert.equal(requestskipped, false);
+            assert.equal(requestskipped, 0);
             assert.equal(crawler.requestedCount(), 1);
           });
       });
 
       it('skips crawling when the requested domain is not allowed', () => {
-        let requestskipped = false;
-        crawler.on('requestskipped', () => { requestskipped = true; });
+        let requestskipped = 0;
+        crawler.on('requestskipped', () => { requestskipped += 1; });
         crawler.queue({ url: URL1, allowedDomains: ['example.net', 'example.org'] });
         return crawler.onIdle()
           .then(() => {
-            assert.equal(requestskipped, true);
+            assert.equal(requestskipped, 1);
             assert.equal(crawler.requestedCount(), 0);
           });
       });
 
       it('emits request events', () => {
-        let requeststarted = false;
-        let requestfinished = false;
-        crawler.on('requeststarted', () => { requeststarted = true; });
-        crawler.on('requestfinished', () => { requestfinished = true; });
+        let requeststarted = 0;
+        let requestfinished = 0;
+        crawler.on('requeststarted', () => { requeststarted += 1; });
+        crawler.on('requestfinished', () => { requestfinished += 1; });
         crawler.queue(URL1);
         return crawler.onIdle()
           .then(() => {
-            assert.equal(requeststarted, true);
-            assert.equal(requestfinished, true);
+            assert.equal(requeststarted, 1);
+            assert.equal(requestfinished, 1);
+          });
+      });
+    });
+
+    context('when the crawler is launched with preRequest returns true', () => {
+      function preRequest() {
+        return true;
+      }
+
+      beforeEach(() => (
+        HCCrawler.launch({ preRequest })
+          .then(_crawler => {
+            crawler = _crawler;
+          })
+      ));
+
+      afterEach(() => crawler.close());
+
+      it('does not skip crawling', () => {
+        let requestskipped = 0;
+        crawler.on('requestskipped', () => { requestskipped += 1; });
+        crawler.queue(URL1);
+        return crawler.onIdle()
+          .then(() => {
+            assert.equal(requestskipped, 0);
+            assert.equal(crawler.requestedCount(), 1);
+          });
+      });
+    });
+
+    context('when the crawler is launched with preRequest returns false', () => {
+      function preRequest() {
+        return false;
+      }
+
+      beforeEach(() => (
+        HCCrawler.launch({ preRequest })
+          .then(_crawler => {
+            crawler = _crawler;
+          })
+      ));
+
+      afterEach(() => crawler.close());
+
+      it('skips crawling', () => {
+        let requestskipped = 0;
+        crawler.on('requestskipped', () => { requestskipped += 1; });
+        crawler.queue(URL1);
+        return crawler.onIdle()
+          .then(() => {
+            assert.equal(requestskipped, 1);
+            assert.equal(crawler.requestedCount(), 0);
+          });
+      });
+    });
+
+    context('when the crawler is launched with preRequest modifies options', () => {
+      const path = './tmp/example.png';
+      function preRequest(options) {
+        options.screenshot = { path };
+        return true;
+      }
+
+      beforeEach(() => (
+        HCCrawler.launch({ preRequest })
+          .then(_crawler => {
+            crawler = _crawler;
+          })
+      ));
+
+      afterEach(() => crawler.close());
+
+      it('modifies options', () => {
+        crawler.queue(URL1);
+        return crawler.onIdle()
+          .then(() => {
+            const { screenshot } = Crawler.prototype.crawl.firstCall.thisValue._options;
+            assert.deepEqual(screenshot, { path });
           });
       });
     });
@@ -234,12 +277,12 @@ describe('HCCrawler', () => {
       afterEach(() => crawler.close());
 
       it('automatically follows links', () => {
-        let maxdepthreached = false;
-        crawler.on('maxdepthreached', () => { maxdepthreached = true; });
+        let maxdepthreached = 0;
+        crawler.on('maxdepthreached', () => { maxdepthreached += 1; });
         crawler.queue(URL1);
         return crawler.onIdle()
           .then(() => {
-            assert.equal(maxdepthreached, true);
+            assert.equal(maxdepthreached, 1);
             assert.equal(crawler.requestedCount(), 2);
           });
       });
@@ -256,15 +299,13 @@ describe('HCCrawler', () => {
       afterEach(() => crawler.close());
 
       it('obeys priority order', () => {
-        crawler.queue({ url: URL1 });
-        crawler.queue({ url: URL2, priority: 1 });
-        crawler.queue({ url: URL3, priority: 2 });
+        crawler.queue({ url: URL1, priority: 1 });
+        crawler.queue({ url: URL2, priority: 2 });
         return crawler.onIdle()
           .then(() => {
-            assert.equal(crawler.requestedCount(), 3);
-            assert.equal(Crawler.prototype.crawl.firstCall.thisValue._options.url, URL1);
-            assert.equal(Crawler.prototype.crawl.secondCall.thisValue._options.url, URL3);
-            assert.equal(Crawler.prototype.crawl.thirdCall.thisValue._options.url, URL2);
+            assert.equal(crawler.requestedCount(), 2);
+            assert.equal(Crawler.prototype.crawl.firstCall.thisValue._options.url, URL2);
+            assert.equal(Crawler.prototype.crawl.secondCall.thisValue._options.url, URL1);
           });
       });
 
@@ -288,17 +329,21 @@ describe('HCCrawler', () => {
       afterEach(() => crawler.close());
 
       it('pauses at maxRequest option', () => {
-        let maxrequestreached = false;
-        crawler.on('maxrequestreached', () => { maxrequestreached = true; });
+        let maxrequestreached = 0;
+        crawler.on('maxrequestreached', () => { maxrequestreached += 1; });
         crawler.queue(URL1);
         crawler.queue(URL2);
         crawler.queue(URL3);
         return crawler.onIdle()
           .then(() => {
-            assert.equal(maxrequestreached, true);
+            assert.equal(maxrequestreached, 1);
             assert.equal(crawler.isPaused(), true);
-            assert.equal(crawler.queueSize(), 1);
             assert.equal(crawler.requestedCount(), 2);
+            assert.equal(crawler.pendingQueueSize(), 1);
+            return crawler.queueSize();
+          })
+          .then(size => {
+            assert.equal(size, 1);
           });
       });
 
@@ -309,16 +354,24 @@ describe('HCCrawler', () => {
         return crawler.onIdle()
           .then(() => {
             assert.equal(crawler.isPaused(), true);
-            assert.equal(crawler.queueSize(), 1);
+            assert.equal(crawler.requestedCount(), 2);
+            assert.equal(crawler.pendingQueueSize(), 1);
+            return crawler.queueSize();
+          })
+          .then(size => {
+            assert.equal(size, 1);
             crawler.setMaxRequest(4);
             crawler.resume();
-            assert.equal(crawler.isPaused(), false);
             return crawler.onIdle();
           })
           .then(() => {
             assert.equal(crawler.isPaused(), false);
-            assert.equal(crawler.queueSize(), 0);
             assert.equal(crawler.requestedCount(), 3);
+            assert.equal(crawler.pendingQueueSize(), 0);
+            return crawler.queueSize();
+          })
+          .then(size => {
+            assert.equal(size, 0);
           });
       });
     });
@@ -489,23 +542,47 @@ describe('HCCrawler', () => {
       });
     });
 
+    context('when the crawler is launched with onSuccess', () => {
+      const onSuccess = sinon.spy();
+
+      beforeEach(() => (
+        HCCrawler.launch({ onSuccess })
+          .then(_crawler => {
+            crawler = _crawler;
+          })
+      ));
+
+      afterEach(() => crawler.close());
+
+      it('does not skip crawling', () => {
+        crawler.queue(URL1);
+        return crawler.onIdle()
+          .then(() => {
+            assert.equal(crawler.requestedCount(), 1);
+            assert.equal(onSuccess.callCount, 1);
+          });
+      });
+    });
+
     it('emits disconnect event', () => {
-      let disconnected = false;
+      let disconnected = 0;
       return HCCrawler.launch()
         .then(_crawler => {
           crawler = _crawler;
         })
-        .then(() => void crawler.on('disconnected', () => { disconnected = true; }))
+        .then(() => void crawler.on('disconnected', () => { disconnected += 1; }))
         .then(() => crawler.close())
-        .then(() => void assert.equal(disconnected, true));
+        .then(() => void assert.equal(disconnected, 1));
     });
   });
 
   context('when crawling fails', () => {
+    const onError = sinon.spy();
+
     beforeEach(() => {
       const error = new Error('Unexpected error occured while crawling!');
       sinon.stub(Crawler.prototype, 'crawl').returns(Promise.reject(error));
-      return HCCrawler.launch()
+      return HCCrawler.launch({ onError })
         .then(_crawler => {
           crawler = _crawler;
         });
@@ -514,13 +591,17 @@ describe('HCCrawler', () => {
     afterEach(() => crawler.close());
 
     it('retries and gives up', () => {
-      let requestfailed = false;
-      crawler.on('requestfailed', () => { requestfailed = true; });
+      let requestretried = 0;
+      let requestfailed = 0;
+      crawler.on('requestretried', () => { requestretried += 1; });
+      crawler.on('requestfailed', () => { requestfailed += 1; });
       crawler.queue({ url: URL1, retryCount: 3, retryDelay: 100 });
       return crawler.onIdle()
         .then(() => {
-          assert.equal(requestfailed, true);
           assert.equal(crawler.requestedCount(), 1);
+          assert.equal(requestretried, 3);
+          assert.equal(requestfailed, 1);
+          assert.equal(onError.callCount, 1);
         });
     });
   });
