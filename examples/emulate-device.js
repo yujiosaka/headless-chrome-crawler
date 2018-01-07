@@ -1,6 +1,7 @@
 const HCCrawler = require('headless-chrome-crawler');
 
 HCCrawler.launch({
+  url: 'https://example.com/',
   evaluatePage: (() => ({
     userAgent: window.navigator.userAgent,
   })),
@@ -9,8 +10,8 @@ HCCrawler.launch({
   }),
 })
   .then(crawler => {
-    crawler.queue({ url: 'https://example.com/', device: 'Nexus 7' });
-    crawler.queue({ url: 'https://example.com/', userAgent: 'headless-chrome-crawler' }); // Only override userAgent
+    crawler.queue({ device: 'Nexus 7' });
+    crawler.queue({ userAgent: 'headless-chrome-crawler' }); // Only override userAgent
     crawler.onIdle()
       .then(() => crawler.close());
   });

@@ -1,5 +1,13 @@
-const BaseCache = require('./base');
 const redis = require('redis');
+const BaseCache = require('./base');
+
+const DEQUEUE_SCRIPT = `
+local queue = redis.call('ZREVRANGE', KEYS[1], 0, 0)[1]\n
+if (queue) then\n
+  redis.call('ZREM', KEYS[1], queue)\n
+end\n
+return queue\n
+`;
 
 /**
  * @implements {BaseCache}
@@ -46,12 +54,17 @@ class RedisCache extends BaseCache {
    */
   get(key) {
     return new Promise((resolve, reject) => {
-      this._client.get(key, (error, value) => {
+      this._client.get(key, (error, json) => {
         if (error) {
           reject(error);
           return;
         }
-        resolve(value || null);
+        try {
+          const value = JSON.parse(json || null);
+          resolve(value);
+        } catch (_error) {
+          reject(_error);
+        }
       });
     });
   }
@@ -64,7 +77,14 @@ class RedisCache extends BaseCache {
    */
   set(key, value) {
     return new Promise((resolve, reject) => {
-      this._client.set(key, value, error => {
+      let json;
+      try {
+        json = JSON.stringify(value);
+      } catch (error) {
+        reject(error);
+        return;
+      }
+      this._client.set(key, json, error => {
         if (error) {
           reject(error);
           return;
@@ -80,6 +100,81 @@ class RedisCache extends BaseCache {
           }
           resolve();
         });
+      });
+    });
+  }
+
+  /**
+   * @param {!string} key
+   * @param {!string} value
+   * @param {!number=} priority
+   * @return {!Promise}
+   * @override
+   */
+  enqueue(key, value, priority = 1) {
+    return new Promise((resolve, reject) => {
+      let json;
+      try {
+        json = JSON.stringify(value);
+      } catch (error) {
+        reject(error);
+        return;
+      }
+      this._client.zadd(key, priority, json, error => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        if (!this._settings.expire) {
+          resolve();
+          return;
+        }
+        this._client.expire(key, this._settings.expire, _error => {
+          if (_error) {
+            reject(_error);
+            return;
+          }
+          resolve();
+        });
+      });
+    });
+  }
+
+  /**
+   * @param {!string} key
+   * @return {!Promise}
+   * @override
+   */
+  dequeue(key) {
+    return new Promise((resolve, reject) => {
+      this._client.eval(DEQUEUE_SCRIPT, 1, key, (error, json) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        try {
+          const value = JSON.parse(json || null);
+          resolve(value);
+        } catch (_error) {
+          reject(_error);
+        }
+      });
+    });
+  }
+
+  /**
+   * @param {!string} key
+   * @return {!Promise<!number>}
+   * @override
+   */
+  size(key) {
+    return new Promise((resolve, reject) => {
+      this._client.zcount(key, '-inf', 'inf', (error, size) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        resolve(size || 0);
       });
     });
   }
