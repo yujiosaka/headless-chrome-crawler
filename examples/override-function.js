@@ -1,12 +1,11 @@
 const HCCrawler = require('headless-chrome-crawler');
 
 HCCrawler.launch({
-  // Global functions won't be called
   evaluatePage: (() => {
-    throw new Error('Evaluate page function is not overriden!');
+    throw new Error("Global functions won't be called");
   }),
-  onSuccess: (() => {
-    throw new Error('On sucess function is not overriden!');
+  onSuccess: (result => {
+    console.log(`Got ${result.result.title} for ${result.options.url}.`);
   }),
 })
   .then(crawler => {
@@ -15,9 +14,6 @@ HCCrawler.launch({
       evaluatePage: (() => ({
         title: $('title').text(),
       })),
-      onSuccess: (result => {
-        console.log(`Got ${result.result.title} for ${result.options.url}.`);
-      }),
     });
     crawler.onIdle()
       .then(() => crawler.close());
