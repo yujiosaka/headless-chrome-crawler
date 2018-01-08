@@ -9,7 +9,7 @@ Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chro
 
 * Configure concurrency, delay and retry
 * Breadth-first search (BFS) to automatically follow links
-* Pluggable cache storages such as [Redis](https://redis.io)
+* Pluggable cache storages such as [Redis](https://redis.io) for distributed setup
 * Support [CSV](https://tools.ietf.org/html/rfc4180) and [JSON Lines](http://jsonlines.org) formats for exporting results
 * Pause at the max request and resume at any time
 * Insert [jQuery](https://jquery.com) automatically for scraping
@@ -113,6 +113,7 @@ NODE_PATH=../ node examples/priority-queue.js
   * [event: 'requeststarted'](#event-requeststarted)
   * [event: 'requestskipped'](#event-requestskipped)
   * [event: 'requestfinished'](#event-requestfinished)
+  * [event: 'requestretried'](#event-requestretried)
   * [event: 'requestfailed'](#event-requestfailed)
   * [event: 'maxdepthreached'](#event-maxdepthreached)
   * [event: 'maxrequestreached'](#event-maxrequestreached)
@@ -154,6 +155,21 @@ HCCrawler.launch({
   * `exporter` <[Exporter]> An exporter object which extends [BaseExporter](#class-baseexporter)'s interfaces to export result, default to `null`.
   * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object.
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `false`.
+  * `preRequest(options)` <[Function]> Function to do anything like modifying `options` before each request. You can also return `false` if you want to skip the request.
+    * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
+  * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
+    * `response` <[Object]>
+      * `response` <[Object]>
+        * `ok` <[boolean]> whether the status code in the range 200-299 or not.
+        * `status` <[string]> status code of the request.
+        * `url` <[string]> Last requested url.
+        * `headers` <[Object]> Response headers.
+      * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
+      * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
+      * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
+      * `links` <[Array]> List of links found in the requested page.
+  * `onError(error)` <[Function]> Function to be called when request fails.
+    * `error` <[Error]> Error object.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
 This method connects to an existing Chromium instance. The following options are passed to [puppeteer.connect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
@@ -165,7 +181,7 @@ browserWSEndpoint, ignoreHTTPSErrors
 Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
 
 ```
-url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, shouldRequest, evaluatePage, onSuccess, onError
+url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, evaluatePage
 ```
 
 > **Note**: In practice, setting the options every time you queue equests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
@@ -178,6 +194,21 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
   * `exporter` <[Exporter]> An exporter object which extends [BaseExporter](#class-baseexporter)'s interfaces to export result, default to `null`.
   * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object.
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `false`.
+  * `preRequest(options)` <[Function]> Function to do anything like modifying `options` before each request. You can also return `false` if you want to skip the request.
+    * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
+  * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
+    * `response` <[Object]>
+      * `response` <[Object]>
+        * `ok` <[boolean]> whether the status code in the range 200-299 or not.
+        * `status` <[string]> status code of the request.
+        * `url` <[string]> Last requested url.
+        * `headers` <[Object]> Response headers.
+      * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
+      * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
+      * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
+      * `links` <[Array]> List of links found in the requested page.
+  * `onError(error)` <[Function]> Function to be called when request fails.
+    * `error` <[Error]> Error object.
 * returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
 
 The method launches a HeadlessChrome/Chromium instance. The following options are passed to [puppeteer.launch()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
@@ -189,7 +220,7 @@ ignoreHTTPSErrors, headless, executablePath, slowMo, args, handleSIGINT, handleS
 Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
 
 ```
-url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, shouldRequest, evaluatePage, onSuccess, onError
+url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, evaluatePage
 ```
 
 > **Note**: In practice, setting the options every time you queue the requests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
@@ -219,22 +250,7 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
   * `password` <[string]> Password for basic authentication. pass `null` if it's not necessary.
   * `userAgent` <[string]> User agent string to override in this page.
   * `extraHeaders` <[Object]> An object containing additional headers to be sent with every request. All header values must be strings.
-  * `preRequest(options)` <[Function]> Function to do anything like modifying `options` before each request. You can also return `false` if you want to skip the request.
-    * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
-  * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
-    * `response` <[Object]>
-      * `response` <[Object]>
-        * `ok` <[boolean]> whether the status code in the range 200-299 or not.
-        * `status` <[string]> status code of the request.
-        * `url` <[string]> Last requested url.
-        * `headers` <[Object]> Response headers.
-      * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
-      * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
-      * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
-      * `links` <[Array]> List of links found in the requested page.
-  * `onError(error)` <[Function]> Function to be called when request fails.
-    * `error` <[Error]> Error object.
 
 > **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
 
@@ -260,37 +276,37 @@ This method resumes processing queues. This method may be used after the crawler
 
 #### crawler.clearCache()
 
-returns: <[Promise]> Promise resolved when the cache is cleared.
+* returns: <[Promise]> Promise resolved when the cache is cleared.
 
 This method clears the cache when it's used.
 
 #### crawler.close()
 
-returns: <[Promise]> Promise resolved when ther browser is closed.
+* returns: <[Promise]> Promise resolved when ther browser is closed.
 
 See [Puppeteer's browser.close()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserclose) for more details.
 
 #### crawler.disconnect()
 
-returns: <[Promise]> Promise resolved when ther browser is disconnected.
+* returns: <[Promise]> Promise resolved when ther browser is disconnected.
 
 See [Puppeteer's browser.disconnect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserdisconnect) for more details.
 
 #### crawler.version()
 
-returns: <[Promise]> Promise resolved with HeadlessChrome/Chromium version.
+* returns: <[Promise]> Promise resolved with HeadlessChrome/Chromium version.
 
 See [Puppeteer's browser.version()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserversion) for more details.
 
 #### crawler.wsEndpoint()
 
-returns: <[Promise]> Promise resolved with websocket url.
+* returns: <[Promise]> Promise resolved with websocket url.
 
 See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserwsendpoint) for more details.
 
 #### crawler.onIdle()
 
-returns: <[Promise]> Promise resolved when queues become empty or paused.
+* returns: <[Promise]> Promise resolved when queues become empty or paused.
 
 #### crawler.isPaused()
 
@@ -298,7 +314,7 @@ returns: <[Promise]> Promise resolved when queues become empty or paused.
 
 #### crawler.queueSize()
 
-* returns: <[number]> The size of queues.
+* returns: <[Promise]> Promise resolves to the size of queues.
 
 #### crawler.pendingQueueSize()
 
@@ -325,6 +341,12 @@ Emitted when a request is skipped.
 * `options` <[Object]>
 
 Emitted when a request finished successfully.
+
+#### event: 'requestretried'
+
+* `options` <[Object]>
+
+Emitted when a request is retried.
 
 #### event: 'requestfailed'
 

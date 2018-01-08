@@ -2,7 +2,7 @@ const { inspect } = require('util');
 const HCCrawler = require('headless-chrome-crawler');
 const BaseExporter = require('headless-chrome-crawler/exporter/base');
 
-const FILE = './tmp/result.json';
+const FILE = './tmp/result';
 
 // Create a new exporter by extending BaseExporter interface
 class InspectExporter extends BaseExporter {
@@ -25,7 +25,7 @@ const exporter = new InspectExporter({
   depth: 1,
 });
 
-HCCrawler.launch({ exporter })
+HCCrawler.launch({ exporter, maxDepth: 2 })
   .then(crawler => {
     crawler.queue('https://example.com/');
     crawler.onIdle()
