@@ -262,7 +262,7 @@ The options can be either an object, an array, or a string. When it's an array, 
 
 #### crawler.setMaxRequest(maxRequest)
 
-This method allows you to modify `maxRequest` option you passed to [HCCrawler.connect()](#hccrawlerconnectoptions) or [HCCrawler.launch()](#hccrawlerlaunchoptions).
+* `maxRequest` <[number]> Modify `maxRequest` option you passed to [HCCrawler.connect()](#hccrawlerconnectoptions) or [HCCrawler.launch()](#hccrawlerlaunchoptions).
 
 #### crawler.pause()
 
@@ -312,7 +312,7 @@ See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer
 
 #### crawler.queueSize()
 
-* returns: <[Promise]> Promise resolves to the size of queues.
+* returns: <[Promise]<[number]>> Promise resolves to the size of queues.
 
 #### crawler.pendingQueueSize()
 
@@ -348,7 +348,7 @@ Emitted when a request is retried.
 
 #### event: 'requestfailed'
 
-* `options` <[Object]>
+* `error` <[Error]>
 
 Emitted when a request failed.
 
@@ -411,7 +411,7 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/exam
 * `options` <[Object]>
   * `file` <[string]> File path to export output.
   * `fields` <[Array]<[string]>> List of fields to be used for columns. This option is also used for the headers.
-  * `separator` <string> Character to separate columns.
+  * `separator` <[string]> Character to separate columns.
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
