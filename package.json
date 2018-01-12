@@ -1,7 +1,7 @@
 {
   "name": "headless-chrome-crawler",
   "version": "1.2.5",
-  "description": "Headless Chrome crawls with jQuery support, powered by Puppeteer",
+  "description": "Headless Chrome crawls with jQuery support",
   "main": "index.js",
   "license": "MIT",
   "author": "Yuji Isobe",
@@ -22,7 +22,7 @@
     "debug": "3.1.0",
     "jquery": "3.2.1",
     "lodash": "4.17.4",
-    "puppeteer": "0.13.0",
+    "puppeteer": "1.0.0",
     "redis": "2.8.0",
     "request": "2.83.0",
     "request-promise": "4.2.2",
