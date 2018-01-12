@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.3.0] - 2018-01-12
+### Added
+
+- Add [HCCrawler.defaultArgs()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerdefaultargs) method.
+- Emit `requestretried` event.
+
+### changed
+
+- Use `cache` option not only for remembering already requested URLs but for request queue for distributed environments.
+- Moved `onSuccess`, `onError` and `maxDepth` options from [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions) to [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions).
+
 ## [1.2.5] - 2018-01-03
 ### Added
 
