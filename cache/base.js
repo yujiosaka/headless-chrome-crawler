@@ -34,7 +34,7 @@ class BaseCache {
    * @param {!string} key
    * @return {!Promise}
    */
-  get() {
+  get(key) {
     throw new Error('Get is not overridden!');
   }
 
@@ -43,7 +43,7 @@ class BaseCache {
    * @param {!string} value
    * @return {!Promise}
    */
-  set() {
+  set(key, value) {
     throw new Error('Set is not overridden!');
   }
 
@@ -53,7 +53,7 @@ class BaseCache {
    * @param {!number=} priority
    * @return {!Promise}
    */
-  enqueue() {
+  enqueue(key, value, priority) {
     throw new Error('Enqueue is not overridden!');
   }
 
@@ -61,7 +61,7 @@ class BaseCache {
    * @param {!string} key
    * @return {!Promise}
    */
-  dequeue() {
+  dequeue(key) {
     throw new Error('Dequeue is not overridden!');
   }
 
@@ -69,7 +69,7 @@ class BaseCache {
    * @param {!string} key
    * @return {!Promise<!number>}
    */
-  size() {
+  size(key) {
     throw new Error('Size is not overridden!');
   }
 
@@ -77,7 +77,7 @@ class BaseCache {
    * @param {!string} key
    * @return {!Promise}
    */
-  remove() {
+  remove(key) {
     throw new Error('Remove is not overridden!');
   }
 }

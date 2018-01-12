@@ -27,7 +27,9 @@ class SessionCache extends BaseCache {
    * @return {!Promise}
    * @override
    */
-  close() {}
+  close() {
+    return Promise.resolve();
+  }
 
   /**
    * @param {!string} key
