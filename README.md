@@ -1,5 +1,5 @@
 # headless-chrome-crawler [![npm](https://badge.fury.io/js/headless-chrome-crawler.svg)](https://www.npmjs.com/package/headless-chrome-crawler) [![build](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master.svg?style=shield&circle-token=ba45f930aed7057b79f2ac09df6be3e1b8ee954b)](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master) [![Greenkeeper badge](https://badges.greenkeeper.io/yujiosaka/headless-chrome-crawler.svg)](https://greenkeeper.io/)
-Headless Chrome crawls with [jQuery](https://jquery.com) support, powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer)
+Headless Chrome crawls with [jQuery](https://jquery.com) support
 
 ## Features
 
@@ -32,7 +32,7 @@ yarn add headless-chrome-crawler
 
 ### Usage
 
-The basic API of headless-chrome-crawler is inspired by that of [node-crawler](https://github.com/bda-research/node-crawler), so the API design is somewhat similar but not exactly compatible.
+The basic API of headless-chrome-crawler is inspired by that of [node-crawler](https://github.com/bda-research/node-crawler).
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
@@ -54,18 +54,12 @@ HCCrawler.launch({
     crawler.queue(['https://example.net/', 'https://example.org/']);
     // Queue a request with custom options
     crawler.queue({
-      url: 'https://www.example.com/',
-      // Disable jQuery only for this request
-      jQuery: false,
-      // Override an already defined evaluatePage option
-      evaluatePage: (() => ({
-        title: document.title,
-      })),
+      url: 'https://example.com/',
       // Emulate a tablet device
       device: 'Nexus 7',
       // Enable screenshot by passing options
       screenshot: {
-        path: './tmp/www-example-com.png'
+        path: './tmp/example-com.png'
       },
     });
     crawler.onIdle() // Resolved when no queue is left
@@ -76,7 +70,6 @@ HCCrawler.launch({
 ## Examples
 
 * [Priority queue for crawling efficiency](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/priority-queue.js)
-* [Pause at the max request and resume at any time](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/pause-resume.js)
 * [Emulate device and user agent](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/emulate-device.js)
 * [Redis cache to skip duplicate requests](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/redis-cache.js)
 * [Export a CSV file for crawled results](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/csv-exporter.js)
@@ -96,6 +89,7 @@ NODE_PATH=../ node examples/priority-queue.js
   * [HCCrawler.connect([options])](#hccrawlerconnectoptions)
   * [HCCrawler.launch([options])](#hccrawlerlaunchoptions)
   * [HCCrawler.executablePath()](#hccrawlerexecutablepath)
+  * [HCCrawler.defaultArgs()](#hccrawlerdefaultargs)
   * [crawler.queue([options])](#crawlerqueueoptions)
   * [crawler.setMaxRequest(maxRequest)](#crawlersetmaxrequestmaxrequest)
   * [crawler.pause()](#crawlerpause)
@@ -127,7 +121,7 @@ NODE_PATH=../ node examples/priority-queue.js
 
 ### class: HCCrawler
 
-HCCrawler provides methods to launch or connect to a HeadlessChrome/Chromium.
+HCCrawler provides methods to launch or connect to a Chromium instance.
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
@@ -170,7 +164,7 @@ HCCrawler.launch({
       * `links` <[Array]> List of links found in the requested page.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
-* returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
+* returns: <[Promise]<[HCCrawler]>> Promise which resolves to HCCrawler instance.
 
 This method connects to an existing Chromium instance. The following options are passed to [puppeteer.connect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
 
@@ -209,12 +203,12 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
       * `links` <[Array]> List of links found in the requested page.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
-* returns: <Promise<HCCrawler>> Promise which resolves to HCCrawler instance.
+* returns: <[Promise]<[HCCrawler]>> Promise which resolves to HCCrawler instance.
 
 The method launches a HeadlessChrome/Chromium instance. The following options are passed to [puppeteer.launch()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
 
 ```
-ignoreHTTPSErrors, headless, executablePath, slowMo, args, handleSIGINT, handleSIGTERM, handleSIGHUP, timeout, dumpio, userDataDir, env, devtools
+ignoreHTTPSErrors, headless, executablePath, slowMo, args, ignoreDefaultArgs, handleSIGINT, handleSIGTERM, handleSIGHUP, timeout, dumpio, userDataDir, env, devtools
 ```
 
 Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
@@ -227,9 +221,13 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
 
 #### HCCrawler.executablePath()
 
-* returns: <string> An expected path to find bundled Chromium.
+* returns: <[string]> An expected path to find bundled Chromium.
 
 See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerexecutablepath) for more details.
+
+#### HCCrawler.defaultArgs()
+
+* returns: <[Array]<[string]>> The default flags that Chromium will be launched with.
 
 #### crawler.queue([options])
 
@@ -239,7 +237,7 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
   * `priority` <[number]> Basic priority of queues, defaults to `1`. Priority with larger number is preferred.
   * `skipDuplicates` <[boolean]> Whether to skip duplicate requests, default to `null`. The request is considered to be the same if `url`, `userAgent`, `device` and `extraHeaders` are strictly the same.
   * `obeyRobotsTxt` <[boolean]> Whether to obey [robots.txt](https://developers.google.com/search/reference/robots_txt), default to `true`.
-  * `allowedDomains` <[Array<string>]> List of domains allowed to request. `www.example.com` will be allowed if `example.com` is listed.
+  * `allowedDomains` <[Array]<[string]>> List of domains allowed to request. `www.example.com` will be allowed if `example.com` is listed.
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, `maxConcurrency` option must be `1`.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
@@ -294,13 +292,13 @@ See [Puppeteer's browser.disconnect()](https://github.com/GoogleChrome/puppeteer
 
 #### crawler.version()
 
-* returns: <[Promise]> Promise resolved with HeadlessChrome/Chromium version.
+* returns: <[Promise]<[string]>> Promise resolved with HeadlessChrome/Chromium version.
 
 See [Puppeteer's browser.version()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserversion) for more details.
 
 #### crawler.wsEndpoint()
 
-* returns: <[Promise]> Promise resolved with websocket url.
+* returns: <[Promise]<[string]>> Promise resolved with websocket url.
 
 See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserwsendpoint) for more details.
 
@@ -412,7 +410,7 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/exam
 
 * `options` <[Object]>
   * `file` <[string]> File path to export output.
-  * `fields` <[Array<string>]> List of fields to be used for columns. This option is also used for the headers.
+  * `fields` <[Array]<[string]>> List of fields to be used for columns. This option is also used for the headers.
   * `separator` <string> Character to separate columns.
 
 ```js
@@ -435,7 +433,7 @@ HCCrawler.launch({ exporter })
 
 * `options` <[Object]>
   * `file` <[string]> File path to export output.
-  * `fields` <[Array<string>]> List of fields to be filtered in json, defaults to `null`. Leave default not to filter fields.
+  * `fields` <[Array]<[string]>> List of fields to be filtered in json, defaults to `null`. Leave default not to filter fields.
   * `jsonReplacer` <[Function]> Function that alters the behavior of the stringification process, defaults to `null`. This is useful to sorts keys always in the same order.
 
 ```js
@@ -496,3 +494,17 @@ The static crawlers are based on simple requests to HTML files. They are general
 Dynamic crawlers based on [PhantomJS](http://phantomjs.org) and [Selenium](http://www.seleniumhq.org) work magically on such dynamic applications. However, [PhantomJS's maintainer has stepped down and recommended to switch to Headless Chrome](https://groups.google.com/forum/#!topic/phantomjs/9aI5d-LDuNE), which is fast and stable. [Selenium](http://www.seleniumhq.org) is still a well-maintained cross browser platform which runs on Chrome, Safari, IE and so on. However, crawlers do not need such cross browsers support.
 
  This crawler is dynamic and based on Headless Chrome.
+
+[Array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array "Array"
+[boolean]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type "Boolean"
+[Buffer]: https://nodejs.org/api/buffer.html#buffer_class_buffer "Buffer"
+[function]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function "Function"
+[number]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type "Number"
+[Object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object "Object"
+[Promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise "Promise"
+[string]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#String_type "String"
+[Serializable]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#Description "Serializable"
+[Error]: https://nodejs.org/api/errors.html#errors_class_error "Error"
+[HCCrawler]: #class-hccrawler "HCCrawler"
+[Exporter]: #baseexporter "Exporter"
+[Cache]: #basecache "Cache"
