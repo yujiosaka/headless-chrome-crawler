@@ -32,7 +32,7 @@ yarn add headless-chrome-crawler
 
 ### Usage
 
-The basic API of headless-chrome-crawler is inspired by that of [node-crawler](https://github.com/bda-research/node-crawler).
+The basic APIs of headless-chrome-crawler is inspired by that of [node-crawler](https://github.com/bda-research/node-crawler).
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
