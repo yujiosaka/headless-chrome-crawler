@@ -146,6 +146,7 @@ HCCrawler.launch({
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
+  * `maxDepth` <[number]> Maximum depth for the crawler to follow links automatically, default to 1. Leave default to disable following links.
   * `exporter` <[Exporter]> An exporter object which extends [BaseExporter](#class-baseexporter)'s interfaces to export result, default to `null`.
   * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object.
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `false`.
@@ -185,6 +186,7 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
+  * `maxDepth` <[number]> Maximum depth for the crawler to follow links automatically, default to 1. Leave default to disable following links.
   * `exporter` <[Exporter]> An exporter object which extends [BaseExporter](#class-baseexporter)'s interfaces to export result, default to `null`.
   * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object.
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `false`.
@@ -233,7 +235,6 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
 
 * `options` <[Object]>
   * `url` <[string]> Url to navigate to. The url should include scheme, e.g. `https://`.
-  * `maxDepth` <[number]> Maximum depth for the crawler to follow links automatically, default to 1. Leave default to disable following links.
   * `priority` <[number]> Basic priority of queues, defaults to `1`. Priority with larger number is preferred.
   * `skipDuplicates` <[boolean]> Whether to skip duplicate requests, default to `null`. The request is considered to be the same if `url`, `userAgent`, `device` and `extraHeaders` are strictly the same.
   * `obeyRobotsTxt` <[boolean]> Whether to obey [robots.txt](https://developers.google.com/search/reference/robots_txt), default to `true`.
