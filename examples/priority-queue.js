@@ -1,7 +1,6 @@
 const HCCrawler = require('headless-chrome-crawler');
 
 HCCrawler.launch({
-  maxDepth: 3,
   maxConcurrency: 1,
   onSuccess: (result => {
     console.log(`Requested ${result.options.url}.`);
