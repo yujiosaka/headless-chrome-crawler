@@ -17,7 +17,7 @@ Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chro
 * Emulate devices and user agents
 * Priority queue for crawling efficiency
 * Obey [robots.txt](https://developers.google.com/search/reference/robots_txt)
-* Promise support
+* [Promise] support
 
 ## Getting Started
 
