@@ -14,10 +14,11 @@ describe('PriorityQueue', () => {
     onPull = sinon.spy();
   });
 
-  afterEach(() => (
-    cache.clear()
-      .then(() => cache.close())
-  ));
+  afterEach(() => {
+    queue.end();
+    return cache.clear()
+      .then(() => cache.close());
+  });
 
   function testSuite() {
     it('pulls without argument', () => {
