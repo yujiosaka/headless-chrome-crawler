@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.3.1] - 2018-01-14
+
+### Fixed
+
+- Fix a bug of listing response properties as methods.
+- Fix a bug of not obeying robots.txt.
+
 ## [1.3.0] - 2018-01-12
 ### Added
 
