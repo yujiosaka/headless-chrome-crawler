@@ -162,6 +162,7 @@ HCCrawler.launch({
       * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
       * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
       * `links` <[Array]> List of links found in the requested page.
+      * `depth` <[number]> Depth of the followed links.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
 * returns: <[Promise]<[HCCrawler]>> Promise which resolves to HCCrawler instance.
@@ -201,6 +202,7 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
       * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
       * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
       * `links` <[Array]> List of links found in the requested page.
+      * `depth` <[number]> Depth of the followed links.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
 * returns: <[Promise]<[HCCrawler]>> Promise which resolves to HCCrawler instance.
