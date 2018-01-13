@@ -363,7 +363,6 @@ describe('HCCrawler', () => {
             .then(() => {
               assert.equal(maxrequestreached, 1);
               assert.equal(crawler.isPaused(), true);
-              assert.equal(crawler.pendingQueueSize(), 1);
               assert.equal(onSuccess.callCount, 2);
               return crawler.queueSize();
             })
@@ -379,7 +378,6 @@ describe('HCCrawler', () => {
           return crawler.onIdle()
             .then(() => {
               assert.equal(crawler.isPaused(), true);
-              assert.equal(crawler.pendingQueueSize(), 1);
               assert.equal(onSuccess.callCount, 2);
               return crawler.queueSize();
             })
@@ -391,7 +389,6 @@ describe('HCCrawler', () => {
             })
             .then(() => {
               assert.equal(crawler.isPaused(), false);
-              assert.equal(crawler.pendingQueueSize(), 0);
               assert.equal(onSuccess.callCount, 3);
               return crawler.queueSize();
             })

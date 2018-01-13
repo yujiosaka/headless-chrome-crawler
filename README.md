@@ -1,16 +1,17 @@
 # headless-chrome-crawler [![npm](https://badge.fury.io/js/headless-chrome-crawler.svg)](https://www.npmjs.com/package/headless-chrome-crawler) [![build](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master.svg?style=shield&circle-token=ba45f930aed7057b79f2ac09df6be3e1b8ee954b)](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master) [![Greenkeeper badge](https://badges.greenkeeper.io/yujiosaka/headless-chrome-crawler.svg)](https://greenkeeper.io/)
-Headless Chrome crawls with [jQuery](https://jquery.com) support
+Distributed crawler powered by Headless Chrome
 
 ## Features
 
 Crawlers based on simple requests to HTML files are generally fast. However, it sometimes ends up capturing empty bodies, especially when the websites are built on such modern frontend frameworks as [AngularJS](https://angularjs.org), [React](https://reactjs.org) and [Vue.js](https://jp.vuejs.org/index.html).
 
-Powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer), headless-chrome-crawler provides [simple APIs](#api-reference) to manupluate Headless Chrome and allows you to crawl these dynamic websites with the following features:
+Powered by Headless Chrome, the crawler provides [simple APIs](#api-reference) to crawl these dynamic websites with the following features:
 
+* Distributed crawling
 * Configure concurrency, delay and retry
 * Breadth-first search (BFS) to automatically follow links
-* Pluggable cache storages such as [Redis](https://redis.io) for distributed setup
-* Support [CSV](https://tools.ietf.org/html/rfc4180) and [JSON Lines](http://jsonlines.org) formats for exporting results
+* Pluggable cache storages such as [Redis](https://redis.io)
+* Support [CSV](https://tools.ietf.org/html/rfc4180) and [JSON Lines](http://jsonlines.org) for exporting results
 * Pause at the max request and resume at any time
 * Insert [jQuery](https://jquery.com) automatically for scraping
 * Save screenshots for the crawling evidence
@@ -28,11 +29,9 @@ yarn add headless-chrome-crawler
 # or "npm i headless-chrome-crawler"
 ```
 
-> **Note**: headless-chrome-crawler is powered by [Puppeteer](https://github.com/GoogleChrome/puppeteer). While installation, it automatically downloads a recent version of Chromium. To skip the download, see [Environment variables](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#environment-variables).
+> **Note**: headless-chrome-crawler contains [Puppeteer](https://github.com/GoogleChrome/puppeteer). While installation, it automatically downloads a recent version of Chromium. To skip the download, see [Environment variables](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#environment-variables).
 
 ### Usage
-
-The basic APIs of headless-chrome-crawler are inspired by that of [node-crawler](https://github.com/bda-research/node-crawler).
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
@@ -147,9 +146,9 @@ HCCrawler.launch({
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
-  * `exporter` <[Exporter]> An exporter object which extends [BaseExporter](#class-baseexporter)'s interfaces to export result, default to `null`.
+  * `exporter` <[Exporter]> An exporter object which extends [BaseExporter](#class-baseexporter)'s interfaces to export results, default to `null`.
   * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object.
-  * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `false`.
+  * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the Chromium instance, defaults to `false`.
   * `preRequest(options)` <[Function]> Function to do anything like modifying `options` before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
   * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
@@ -187,9 +186,9 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
-  * `exporter` <[Exporter]> An exporter object which extends [BaseExporter](#class-baseexporter)'s interfaces to export result, default to `null`.
+  * `exporter` <[Exporter]> An exporter object which extends [BaseExporter](#class-baseexporter)'s interfaces to export results, default to `null`.
   * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object.
-  * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `false`.
+  * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the Chromium instance, defaults to `false`.
   * `preRequest(options)` <[Function]> Function to do anything like modifying `options` before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
   * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
@@ -208,7 +207,7 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
     * `error` <[Error]> Error object.
 * returns: <[Promise]<[HCCrawler]>> Promise which resolves to HCCrawler instance.
 
-The method launches a HeadlessChrome/Chromium instance. The following options are passed to [puppeteer.launch()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
+The method launches a Chromium instance. The following options are passed to [puppeteer.launch()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
 
 ```
 ignoreHTTPSErrors, headless, executablePath, slowMo, args, ignoreDefaultArgs, handleSIGINT, handleSIGTERM, handleSIGHUP, timeout, dumpio, userDataDir, env, devtools
@@ -225,8 +224,6 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
 #### HCCrawler.executablePath()
 
 * returns: <[string]> An expected path to find bundled Chromium.
-
-See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerexecutablepath) for more details.
 
 #### HCCrawler.defaultArgs()
 
@@ -457,6 +454,32 @@ You can create your own exporter by extending the [BaseExporter's interfaces](ht
 See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/custom-exporter.js) for example.
 
 ## Tips
+
+### Distributed crawling
+
+In order to crawl under distributed mode, use [Redis](https://redis.io) for the shared cache storage.
+You can run the same script on multiple machines, so that [Redis](https://redis.io) is used to share and distribute task queues.
+
+```js
+const HCCrawler = require('headless-chrome-crawler');
+const RedisCache = require('headless-chrome-crawler/cache/redis');
+
+const TOP_PAGES = [
+  // ...
+];
+
+const cache = new RedisCache({
+  // ...
+});
+
+HCCrawler.launch({
+  maxDepth: 3,
+  cache,
+})
+  .then(crawler => {
+    crawler.queue(TOP_PAGES);
+  });
+```
 
 ### Launch options
 
