@@ -45,6 +45,12 @@ describe('HCCrawler', () => {
         onSuccess = sinon.spy();
         sinon.stub(Crawler.prototype, 'crawl').returns(Promise.resolve({
           options: {},
+          response: {
+            ok: (() => true),
+            url: (() => 'https://example.com/'),
+            status: (() => 200),
+            headers: (() => {}),
+          },
           result: { title: 'Example Domain' },
           links: ['http://www.iana.org/domains/example'],
           screenshot: null,
@@ -322,8 +328,8 @@ describe('HCCrawler', () => {
           return crawler.onIdle()
             .then(() => {
               assert.equal(onSuccess.callCount, 2);
-              assert.equal(Crawler.prototype.crawl.firstCall.thisValue._options.url, URL2);
-              assert.equal(Crawler.prototype.crawl.secondCall.thisValue._options.url, URL1);
+              assert.equal(onSuccess.firstCall.args[0].options.url, URL2);
+              assert.equal(onSuccess.secondCall.args[0].options.url, URL1);
             });
         });
 
