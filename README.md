@@ -98,6 +98,7 @@ NODE_PATH=../ node examples/priority-queue.js
   * [crawler.close()](#crawlerclose)
   * [crawler.disconnect()](#crawlerdisconnect)
   * [crawler.version()](#crawlerversion)
+  * [crawler.userAgent()](#crawleruseragent)
   * [crawler.wsEndpoint()](#crawlerwsendpoint)
   * [crawler.onIdle()](#crawleronidle)
   * [crawler.isPaused()](#crawlerispaused)
@@ -284,25 +285,21 @@ This method clears the cache when it's used.
 
 * returns: <[Promise]> Promise resolved when ther browser is closed.
 
-See [Puppeteer's browser.close()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserclose) for more details.
-
 #### crawler.disconnect()
 
 * returns: <[Promise]> Promise resolved when ther browser is disconnected.
 
-See [Puppeteer's browser.disconnect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserdisconnect) for more details.
-
 #### crawler.version()
 
-* returns: <[Promise]<[string]>> Promise resolved with HeadlessChrome/Chromium version.
+* returns: <[Promise]<[string]>> Promise resolved with the Chromium version.
 
-See [Puppeteer's browser.version()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserversion) for more details.
+#### crawler.userAgent()
+
+* returns: <[Promise]<[string]>> Promise resolved with the default user agent.
 
 #### crawler.wsEndpoint()
 
 * returns: <[Promise]<[string]>> Promise resolved with websocket url.
-
-See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserwsendpoint) for more details.
 
 #### crawler.onIdle()
 
