@@ -98,6 +98,7 @@ NODE_PATH=../ node examples/priority-queue.js
   * [crawler.close()](#crawlerclose)
   * [crawler.disconnect()](#crawlerdisconnect)
   * [crawler.version()](#crawlerversion)
+  * [crawler.userAgent()](#crawleruseragent)
   * [crawler.wsEndpoint()](#crawlerwsendpoint)
   * [crawler.onIdle()](#crawleronidle)
   * [crawler.isPaused()](#crawlerispaused)
@@ -146,7 +147,6 @@ HCCrawler.launch({
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
-  * `maxDepth` <[number]> Maximum depth for the crawler to follow links automatically, default to 1. Leave default to disable following links.
   * `exporter` <[Exporter]> An exporter object which extends [BaseExporter](#class-baseexporter)'s interfaces to export result, default to `null`.
   * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object.
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `false`.
@@ -163,6 +163,7 @@ HCCrawler.launch({
       * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
       * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
       * `links` <[Array]> List of links found in the requested page.
+      * `depth` <[number]> Depth of the followed links.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
 * returns: <[Promise]<[HCCrawler]>> Promise which resolves to HCCrawler instance.
@@ -186,7 +187,6 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
   * `maxRequest` <[number]> Maximum number of requests, defaults to `0`. Pass `0` to disable the limit.
-  * `maxDepth` <[number]> Maximum depth for the crawler to follow links automatically, default to 1. Leave default to disable following links.
   * `exporter` <[Exporter]> An exporter object which extends [BaseExporter](#class-baseexporter)'s interfaces to export result, default to `null`.
   * `cache` <[Cache]> A cache object which extends [BaseCache](#class-basecache)'s interfaces to remember and skip duplicate requests, defaults to a [SessionCache](#class-sessioncache) object.
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the browser, defaults to `false`.
@@ -203,6 +203,7 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
       * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
       * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
       * `links` <[Array]> List of links found in the requested page.
+      * `depth` <[number]> Depth of the followed links.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
 * returns: <[Promise]<[HCCrawler]>> Promise which resolves to HCCrawler instance.
@@ -235,6 +236,7 @@ See [puppeteer.executablePath()](https://github.com/GoogleChrome/puppeteer/blob/
 
 * `options` <[Object]>
   * `url` <[string]> Url to navigate to. The url should include scheme, e.g. `https://`.
+  * `maxDepth` <[number]> Maximum depth for the crawler to follow links automatically, default to 1. Leave default to disable following links.
   * `priority` <[number]> Basic priority of queues, defaults to `1`. Priority with larger number is preferred.
   * `skipDuplicates` <[boolean]> Whether to skip duplicate requests, default to `null`. The request is considered to be the same if `url`, `userAgent`, `device` and `extraHeaders` are strictly the same.
   * `obeyRobotsTxt` <[boolean]> Whether to obey [robots.txt](https://developers.google.com/search/reference/robots_txt), default to `true`.
@@ -283,25 +285,21 @@ This method clears the cache when it's used.
 
 * returns: <[Promise]> Promise resolved when ther browser is closed.
 
-See [Puppeteer's browser.close()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserclose) for more details.
-
 #### crawler.disconnect()
 
 * returns: <[Promise]> Promise resolved when ther browser is disconnected.
 
-See [Puppeteer's browser.disconnect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserdisconnect) for more details.
-
 #### crawler.version()
 
-* returns: <[Promise]<[string]>> Promise resolved with HeadlessChrome/Chromium version.
+* returns: <[Promise]<[string]>> Promise resolved with the Chromium version.
 
-See [Puppeteer's browser.version()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserversion) for more details.
+#### crawler.userAgent()
+
+* returns: <[Promise]<[string]>> Promise resolved with the default user agent.
 
 #### crawler.wsEndpoint()
 
 * returns: <[Promise]<[string]>> Promise resolved with websocket url.
-
-See [Puppeteer's browser.wsEndpoint()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#browserwsendpoint) for more details.
 
 #### crawler.onIdle()
 
