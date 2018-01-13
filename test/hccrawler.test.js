@@ -40,7 +40,9 @@ describe('HCCrawler', () => {
     });
 
     context('when crawling does not fail', () => {
+      let onSuccess;
       beforeEach(() => {
+        onSuccess = sinon.spy();
         sinon.stub(Crawler.prototype, 'crawl').returns(Promise.resolve({
           options: {},
           result: { title: 'Example Domain' },
@@ -49,9 +51,9 @@ describe('HCCrawler', () => {
         }));
       });
 
-      context('when the crawler is launched without necessary options', () => {
+      context('when the crawler is launched with necessary options', () => {
         beforeEach(() => (
-          HCCrawler.launch(DEFAULT_OPTIONS)
+          HCCrawler.launch(extend({ onSuccess }, DEFAULT_OPTIONS))
             .then(_crawler => {
               crawler = _crawler;
             })
@@ -72,29 +74,26 @@ describe('HCCrawler', () => {
         });
 
         it('crawls when queueing necessary options', () => {
-          crawler.queue({ url: URL1 });
+          let requeststarted = 0;
+          let requestfinished = 0;
+          crawler.on('requeststarted', () => { requeststarted += 1; });
+          crawler.on('requestfinished', () => { requestfinished += 1; });
+          crawler.queue(URL1);
           return crawler.onIdle()
             .then(() => {
+              assert.equal(requeststarted, 1);
+              assert.equal(requestfinished, 1);
+              assert.equal(crawler.pendingQueueSize(), 0);
               assert.equal(crawler.requestedCount(), 1);
+              assert.equal(onSuccess.callCount, 1);
             });
         });
-      });
-
-      context('when the crawler is launched with necessary options', () => {
-        beforeEach(() => (
-          HCCrawler.launch(DEFAULT_OPTIONS)
-            .then(_crawler => {
-              crawler = _crawler;
-            })
-        ));
-
-        afterEach(() => crawler.close());
 
         it('crawls when queueing a string', () => {
           crawler.queue(URL1);
           return crawler.onIdle()
             .then(() => {
-              assert.equal(crawler.requestedCount(), 1);
+              assert.equal(onSuccess.callCount, 1);
             });
         });
 
@@ -102,7 +101,7 @@ describe('HCCrawler', () => {
           crawler.queue([URL1, URL2, URL3]);
           return crawler.onIdle()
             .then(() => {
-              assert.equal(crawler.requestedCount(), 3);
+              assert.equal(onSuccess.callCount, 3);
             });
         });
 
@@ -110,15 +109,15 @@ describe('HCCrawler', () => {
           crawler.queue({ url: URL1 });
           return crawler.onIdle()
             .then(() => {
-              assert.equal(crawler.requestedCount(), 1);
+              assert.equal(onSuccess.callCount, 1);
             });
         });
 
         it('crawls when queueing multiple objects', () => {
-          crawler.queue([{ url: URL1 }, { url: URL2 }, { url: URL3 }]);
+          crawler.queue([{ url: URL1 }, { url: URL2 }]);
           return crawler.onIdle()
             .then(() => {
-              assert.equal(crawler.requestedCount(), 3);
+              assert.equal(onSuccess.callCount, 2);
             });
         });
 
@@ -127,7 +126,7 @@ describe('HCCrawler', () => {
           crawler.queue(URL3);
           return crawler.onIdle()
             .then(() => {
-              assert.equal(crawler.requestedCount(), 3);
+              assert.equal(onSuccess.callCount, 3);
             });
         });
 
@@ -156,7 +155,7 @@ describe('HCCrawler', () => {
           return crawler.onIdle()
             .then(() => {
               assert.equal(requestskipped, 0);
-              assert.equal(crawler.requestedCount(), 1);
+              assert.equal(onSuccess.callCount, 1);
             });
         });
 
@@ -167,21 +166,37 @@ describe('HCCrawler', () => {
           return crawler.onIdle()
             .then(() => {
               assert.equal(requestskipped, 1);
-              assert.equal(crawler.requestedCount(), 0);
+              assert.equal(onSuccess.callCount, 0);
             });
         });
 
-        it('emits request events', () => {
-          let requeststarted = 0;
-          let requestfinished = 0;
-          crawler.on('requeststarted', () => { requeststarted += 1; });
-          crawler.on('requestfinished', () => { requestfinished += 1; });
-          crawler.queue(URL1);
+        it('follows links when maxDepth is set', () => {
+          let maxdepthreached = 0;
+          crawler.on('maxdepthreached', () => { maxdepthreached += 1; });
+          crawler.queue({ url: URL1, maxDepth: 2 });
           return crawler.onIdle()
             .then(() => {
-              assert.equal(requeststarted, 1);
-              assert.equal(requestfinished, 1);
+              assert.equal(maxdepthreached, 1);
+              assert.equal(onSuccess.callCount, 2);
             });
+        });
+
+        it('shows the browser version', () => (
+          crawler.version()
+            .then(version => {
+              assert.ok(includes(version, 'HeadlessChrome'));
+            })
+        ));
+
+        it('shows the default user agent', () => (
+          crawler.userAgent()
+            .then(userAgent => {
+              assert.ok(includes(userAgent, 'HeadlessChrome'));
+            })
+        ));
+
+        it('shows the WebSocket endpoint', () => {
+          assert.ok(includes(crawler.wsEndpoint(), 'ws://'));
         });
       });
 
@@ -191,7 +206,7 @@ describe('HCCrawler', () => {
         }
 
         beforeEach(() => (
-          HCCrawler.launch(extend({ preRequest }, DEFAULT_OPTIONS))
+          HCCrawler.launch(extend({ onSuccess, preRequest }, DEFAULT_OPTIONS))
             .then(_crawler => {
               crawler = _crawler;
             })
@@ -206,7 +221,7 @@ describe('HCCrawler', () => {
           return crawler.onIdle()
             .then(() => {
               assert.equal(requestskipped, 0);
-              assert.equal(crawler.requestedCount(), 1);
+              assert.equal(onSuccess.callCount, 1);
             });
         });
       });
@@ -217,7 +232,7 @@ describe('HCCrawler', () => {
         }
 
         beforeEach(() => (
-          HCCrawler.launch(extend({ preRequest }, DEFAULT_OPTIONS))
+          HCCrawler.launch(extend({ onSuccess, preRequest }, DEFAULT_OPTIONS))
             .then(_crawler => {
               crawler = _crawler;
             })
@@ -232,7 +247,7 @@ describe('HCCrawler', () => {
           return crawler.onIdle()
             .then(() => {
               assert.equal(requestskipped, 1);
-              assert.equal(crawler.requestedCount(), 0);
+              assert.equal(onSuccess.callCount, 0);
             });
         });
       });
@@ -245,7 +260,7 @@ describe('HCCrawler', () => {
         }
 
         beforeEach(() => (
-          HCCrawler.launch(extend({ preRequest }, DEFAULT_OPTIONS))
+          HCCrawler.launch(extend({ onSuccess, preRequest }, DEFAULT_OPTIONS))
             .then(_crawler => {
               crawler = _crawler;
             })
@@ -257,15 +272,15 @@ describe('HCCrawler', () => {
           crawler.queue(URL1);
           return crawler.onIdle()
             .then(() => {
-              const { screenshot } = Crawler.prototype.crawl.firstCall.thisValue._options;
-              assert.deepEqual(screenshot, { path });
+              assert.equal(onSuccess.callCount, 1);
+              assert.equal(onSuccess.firstCall.args[0].options.screenshot.path, path);
             });
         });
       });
 
       context('when the crawler is launched with device option', () => {
         beforeEach(() => (
-          HCCrawler.launch(extend({ device: 'iPhone 6' }, DEFAULT_OPTIONS))
+          HCCrawler.launch(extend({ onSuccess, device: 'iPhone 6' }, DEFAULT_OPTIONS))
             .then(_crawler => {
               crawler = _crawler;
             })
@@ -277,37 +292,15 @@ describe('HCCrawler', () => {
           crawler.queue({ url: URL1, device: 'Nexus 6' });
           return crawler.onIdle()
             .then(() => {
-              assert.equal(crawler.requestedCount(), 1);
-              assert.equal(Crawler.prototype.crawl.firstCall.thisValue._options.device, 'Nexus 6');
-            });
-        });
-      });
-
-      context('when the crawler is launched with maxDepth = 2', () => {
-        beforeEach(() => (
-          HCCrawler.launch(extend({ maxDepth: 2 }, DEFAULT_OPTIONS))
-            .then(_crawler => {
-              crawler = _crawler;
-            })
-        ));
-
-        afterEach(() => crawler.close());
-
-        it('automatically follows links', () => {
-          let maxdepthreached = 0;
-          crawler.on('maxdepthreached', () => { maxdepthreached += 1; });
-          crawler.queue(URL1);
-          return crawler.onIdle()
-            .then(() => {
-              assert.equal(maxdepthreached, 1);
-              assert.equal(crawler.requestedCount(), 2);
+              assert.equal(onSuccess.callCount, 1);
+              assert.equal(onSuccess.firstCall.args[0].options.device, 'Nexus 6');
             });
         });
       });
 
       context('when the crawler is launched with maxConcurrency = 1', () => {
         beforeEach(() => (
-          HCCrawler.launch(extend({ maxConcurrency: 1 }, DEFAULT_OPTIONS))
+          HCCrawler.launch(extend({ onSuccess, maxConcurrency: 1 }, DEFAULT_OPTIONS))
             .then(_crawler => {
               crawler = _crawler;
             })
@@ -315,29 +308,44 @@ describe('HCCrawler', () => {
 
         afterEach(() => crawler.close());
 
+        it('does not throw an error when delay option is set', () => {
+          crawler.queue({ url: URL1, delay: 100 });
+          return crawler.onIdle()
+            .then(() => {
+              assert.equal(onSuccess.callCount, 1);
+            });
+        });
+
         it('obeys priority order', () => {
           crawler.queue({ url: URL1, priority: 1 });
           crawler.queue({ url: URL2, priority: 2 });
           return crawler.onIdle()
             .then(() => {
-              assert.equal(crawler.requestedCount(), 2);
+              assert.equal(onSuccess.callCount, 2);
               assert.equal(Crawler.prototype.crawl.firstCall.thisValue._options.url, URL2);
               assert.equal(Crawler.prototype.crawl.secondCall.thisValue._options.url, URL1);
             });
         });
 
-        it('does not throw an error when delay option is set', () => {
-          crawler.queue({ url: URL1, delay: 100 });
+        it('crawls duplicate urls with skipDuplicates = false', () => {
+          crawler.queue({ url: URL1 });
+          crawler.queue({ url: URL2 });
+          crawler.queue({ url: URL1 });
+          crawler.queue({ url: URL2, skipDuplicates: false }); // The queue will be requested
           return crawler.onIdle()
             .then(() => {
-              assert.equal(crawler.requestedCount(), 1);
+              assert.equal(onSuccess.callCount, 3);
             });
         });
       });
 
       context('when the crawler is launched with maxRequest option', () => {
         beforeEach(() => (
-          HCCrawler.launch(extend({ maxConcurrency: 1, maxRequest: 2 }, DEFAULT_OPTIONS))
+          HCCrawler.launch(extend({
+            onSuccess,
+            maxConcurrency: 1,
+            maxRequest: 2,
+          }, DEFAULT_OPTIONS))
             .then(_crawler => {
               crawler = _crawler;
             })
@@ -355,8 +363,8 @@ describe('HCCrawler', () => {
             .then(() => {
               assert.equal(maxrequestreached, 1);
               assert.equal(crawler.isPaused(), true);
-              assert.equal(crawler.requestedCount(), 2);
               assert.equal(crawler.pendingQueueSize(), 1);
+              assert.equal(onSuccess.callCount, 2);
               return crawler.queueSize();
             })
             .then(size => {
@@ -371,8 +379,8 @@ describe('HCCrawler', () => {
           return crawler.onIdle()
             .then(() => {
               assert.equal(crawler.isPaused(), true);
-              assert.equal(crawler.requestedCount(), 2);
               assert.equal(crawler.pendingQueueSize(), 1);
+              assert.equal(onSuccess.callCount, 2);
               return crawler.queueSize();
             })
             .then(size => {
@@ -383,8 +391,8 @@ describe('HCCrawler', () => {
             })
             .then(() => {
               assert.equal(crawler.isPaused(), false);
-              assert.equal(crawler.requestedCount(), 3);
               assert.equal(crawler.pendingQueueSize(), 0);
+              assert.equal(onSuccess.callCount, 3);
               return crawler.queueSize();
             })
             .then(size => {
@@ -422,7 +430,11 @@ describe('HCCrawler', () => {
                   file: CSV_FILE,
                   fields: ['result.title'],
                 });
-                return HCCrawler.launch(extend({ maxConcurrency: 1, exporter }, DEFAULT_OPTIONS))
+                return HCCrawler.launch(extend({
+                  onSuccess,
+                  exporter,
+                  maxConcurrency: 1,
+                }, DEFAULT_OPTIONS))
                   .then(_crawler => {
                     crawler = _crawler;
                   });
@@ -440,6 +452,7 @@ describe('HCCrawler', () => {
                 const line2 = 'Example Domain\n';
                 const expected = header + line1 + line2;
                 assert.equal(actual, expected);
+                assert.equal(onSuccess.callCount, 2);
               });
           });
         });
@@ -452,7 +465,11 @@ describe('HCCrawler', () => {
                   file: JSON_FILE,
                   fields: ['result.title'],
                 });
-                return HCCrawler.launch(extend({ maxConcurrency: 1, exporter }, DEFAULT_OPTIONS))
+                return HCCrawler.launch(extend({
+                  onSuccess,
+                  exporter,
+                  maxConcurrency: 1,
+                }, DEFAULT_OPTIONS))
                   .then(_crawler => {
                     crawler = _crawler;
                   });
@@ -469,6 +486,7 @@ describe('HCCrawler', () => {
                 const line2 = `${JSON.stringify({ result: { title: 'Example Domain' } })}\n`;
                 const expected = line1 + line2;
                 assert.equal(actual, expected);
+                assert.equal(onSuccess.callCount, 2);
               });
           });
         });
@@ -476,7 +494,7 @@ describe('HCCrawler', () => {
 
       context('when the crawler is launched with default cache', () => {
         beforeEach(() => (
-          HCCrawler.launch(extend({ maxConcurrency: 1 }, DEFAULT_OPTIONS))
+          HCCrawler.launch(extend({ onSuccess, maxConcurrency: 1 }, DEFAULT_OPTIONS))
             .then(_crawler => {
               crawler = _crawler;
             })
@@ -490,7 +508,7 @@ describe('HCCrawler', () => {
           crawler.queue(URL1); // The queue won't be requested
           return crawler.onIdle()
             .then(() => {
-              assert.equal(crawler.requestedCount(), 2);
+              assert.equal(onSuccess.callCount, 2);
             });
         });
       });
@@ -499,7 +517,11 @@ describe('HCCrawler', () => {
         context('for the fist time with persistCache = true', () => {
           beforeEach(() => {
             const cache = new RedisCache();
-            return HCCrawler.launch(extend({ cache, persistCache: true }, DEFAULT_OPTIONS))
+            return HCCrawler.launch(extend({
+              onSuccess,
+              cache,
+              persistCache: true,
+            }, DEFAULT_OPTIONS))
               .then(_crawler => {
                 crawler = _crawler;
                 return crawler.clearCache();
@@ -513,7 +535,7 @@ describe('HCCrawler', () => {
             crawler.queue(URL2);
             return crawler.onIdle()
               .then(() => {
-                assert.equal(crawler.requestedCount(), 2);
+                assert.equal(onSuccess.callCount, 2);
               });
           });
         });
@@ -521,7 +543,7 @@ describe('HCCrawler', () => {
         context('for the second time', () => {
           beforeEach(() => {
             const cache = new RedisCache();
-            return HCCrawler.launch(extend({ cache }, DEFAULT_OPTIONS))
+            return HCCrawler.launch(extend({ onSuccess, cache }, DEFAULT_OPTIONS))
               .then(_crawler => {
                 crawler = _crawler;
               });
@@ -534,52 +556,9 @@ describe('HCCrawler', () => {
             crawler.queue(URL3);
             return crawler.onIdle()
               .then(() => {
-                assert.equal(crawler.requestedCount(), 1);
+                assert.equal(onSuccess.callCount, 1);
               });
           });
-        });
-      });
-
-      context('when the crawler is with skipDuplicates = false', () => {
-        beforeEach(() => (
-          HCCrawler.launch(extend({ maxConcurrency: 1, skipDuplicates: false }, DEFAULT_OPTIONS))
-            .then(_crawler => {
-              crawler = _crawler;
-            })
-        ));
-
-        afterEach(() => crawler.close());
-
-        it('crawls duplicate urls', () => {
-          crawler.queue(URL1);
-          crawler.queue(URL2);
-          crawler.queue(URL1); // The queue will be requested
-          return crawler.onIdle()
-            .then(() => {
-              assert.equal(crawler.requestedCount(), 3);
-            });
-        });
-      });
-
-      context('when the crawler is launched with onSuccess', () => {
-        const onSuccess = sinon.spy();
-
-        beforeEach(() => (
-          HCCrawler.launch(extend({ onSuccess }, DEFAULT_OPTIONS))
-            .then(_crawler => {
-              crawler = _crawler;
-            })
-        ));
-
-        afterEach(() => crawler.close());
-
-        it('does not skip crawling', () => {
-          crawler.queue(URL1);
-          return crawler.onIdle()
-            .then(() => {
-              assert.equal(crawler.requestedCount(), 1);
-              assert.equal(onSuccess.callCount, 1);
-            });
         });
       });
 
@@ -596,10 +575,10 @@ describe('HCCrawler', () => {
     });
 
     context('when crawling fails', () => {
+      const error = new Error('Unexpected error occured while crawling!');
       const onError = sinon.spy();
 
       beforeEach(() => {
-        const error = new Error('Unexpected error occured while crawling!');
         sinon.stub(Crawler.prototype, 'crawl').returns(Promise.reject(error));
         return HCCrawler.launch(extend({ onError }, DEFAULT_OPTIONS))
           .then(_crawler => {
@@ -617,10 +596,12 @@ describe('HCCrawler', () => {
         crawler.queue({ url: URL1, retryCount: 3, retryDelay: 100 });
         return crawler.onIdle()
           .then(() => {
-            assert.equal(crawler.requestedCount(), 1);
             assert.equal(requestretried, 3);
             assert.equal(requestfailed, 1);
+            assert.equal(crawler.pendingQueueSize(), 0);
+            assert.equal(crawler.requestedCount(), 1);
             assert.equal(onError.callCount, 1);
+            assert.equal(onError.firstCall.args[0], error);
           });
       });
     });
