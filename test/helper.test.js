@@ -9,6 +9,8 @@ const {
   escapeQuotes,
   getRobotsUrl,
   lowerBound,
+  getSitemapUrls,
+  unescape,
   stringifyArgument,
   debugConsole,
   debugDialog,
@@ -211,6 +213,53 @@ describe('Helper', () => {
       const item = { priority: -1 };
       const actual = lowerBound(queue, item, (a, b) => b.priority - a.priority);
       const expected = 2;
+      assert.equal(actual, expected);
+    });
+  });
+
+  describe('Helper.getSitemapUrls', () => {
+    it('returns empty array for empty xml', () => {
+      const actual = getSitemapUrls('');
+      const expected = [];
+      assert.deepEqual(actual, expected);
+    });
+
+    it('returns empty array for no urls', () => {
+      const actual = getSitemapUrls(`
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      </urlset>
+      `);
+      const expected = [];
+      assert.deepEqual(actual, expected);
+    });
+
+    it('returns a url', () => {
+      const actual = getSitemapUrls(`
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url><loc>https://github.com/yujiosaka/headless-chrome-crawler/issues</loc></url>
+      </urlset>
+      `);
+      const expected = ['https://github.com/yujiosaka/headless-chrome-crawler/issues'];
+      assert.deepEqual(actual, expected);
+    });
+  });
+
+  describe('Helper.unescape', () => {
+    it('returns empty string for empty argument', () => {
+      const actual = unescape('');
+      const expected = '';
+      assert.equal(actual, expected);
+    });
+
+    it('returns the same string for non-escaped argument', () => {
+      const actual = unescape('https://github.com/yujiosaka/headless-chrome-crawler/issues');
+      const expected = 'https://github.com/yujiosaka/headless-chrome-crawler/issues';
+      assert.equal(actual, expected);
+    });
+
+    it('returns the unescaped argument', () => {
+      const actual = unescape('&lt;loc&gt;https://github.com/yujiosaka/headless-chrome-crawler/issues?a=1&amp;b=2&lt;/loc&gt;');
+      const expected = '<loc>https://github.com/yujiosaka/headless-chrome-crawler/issues?a=1&b=2</loc>';
       assert.equal(actual, expected);
     });
   });

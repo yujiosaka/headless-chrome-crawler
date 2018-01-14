@@ -18,6 +18,7 @@ Powered by Headless Chrome, the crawler provides [simple APIs](#api-reference) t
 * Emulate devices and user agents
 * Priority queue for crawling efficiency
 * Obey [robots.txt](https://developers.google.com/search/reference/robots_txt)
+* Follow [sitemap.xml](https://www.sitemaps.org/)
 * [Promise] support
 
 ## Getting Started
@@ -109,6 +110,8 @@ NODE_PATH=../ node examples/priority-queue.js
   * [event: 'requestfinished'](#event-requestfinished)
   * [event: 'requestretried'](#event-requestretried)
   * [event: 'requestfailed'](#event-requestfailed)
+  * [event: 'robotstxtrequestfailed'](#event-robotstxtrequestfailed)
+  * [event: 'sitemapxmlrequestfailed'](#event-sitemapxmlrequestfailed)
   * [event: 'maxdepthreached'](#event-maxdepthreached)
   * [event: 'maxrequestreached'](#event-maxrequestreached)
   * [event: 'disconnected'](#event-disconnected)
@@ -237,6 +240,7 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
   * `priority` <[number]> Basic priority of queues, defaults to `1`. Priority with larger number is preferred.
   * `skipDuplicates` <[boolean]> Whether to skip duplicate requests, default to `null`. The request is considered to be the same if `url`, `userAgent`, `device` and `extraHeaders` are strictly the same.
   * `obeyRobotsTxt` <[boolean]> Whether to obey [robots.txt](https://developers.google.com/search/reference/robots_txt), default to `true`.
+  * `followSitemapXml` <[boolean]> Whether to use [sitemap.xml](https://www.sitemaps.org/) to find locations, default to `false`.
   * `allowedDomains` <[Array]<[string]>> List of domains allowed to request. `www.example.com` will be allowed if `example.com` is listed.
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, `maxConcurrency` option must be `1`.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
@@ -347,6 +351,18 @@ Emitted when a request is retried.
 * `error` <[Error]>
 
 Emitted when a request failed.
+
+#### event: 'robotstxtrequestfailed'
+
+* `error` <[Error]>
+
+Emitted when a request to [robots.txt](https://developers.google.com/search/reference/robots_txt) failed
+
+#### event: 'sitemapxmlrequestfailed'
+
+* `error` <[Error]>
+
+Emitted when a request to [sitemap.xml](https://www.sitemaps.org/) failed
 
 #### event: 'maxdepthreached'
 
