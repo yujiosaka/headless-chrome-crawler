@@ -46,10 +46,10 @@ describe('HCCrawler', () => {
         sinon.stub(Crawler.prototype, 'crawl').returns(Promise.resolve({
           options: {},
           response: {
-            ok: (() => true),
-            url: (() => 'https://example.com/'),
-            status: (() => 200),
-            headers: (() => {}),
+            ok: true,
+            url: 'https://example.com/',
+            status: 200,
+            headers: {},
           },
           result: { title: 'Example Domain' },
           links: ['http://www.iana.org/domains/example'],
