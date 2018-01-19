@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.3.2] - 2018-01-19
+
+### Added
+
+- Support `followSitemapXml` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+
+### Fixed
+
+- Fix a bug of not showing console message properly.
+
 ## [1.3.1] - 2018-01-14
 
 ### Fixed
