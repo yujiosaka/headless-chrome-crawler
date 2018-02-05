@@ -105,6 +105,7 @@ NODE_PATH=../ node examples/priority-queue.js
   * [crawler.queueSize()](#crawlerqueuesize)
   * [crawler.pendingQueueSize()](#crawlerpendingqueuesize)
   * [crawler.requestedCount()](#crawlerrequestedcount)
+  * [event: 'newpage'](#event-newpage)
   * [event: 'requeststarted'](#event-requeststarted)
   * [event: 'requestskipped'](#event-requestskipped)
   * [event: 'requestfinished'](#event-requestfinished)
@@ -321,6 +322,12 @@ This method clears the cache when it's used.
 #### crawler.requestedCount()
 
 * returns: <[number]> The count of total requests.
+
+#### event: 'newpage'
+
+* `page` <[Page]>
+
+Emitted when a [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s page is opened.
 
 #### event: 'requeststarted'
 
@@ -546,3 +553,4 @@ Dynamic crawlers based on [PhantomJS](http://phantomjs.org) and [Selenium](http:
 [HCCrawler]: #class-hccrawler "HCCrawler"
 [Exporter]: #baseexporter "Exporter"
 [Cache]: #basecache "Cache"
+[Page]: https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#class-page "Page"

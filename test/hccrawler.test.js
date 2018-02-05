@@ -176,6 +176,21 @@ describe('HCCrawler', () => {
           });
         });
 
+        it('emits newpage event', () => {
+          let request;
+          let response;
+          crawler.on('newpage', page => {
+            page.on('request', _request => { request = _request; });
+            page.on('response', _response => { response = _response; });
+          });
+          crawler.queue(INDEX_PAGE);
+          return crawler.onIdle()
+            .then(() => {
+              assert.equal(request.response(), response);
+              assert.equal(onSuccess.callCount, 1);
+            });
+        });
+
         it('crawls when the requested domain is allowed', () => {
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
@@ -269,7 +284,6 @@ describe('HCCrawler', () => {
               assert.equal(onSuccess.callCount, 1);
             });
         });
-
 
         context('when the page requires basic authentication', () => {
           beforeEach(() => {
