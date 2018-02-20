@@ -6,6 +6,7 @@
   "license": "MIT",
   "author": "Yuji Isobe",
   "scripts": {
+    "commitmsg": "commitlint -e $GIT_PARAMS",
     "lint": "eslint --quiet -f codeframe . || eslint .",
     "test": "npm run lint && mocha"
   },
@@ -19,6 +20,7 @@
   "homepage": "https://github.com/yujiosaka/headless-chrome-crawler#readme",
   "dependencies": {
     "debug": "3.1.0",
+    "husky": "0.14.3",
     "jquery": "3.3.1",
     "lodash": "4.17.5",
     "puppeteer": "1.1.0",
@@ -28,6 +30,8 @@
     "robots-parser": "1.0.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "6.1.0",
+    "@commitlint/config-conventional": "6.1.0",
     "eslint": "4.18.0",
     "eslint-config-airbnb": "16.1.0",
     "eslint-plugin-import": "2.8.0",
