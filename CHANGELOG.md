@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Emit `newpage` event.
-- Support `deniedDomains` and `depthPriority` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+- Support `deniedDomains` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
 
 ### changed
 
