@@ -512,38 +512,6 @@ describe('HCCrawler', () => {
               assert.equal(onSuccess.callCount, 3);
             });
         });
-
-        context('when the first page contains several links', () => {
-          beforeEach(() => {
-            server.setContent('/1.html', `
-            go to <a href="${PREFIX}/2.html">/2.html</a>
-            go to <a href="${PREFIX}/3.html">/3.html</a>
-            `);
-            server.setContent('/2.html', `go to <a href="${PREFIX}/4.html">/4.html</a>`);
-          });
-
-          it('follow links with depth first order with maxDepth = 3', () => {
-            crawler.queue({ url: `${PREFIX}/1.html`, maxDepth: 3 });
-            return crawler.onIdle()
-              .then(() => {
-                assert.equal(onSuccess.callCount, 4);
-                assert.equal(onSuccess.firstCall.args[0].depth, 1);
-                assert.equal(onSuccess.secondCall.args[0].depth, 2);
-                assert.equal(onSuccess.thirdCall.args[0].depth, 3);
-              });
-          });
-
-          it('follow links with breadth first order with maxDepth = 3 and depthPriority = false', () => {
-            crawler.queue({ url: `${PREFIX}/1.html`, maxDepth: 3, depthPriority: false });
-            return crawler.onIdle()
-              .then(() => {
-                assert.equal(onSuccess.callCount, 4);
-                assert.equal(onSuccess.firstCall.args[0].depth, 1);
-                assert.equal(onSuccess.secondCall.args[0].depth, 2);
-                assert.equal(onSuccess.thirdCall.args[0].depth, 2);
-              });
-          });
-        });
       });
 
       context('when the crawler is launched with maxRequest option', () => {
