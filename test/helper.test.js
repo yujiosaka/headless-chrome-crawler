@@ -9,7 +9,6 @@ const {
   escapeQuotes,
   getRobotsUrl,
   lowerBound,
-  checkDomainMatch,
   getSitemapUrls,
   unescape,
   stringifyArgument,
@@ -214,38 +213,6 @@ describe('Helper', () => {
       const item = { priority: -1 };
       const actual = lowerBound(queue, item, (a, b) => b.priority - a.priority);
       const expected = 2;
-      assert.equal(actual, expected);
-    });
-  });
-
-  describe('Helper.checkDomainMatch', () => {
-    it('returns false for empty array', () => {
-      const actual = checkDomainMatch([], '127.0.0.1');
-      const expected = false;
-      assert.equal(actual, expected);
-    });
-
-    it('returns false when no domain fully matches requested hostname', () => {
-      const actual = checkDomainMatch(['localhost', '0.0.0.0'], '127.0.0.1');
-      const expected = false;
-      assert.equal(actual, expected);
-    });
-
-    it('returns false when no domain matches requested hostname by regular expression', () => {
-      const actual = checkDomainMatch([/^localhost$/, /^\d\.\d\.\d\.\d$/], '127.0.0.1');
-      const expected = false;
-      assert.equal(actual, expected);
-    });
-
-    it('returns true when a domain fully matches requested hostname', () => {
-      const actual = checkDomainMatch(['localhost', '127.0.0.1'], '127.0.0.1');
-      const expected = true;
-      assert.equal(actual, expected);
-    });
-
-    it('returns true when a domain fully matches requested hostname by regular expression', () => {
-      const actual = checkDomainMatch([/^localhost$/, /^\d+\.\d+\.\d+\.\d+$/], '127.0.0.1');
-      const expected = true;
       assert.equal(actual, expected);
     });
   });
