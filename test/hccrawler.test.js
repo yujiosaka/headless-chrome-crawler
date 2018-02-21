@@ -191,7 +191,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('crawls when the requested domain is allowed', () => {
+        it('crawls when the requested domain exactly matches allowed domain', () => {
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
           crawler.queue({ url: INDEX_PAGE, allowedDomains: ['127.0.0.1'] });
@@ -202,10 +202,43 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('skips crawling when the requested domain is not allowed', () => {
+        it('crawls when the requested domain matches allowed domain by regular expression', () => {
+          let requestskipped = 0;
+          crawler.on('requestskipped', () => { requestskipped += 1; });
+          crawler.queue({ url: INDEX_PAGE, allowedDomains: [/\d+\.\d+\.\d+\.\d+/] });
+          return crawler.onIdle()
+            .then(() => {
+              assert.equal(requestskipped, 0);
+              assert.equal(onSuccess.callCount, 1);
+            });
+        });
+
+        it('skips crawling when the requested domain does not match allowed domain', () => {
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
           crawler.queue({ url: INDEX_PAGE, allowedDomains: ['0.0.0.0'] });
+          return crawler.onIdle()
+            .then(() => {
+              assert.equal(requestskipped, 1);
+              assert.equal(onSuccess.callCount, 0);
+            });
+        });
+
+        it('skips crawling when the requested domain exactly matches denied domain', () => {
+          let requestskipped = 0;
+          crawler.on('requestskipped', () => { requestskipped += 1; });
+          crawler.queue({ url: INDEX_PAGE, deniedDomains: ['127.0.0.1'] });
+          return crawler.onIdle()
+            .then(() => {
+              assert.equal(requestskipped, 1);
+              assert.equal(onSuccess.callCount, 0);
+            });
+        });
+
+        it('skips crawling when the requested domain matches denied domain by regular expression', () => {
+          let requestskipped = 0;
+          crawler.on('requestskipped', () => { requestskipped += 1; });
+          crawler.queue({ url: INDEX_PAGE, deniedDomains: [/\d+\.\d+\.\d+\.\d+/] });
           return crawler.onIdle()
             .then(() => {
               assert.equal(requestskipped, 1);

@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Emit `newpage` event.
+- Support `deniedDomains` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+
+### changed
+
+-  Allow `allowedDomains` option to accept a list of regular expressions.
 
 ## [1.3.2] - 2018-01-19
 
