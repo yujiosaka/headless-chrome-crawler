@@ -9,7 +9,7 @@ Powered by Headless Chrome, the crawler provides [simple APIs](#api-reference) t
 
 * Distributed crawling
 * Configure concurrency, delay and retry
-* Breadth-first search (BFS) to automatically follow links
+* Support both [depth-first search](https://en.wikipedia.org/wiki/Depth-first_search) and [breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search) algorithm
 * Pluggable cache storages such as [Redis](https://redis.io)
 * Support [CSV](https://tools.ietf.org/html/rfc4180) and [JSON Lines](http://jsonlines.org) for exporting results
 * Pause at the max request and resume at any time
@@ -180,7 +180,7 @@ browserWSEndpoint, ignoreHTTPSErrors
 Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
 
 ```
-url, allowedDomains, deniedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, evaluatePage
+url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, retryCount, retryDelay, jQuery, device, username, password, evaluatePage
 ```
 
 > **Note**: In practice, setting the options every time you queue equests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
@@ -220,7 +220,7 @@ ignoreHTTPSErrors, headless, executablePath, slowMo, args, ignoreDefaultArgs, ha
 Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
 
 ```
-url, allowedDomains, deniedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, evaluatePage
+url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, retryCount, retryDelay, jQuery, device, username, password, evaluatePage
 ```
 
 > **Note**: In practice, setting the options every time you queue the requests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
@@ -239,6 +239,7 @@ url, allowedDomains, deniedDomains, timeout, priority, delay, retryCount, retryD
   * `url` <[string]> Url to navigate to. The url should include scheme, e.g. `https://`.
   * `maxDepth` <[number]> Maximum depth for the crawler to follow links automatically, default to 1. Leave default to disable following links.
   * `priority` <[number]> Basic priority of queues, defaults to `1`. Priority with larger number is preferred.
+  * `depthPriority` <[boolean]> Whether to adjust priority based on its depth, defaults to `true`. Leave default to increase priority for higher depth, which is [depth-first search](https://en.wikipedia.org/wiki/Depth-first_search).
   * `skipDuplicates` <[boolean]> Whether to skip duplicate requests, default to `null`. The request is considered to be the same if `url`, `userAgent`, `device` and `extraHeaders` are strictly the same.
   * `obeyRobotsTxt` <[boolean]> Whether to obey [robots.txt](https://developers.google.com/search/reference/robots_txt), default to `true`.
   * `followSitemapXml` <[boolean]> Whether to use [sitemap.xml](https://www.sitemaps.org/) to find locations, default to `false`.
