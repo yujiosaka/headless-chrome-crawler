@@ -180,7 +180,7 @@ browserWSEndpoint, ignoreHTTPSErrors
 Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
 
 ```
-url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, evaluatePage
+url, allowedDomains, deniedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, evaluatePage
 ```
 
 > **Note**: In practice, setting the options every time you queue equests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
@@ -220,7 +220,7 @@ ignoreHTTPSErrors, headless, executablePath, slowMo, args, ignoreDefaultArgs, ha
 Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
 
 ```
-url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, evaluatePage
+url, allowedDomains, deniedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, device, username, password, evaluatePage
 ```
 
 > **Note**: In practice, setting the options every time you queue the requests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
@@ -242,7 +242,8 @@ url, allowedDomains, timeout, priority, delay, retryCount, retryDelay, jQuery, d
   * `skipDuplicates` <[boolean]> Whether to skip duplicate requests, default to `null`. The request is considered to be the same if `url`, `userAgent`, `device` and `extraHeaders` are strictly the same.
   * `obeyRobotsTxt` <[boolean]> Whether to obey [robots.txt](https://developers.google.com/search/reference/robots_txt), default to `true`.
   * `followSitemapXml` <[boolean]> Whether to use [sitemap.xml](https://www.sitemaps.org/) to find locations, default to `false`.
-  * `allowedDomains` <[Array]<[string]>> List of domains allowed to request. `www.example.com` will be allowed if `example.com` is listed.
+  * `allowedDomains` <[Array]<[string]|[RegExp]>> List of domains allowed to request. Pass `null` or leave default to skip checking allowed domain
+  * `deniedDomains` <[Array]<[string]|[RegExp]>> List of domains not allowed to request. Pass `null` or leave default to skip checking denied domain.
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, `maxConcurrency` option must be `1`.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
@@ -548,6 +549,7 @@ Dynamic crawlers based on [PhantomJS](http://phantomjs.org) and [Selenium](http:
 [Object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object "Object"
 [Promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise "Promise"
 [string]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#String_type "String"
+[RegExp]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp "RegExp"
 [Serializable]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#Description "Serializable"
 [Error]: https://nodejs.org/api/errors.html#errors_class_error "Error"
 [HCCrawler]: #class-hccrawler "HCCrawler"
