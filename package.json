@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "6.1.0",
-    "@commitlint/config-conventional": "6.1.0",
+    "@commitlint/config-conventional": "6.1.1",
     "eslint": "4.18.1",
     "eslint-config-airbnb": "16.1.0",
     "eslint-plugin-import": "2.9.0",
