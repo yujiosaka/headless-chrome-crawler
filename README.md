@@ -1,6 +1,8 @@
 # headless-chrome-crawler [![npm](https://badge.fury.io/js/headless-chrome-crawler.svg)](https://www.npmjs.com/package/headless-chrome-crawler) [![build](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master.svg?style=shield&circle-token=ba45f930aed7057b79f2ac09df6be3e1b8ee954b)](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master) [![Greenkeeper badge](https://badges.greenkeeper.io/yujiosaka/headless-chrome-crawler.svg)](https://greenkeeper.io/)
 Distributed crawler powered by Headless Chrome
 
+<img src="https://user-images.githubusercontent.com/2261067/36531211-81d54840-1800-11e8-8aa7-019c777712bf.png" height="300" align="right">
+
 ## Features
 
 Crawlers based on simple requests to HTML files are generally fast. However, it sometimes ends up capturing empty bodies, especially when the websites are built on such modern frontend frameworks as [AngularJS](https://angularjs.org), [React](https://reactjs.org) and [Vue.js](https://jp.vuejs.org/index.html).
