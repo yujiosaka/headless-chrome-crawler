@@ -32,7 +32,7 @@ yarn add headless-chrome-crawler
 # or "npm i headless-chrome-crawler"
 ```
 
-> **Note**: headless-chrome-crawler contains [Puppeteer](https://github.com/GoogleChrome/puppeteer). While installation, it automatically downloads a recent version of Chromium. To skip the download, see [Environment variables](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#environment-variables).
+> **Note**: headless-chrome-crawler contains [Puppeteer](https://github.com/GoogleChrome/puppeteer). During installation, it automatically downloads a recent version of Chromium. To skip the download, see [Environment variables](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#environment-variables).
 
 ### Usage
 
