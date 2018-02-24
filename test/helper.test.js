@@ -216,6 +216,22 @@ describe('Helper', () => {
       const expected = 2;
       assert.equal(actual, expected);
     });
+
+    it('returns the first index when queue is long', () => {
+      const queue = [
+        { priority: 4 },
+        { priority: 3 },
+        { priority: 1 },
+        { priority: 0 },
+        { priority: -1 },
+        { priority: -2 },
+        { priority: -4 },
+      ];
+      const item = { priority: -5 };
+      const actual = lowerBound(queue, item, (a, b) => b.priority - a.priority);
+      const expected = 7;
+      assert.equal(actual, expected);
+    });
   });
 
   describe('Helper.checkDomainMatch', () => {
