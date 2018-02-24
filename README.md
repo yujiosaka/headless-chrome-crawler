@@ -182,7 +182,7 @@ browserWSEndpoint, ignoreHTTPSErrors
 Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
 
 ```
-url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, retryCount, retryDelay, jQuery, device, username, password, evaluatePage
+url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, retryCount, retryDelay, jQuery, browserCache, device, username, password, evaluatePage
 ```
 
 > **Note**: In practice, setting the options every time you queue equests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
@@ -222,7 +222,7 @@ ignoreHTTPSErrors, headless, executablePath, slowMo, args, ignoreDefaultArgs, ha
 Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
 
 ```
-url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, retryCount, retryDelay, jQuery, device, username, password, evaluatePage
+url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, retryCount, retryDelay, jQuery, browserCache, device, username, password, evaluatePage
 ```
 
 > **Note**: In practice, setting the options every time you queue the requests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
@@ -251,6 +251,7 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
   * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
+  * `browserCache` <[boolean]> Whether to enable browser cache for each request, defaults to `true`.
   * `device` <[string]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
   * `username` <[string]> Username for basic authentication. pass `null` if it's not necessary.
   * `screenshot` <[Object]> Screenshot option, defaults to `null`. This option is passed to [Puppeteer's page.screenshot()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagescreenshotoptions). Pass `null` or leave default to disable screenshot.
