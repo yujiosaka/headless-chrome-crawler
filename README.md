@@ -460,7 +460,7 @@ HCCrawler.launch({ exporter })
 
 ```js
 const HCCrawler = require('headless-chrome-crawler');
-const CSVExporter = require('headless-chrome-crawler/exporter/json-line');
+const JSONLineExporter = require('headless-chrome-crawler/exporter/json-line');
 
 const FILE = './tmp/result.json';
 
