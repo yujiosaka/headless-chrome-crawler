@@ -63,6 +63,7 @@ class SessionCache extends BaseCache {
     const item = { value, priority };
     if (queue.length && queue[queue.length - 1].priority >= priority) {
       queue.push(item);
+      this._storage.set(key, queue);
       return Promise.resolve();
     }
     const index = lowerBound(queue, item, (a, b) => b.priority - a.priority);
@@ -78,6 +79,7 @@ class SessionCache extends BaseCache {
    */
   dequeue(key) {
     const queue = this._storage.get(key) || [];
+    this._storage.set(key, queue);
     const item = queue.shift();
     if (!item) return Promise.resolve(null);
     return Promise.resolve(item.value);
