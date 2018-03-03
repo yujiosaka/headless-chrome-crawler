@@ -32,7 +32,7 @@
     "robots-parser": "1.0.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "6.1.2",
+    "@commitlint/cli": "6.1.3",
     "@commitlint/config-conventional": "6.1.3",
     "eslint": "4.18.2",
     "eslint-config-airbnb": "16.1.0",
