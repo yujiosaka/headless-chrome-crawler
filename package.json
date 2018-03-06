@@ -39,7 +39,7 @@
     "eslint-plugin-import": "2.9.0",
     "greenkeeper-lockfile": "1.14.0",
     "mime": "2.2.0",
-    "mocha": "5.0.1",
+    "mocha": "5.0.2",
     "power-assert": "1.4.4",
     "sinon": "4.4.2"
   },
