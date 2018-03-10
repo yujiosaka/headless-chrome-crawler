@@ -249,7 +249,11 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
   * `deniedDomains` <[Array]<[string]|[RegExp]>> List of domains not allowed to request. Pass `null` or leave default to skip checking denied domain.
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, `maxConcurrency` option must be `1`.
   * `timeout` <[number]> Navigation timeout in milliseconds, defaults to `30` seconds, pass `0` to disable timeout.
-  * `waitUntil` <[string]|[Array]<[string]>> When to consider navigation succeeded, defaults to `load`. See the [Puppeteer's page.goto()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s `waitUntil` options.
+  * `waitUntil` <[string]|[Array]<[string]>> When to consider navigation succeeded, defaults to `load`. See the [Puppeteer's page.goto()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s `waitUntil` options for further details.
+  * `waitFor` <[Object]> See [Puppeteer's page.waitFor()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagewaitforselectororfunctionortimeout-options-args) for further details.
+    * `selectorOrFunctionOrTimeout` <[string]|[number]|[function]> A selecctor, predicate or timeout to wait for.
+    * `options` <[Object]> Optional waiting parameters.
+    * `args` <[Array]<[Serializable]>> List of arguments to pass to the predicate function.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
   * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
