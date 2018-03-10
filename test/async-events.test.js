@@ -13,7 +13,7 @@ describe('AsyncEventEmitter', () => {
     let actual = 0;
     const expected = 1;
     eventEmitter.on('success', () => { actual += 1; });
-    eventEmitter.emit('success');
+    eventEmitter.emitAsync('success');
     assert.equal(actual, expected);
   });
 
@@ -21,8 +21,8 @@ describe('AsyncEventEmitter', () => {
     let actual = 0;
     const expected = 2;
     eventEmitter.on('success', () => { actual += 1; });
-    eventEmitter.emit('success');
-    eventEmitter.emit('success');
+    eventEmitter.emitAsync('success');
+    eventEmitter.emitAsync('success');
     assert.equal(actual, expected);
   });
 
@@ -31,7 +31,7 @@ describe('AsyncEventEmitter', () => {
     const expected = 3;
     eventEmitter.on('success', () => { actual += 1; });
     eventEmitter.on('success', () => { actual += 2; });
-    eventEmitter.emit('success');
+    eventEmitter.emitAsync('success');
     assert.equal(actual, expected);
   });
 
@@ -39,7 +39,7 @@ describe('AsyncEventEmitter', () => {
     let actual;
     const expected = new Error('Url must be defined!');
     eventEmitter.on('error', error => { actual = error; });
-    eventEmitter.emit('error', expected);
+    eventEmitter.emitAsync('error', expected);
     assert.equal(actual, expected);
   });
 
@@ -47,7 +47,7 @@ describe('AsyncEventEmitter', () => {
     let actual;
     const expected = 1;
     eventEmitter.on('pull', (options, depth) => { actual = depth; });
-    eventEmitter.emit('pull', { url: 'http://example.com/' }, 1);
+    eventEmitter.emitAsync('pull', { url: 'http://example.com/' }, 1);
     assert.equal(actual, expected);
   });
 
@@ -55,7 +55,7 @@ describe('AsyncEventEmitter', () => {
     let actual = 0;
     const expected = 0;
     eventEmitter.on('success', () => delay(100).then(() => { actual += 1; }));
-    eventEmitter.emit('success');
+    eventEmitter.emitAsync('success');
     assert.equal(actual, expected);
   });
 
@@ -63,7 +63,7 @@ describe('AsyncEventEmitter', () => {
     let actual = 0;
     const expected = 1;
     eventEmitter.on('success', () => delay(100).then(() => { actual += 1; }));
-    return eventEmitter.emit('success')
+    return eventEmitter.emitAsync('success')
       .then(() => {
         assert.equal(actual, expected);
       });
