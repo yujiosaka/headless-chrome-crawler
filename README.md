@@ -216,7 +216,7 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
 The method launches a Chromium instance. The following options are passed to [puppeteer.launch()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
 
 ```
-ignoreHTTPSErrors, headless, executablePath, slowMo, args, ignoreDefaultArgs, handleSIGINT, handleSIGTERM, handleSIGHUP, timeout, dumpio, userDataDir, env, devtools
+ignoreHTTPSErrors, headless, executablePath, slowMo, args, ignoreDefaultArgs, handleSIGINT, handleSIGTERM, handleSIGHUP, dumpio, userDataDir, env, devtools
 ```
 
 Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
@@ -248,6 +248,8 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
   * `allowedDomains` <[Array]<[string]|[RegExp]>> List of domains allowed to request. Pass `null` or leave default to skip checking allowed domain
   * `deniedDomains` <[Array]<[string]|[RegExp]>> List of domains not allowed to request. Pass `null` or leave default to skip checking denied domain.
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, `maxConcurrency` option must be `1`.
+  * `timeout` <[number]> Navigation timeout in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+  * `waitUntil` <[string]|[Array]<[string]>> When to consider navigation succeeded, defaults to `load`. See the [Puppeteer's page.goto()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s `waitUntil` options.
   * `retryCount` <[number]> Number of limit when retry fails, defaults to `3`.
   * `retryDelay` <[number]> Number of milliseconds after each retry fails, defaults to `10000`.
   * `jQuery` <[boolean]> Whether to automatically add [jQuery](https://jquery.com) tag to page, defaults to `true`.
@@ -261,12 +263,6 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
 
 > **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
-
-The following options are passed to [Puppeteer's page.goto()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s options'.
-
-```
-timeout, waitUntil
-```
 
 The options can be either an object, an array, or a string. When it's an array, each item in the array will be executed. When it's a string, the options are transformed to an object with only url defined.
 
