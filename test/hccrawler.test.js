@@ -323,6 +323,74 @@ describe('HCCrawler', () => {
             });
         });
 
+        context('when the content rendering is delayed', () => {
+          beforeEach(() => {
+            server.setContent('/', `
+            <script>
+            setTimeout(() => {
+              window.document.write('<h1>Welcome to ${INDEX_PAGE}</h1>');
+            }, 100);
+            </script>
+            `);
+          });
+
+          it('fails evaluating the delayed content without the waitFor option', () => {
+            crawler.queue({
+              url: INDEX_PAGE,
+              evaluatePage,
+            });
+            return crawler.onIdle()
+              .then(() => {
+                assert.equal(onSuccess.callCount, 1);
+                assert.equal(onSuccess.firstCall.args[0].result, '');
+              });
+          });
+
+          it('succeeds evaluating the delayed content with the waitFor timeout option', () => {
+            crawler.queue({
+              url: INDEX_PAGE,
+              waitFor: { selectorOrFunctionOrTimeout: 150 },
+              evaluatePage,
+            });
+            return crawler.onIdle()
+              .then(() => {
+                assert.equal(onSuccess.callCount, 1);
+                assert.ok(includes(onSuccess.firstCall.args[0].result, 'Welcome to'));
+              });
+          });
+
+          it('succeeds evaluating the delayed content with the waitFor selector option', () => {
+            crawler.queue({
+              url: INDEX_PAGE,
+              waitFor: { selectorOrFunctionOrTimeout: 'h1' },
+              evaluatePage,
+            });
+            return crawler.onIdle()
+              .then(() => {
+                assert.equal(onSuccess.callCount, 1);
+                assert.ok(includes(onSuccess.firstCall.args[0].result, 'Welcome to'));
+              });
+          });
+
+          it('succeeds evaluating the delayed content with the waitFor function', () => {
+            crawler.queue({
+              url: INDEX_PAGE,
+              waitFor: {
+                selectorOrFunctionOrTimeout: (expected => (
+                  window.document.body.innerText.includes(expected)
+                )),
+                args: ['Welcome to'],
+              },
+              evaluatePage,
+            });
+            return crawler.onIdle()
+              .then(() => {
+                assert.equal(onSuccess.callCount, 1);
+                assert.ok(includes(onSuccess.firstCall.args[0].result, 'Welcome to'));
+              });
+          });
+        });
+
         context('when the page requires the basic authentication', () => {
           beforeEach(() => {
             server.setContent('/', 'Authorization succeeded!');
