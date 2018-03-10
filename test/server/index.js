@@ -20,11 +20,13 @@ class Server {
   constructor(port) {
     this._server = createServer(this._onRequest.bind(this));
     this._server.listen(port);
+    this._delays = new Map();
     this._auths = new Map();
     this._contents = new Map();
   }
 
   reset() {
+    this._delays.clear();
     this._auths.clear();
     this._contents.clear();
   }
@@ -54,6 +56,14 @@ class Server {
   }
 
   /**
+   * @param {!string} path
+   * @param {!number} delay
+   */
+  setResponseDelay(path, delay) {
+    this._delays.set(path, delay);
+  }
+
+  /**
    * @param {!IncomingMessage} request
    * @param {!ServerResponse} response
    * @private
@@ -68,12 +78,15 @@ class Server {
       response.end('HTTP Error 401 Unauthorized: Access is denied');
       return;
     }
-    const content = this._contents.get(path);
-    if (content) {
-      response.end(content);
-      return;
-    }
-    response.end(path);
+    const delay = this._delays.get(path) || 0;
+    setTimeout(() => {
+      const content = this._contents.get(path);
+      if (content) {
+        response.end(content);
+        return;
+      }
+      response.end(path);
+    }, delay);
   }
 
   /**
