@@ -19,7 +19,7 @@ const DEFAULT_OPTIONS = { args: ['--no-sandbox', '--disable-dev-shm-usage'] };
 
 describe('HCCrawler', () => {
   describe('HCCrawler.executablePath', () => {
-    it('works', () => {
+    it('returns the existing path', () => {
       const executablePath = HCCrawler.executablePath();
       assert.ok(existsSync(executablePath));
     });
@@ -33,11 +33,19 @@ describe('HCCrawler', () => {
   });
 
   describe('HCCrawler.launch', () => {
-    let server;
     let crawler;
+    let onSuccess;
+    let onError;
 
-    context('when crawling does not fail', () => {
-      let onSuccess;
+    beforeEach(() => {
+      onSuccess = sinon.spy();
+      onError = sinon.spy();
+    });
+
+    afterEach(() => crawler.close());
+
+    context('when the server is running', () => {
+      let server;
 
       function evaluatePage() {
         return $('body').text();
@@ -54,7 +62,6 @@ describe('HCCrawler', () => {
 
       beforeEach(() => {
         server.reset();
-        onSuccess = sinon.spy();
       });
 
       context('when the crawler is launched with necessary options', () => {
@@ -64,8 +71,6 @@ describe('HCCrawler', () => {
               crawler = _crawler;
             })
         ));
-
-        afterEach(() => crawler.close());
 
         it('shows the browser version', () => (
           crawler.version()
@@ -158,25 +163,25 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('throws an error when overriding onSuccess', () => {
+        it('throws an error when overriding the onSuccess function', () => {
           assert.throws(() => {
             crawler.queue({ url: INDEX_PAGE, onSuccess: noop });
           });
         });
 
-        it('throws an error when queueing options with unavailable device', () => {
+        it('throws an error when queueing options with an unavailable device', () => {
           assert.throws(() => {
             crawler.queue({ url: INDEX_PAGE, device: 'do-not-exist' });
           });
         });
 
-        it('throws an error when delay is set', () => {
+        it('throws an error when the delay option is set', () => {
           assert.throws(() => {
             crawler.queue({ url: INDEX_PAGE, delay: 100 });
           });
         });
 
-        it('emits newpage event', () => {
+        it('emits a newpage event', () => {
           let request;
           let response;
           crawler.on('newpage', page => {
@@ -191,7 +196,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('crawls when the requested domain exactly matches allowed domain', () => {
+        it('crawls when the requested domain exactly matches allowed domains', () => {
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
           crawler.queue({ url: INDEX_PAGE, allowedDomains: ['127.0.0.1'] });
@@ -202,7 +207,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('crawls when the requested domain matches allowed domain by regular expression', () => {
+        it('crawls when the requested domain matches allowed domains by the regular expression', () => {
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
           crawler.queue({ url: INDEX_PAGE, allowedDomains: [/\d+\.\d+\.\d+\.\d+/] });
@@ -213,7 +218,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('skips crawling when the requested domain does not match allowed domain', () => {
+        it('skips crawling when the requested domain does not match allowed domains', () => {
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
           crawler.queue({ url: INDEX_PAGE, allowedDomains: ['0.0.0.0'] });
@@ -224,7 +229,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('skips crawling when the requested domain exactly matches denied domain', () => {
+        it('skips crawling when the requested domain exactly matches denied domains', () => {
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
           crawler.queue({ url: INDEX_PAGE, deniedDomains: ['127.0.0.1'] });
@@ -235,7 +240,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('skips crawling when the requested domain matches denied domain by regular expression', () => {
+        it('skips crawling when the requested domain matches denied domains by the regular expression', () => {
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
           crawler.queue({ url: INDEX_PAGE, deniedDomains: [/\d+\.\d+\.\d+\.\d+/] });
@@ -246,7 +251,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('follows links when maxDepth is set', () => {
+        it('follows links when the maxDepth option is set', () => {
           let maxdepthreached = 0;
           server.setContent('/1.html', `go to <a href="${PREFIX}/2.html">/2.html</a>`);
           crawler.on('maxdepthreached', () => { maxdepthreached += 1; });
@@ -260,7 +265,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('crawls regardless of the alert dialog', () => {
+        it('crawls regardless of alert dialogs', () => {
           server.setContent('/', `<script>alert('Welcome to ${INDEX_PAGE}');</script>`);
           crawler.queue(INDEX_PAGE);
           return crawler.onIdle()
@@ -269,7 +274,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('crawls when the path is allowed by robots.txt', () => {
+        it('crawls when the path is allowed by the robots.txt', () => {
           server.setContent('/robots.txt', 'User-agent: *\nAllow: /');
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
@@ -281,7 +286,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('skips crawling when the path is not allowed by robots.txt', () => {
+        it('skips crawling when the path is not allowed by the robots.txt', () => {
           server.setContent('/robots.txt', 'User-agent: *\nDisallow: /');
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
@@ -306,7 +311,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('does not obey robots.txt with obeyRobotsTxt = false', () => {
+        it('does not obey the robots.txt with obeyRobotsTxt = false', () => {
           server.setContent('/robots.txt', 'User-agent: *\nDisallow: /');
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
@@ -318,13 +323,13 @@ describe('HCCrawler', () => {
             });
         });
 
-        context('when the page requires basic authentication', () => {
+        context('when the page requires the basic authentication', () => {
           beforeEach(() => {
             server.setContent('/', 'Authorization succeeded!');
             server.setAuth('/', 'username', 'password');
           });
 
-          it('fails authentication when username and password are not set', () => {
+          it('fails authentication when username and password options are not set', () => {
             crawler.queue({
               url: INDEX_PAGE,
               evaluatePage,
@@ -336,7 +341,7 @@ describe('HCCrawler', () => {
               });
           });
 
-          it('fails authentication when wrong username and password are set', () => {
+          it('fails authentication when wrong username and password options are set', () => {
             crawler.queue({
               url: INDEX_PAGE,
               username: 'password',
@@ -350,7 +355,7 @@ describe('HCCrawler', () => {
               });
           });
 
-          it('passes authentication when proper username and password are set', () => {
+          it('passes authentication when proper username and password options are set', () => {
             crawler.queue({
               url: INDEX_PAGE,
               username: 'username',
@@ -365,7 +370,7 @@ describe('HCCrawler', () => {
           });
         });
 
-        context('when sitemap.xml is referred by robots.txt', () => {
+        context('when the sitemap.xml is referred by the robots.txt', () => {
           beforeEach(() => {
             server.setContent('/robots.txt', `Sitemap: ${PREFIX}/sitemap.xml`);
             server.setContent('/sitemap.xml', `
@@ -378,7 +383,7 @@ describe('HCCrawler', () => {
             `);
           });
 
-          it('does not follow sitemap.xml', () => {
+          it('does not follow the sitemap.xml', () => {
             crawler.queue(`${PREFIX}/1.html`);
             return crawler.onIdle()
               .then(() => {
@@ -386,7 +391,7 @@ describe('HCCrawler', () => {
               });
           });
 
-          it('follows sitemap.xml with followSitemapXml = true', () => {
+          it('follows the sitemap.xml with followSitemapXml = true', () => {
             crawler.queue({ url: `${PREFIX}/1.html`, followSitemapXml: true });
             return crawler.onIdle()
               .then(() => {
@@ -396,35 +401,7 @@ describe('HCCrawler', () => {
         });
       });
 
-      context('when page is evaluated by jQuery', () => {
-        beforeEach(() => (
-          HCCrawler.launch(extend({ onSuccess, evaluatePage, retryCount: 0 }, DEFAULT_OPTIONS))
-            .then(_crawler => {
-              crawler = _crawler;
-            })
-        ));
-
-        afterEach(() => crawler.close());
-
-        it('succeeds evaluating page', () => {
-          crawler.queue(INDEX_PAGE);
-          return crawler.onIdle()
-            .then(() => {
-              assert.equal(onSuccess.callCount, 1);
-              assert.equal(onSuccess.firstCall.args[0].result, '/');
-            });
-        });
-
-        it('fails evaluating page with jQuery = false', () => {
-          crawler.queue({ url: INDEX_PAGE, jQuery: false });
-          return crawler.onIdle()
-            .then(() => {
-              assert.equal(onSuccess.callCount, 0);
-            });
-        });
-      });
-
-      context('when the crawler is launched with device option', () => {
+      context('when the crawler is launched with the device option', () => {
         beforeEach(() => {
           server.setContent('/', '<script>window.document.write(window.navigator.userAgent);</script>');
           return HCCrawler.launch(extend({ onSuccess, evaluatePage, device: 'iPhone 6' }, DEFAULT_OPTIONS))
@@ -433,9 +410,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        afterEach(() => crawler.close());
-
-        it('modifies userAgent', () => {
+        it('modifies the userAgent', () => {
           crawler.queue(INDEX_PAGE);
           return crawler.onIdle()
             .then(() => {
@@ -444,7 +419,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it("overrides device with device = 'Nexus 6'", () => {
+        it("overrides the device with device = 'Nexus 6'", () => {
           crawler.queue({ url: INDEX_PAGE, device: 'Nexus 6' });
           return crawler.onIdle()
             .then(() => {
@@ -453,13 +428,130 @@ describe('HCCrawler', () => {
             });
         });
 
-        it("overrides userAgent with userAgent = 'headless-chrome-crawler'", () => {
+        it("overrides the user agent with userAgent = 'headless-chrome-crawler'", () => {
           crawler.queue({ url: INDEX_PAGE, userAgent: 'headless-chrome-crawler' });
           return crawler.onIdle()
             .then(() => {
               assert.equal(onSuccess.callCount, 1);
               assert.equal(onSuccess.firstCall.args[0].result, 'headless-chrome-crawler');
             });
+        });
+      });
+
+      context('when the crawler is launched with retryCount = 0', () => {
+        beforeEach(() => (
+          HCCrawler.launch(extend({ onSuccess, onError, retryCount: 0 }, DEFAULT_OPTIONS))
+            .then(_crawler => {
+              crawler = _crawler;
+            })
+        ));
+
+        it('succeeds evaluating page', () => {
+          crawler.queue({ url: INDEX_PAGE, evaluatePage });
+          return crawler.onIdle()
+            .then(() => {
+              assert.equal(onSuccess.callCount, 1);
+              assert.equal(onSuccess.firstCall.args[0].result, '/');
+            });
+        });
+
+        it('fails evaluating page with jQuery = false', () => {
+          crawler.queue({ url: INDEX_PAGE, jQuery: false, evaluatePage });
+          return crawler.onIdle()
+            .then(() => {
+              assert.equal(onError.callCount, 1);
+              assert.ok(includes(onError.firstCall.args[0].message, 'Evaluation failed:'));
+            });
+        });
+
+        context('when the page response is delayed', () => {
+          beforeEach(() => {
+            server.setResponseDelay('/', 100);
+          });
+
+          it('succeeds request when the timeout option is not set', () => {
+            crawler.queue({ url: INDEX_PAGE });
+            return crawler.onIdle()
+              .then(() => {
+                assert.equal(onSuccess.callCount, 1);
+              });
+          });
+
+          it('succeeds request when the timeout option is disabled', () => {
+            crawler.queue({ url: INDEX_PAGE, timeout: 0 });
+            return crawler.onIdle()
+              .then(() => {
+                assert.equal(onSuccess.callCount, 1);
+              });
+          });
+
+          it('succeeds request when the timeout option is longer than the response delay', () => {
+            crawler.queue({ url: INDEX_PAGE, timeout: 200 });
+            return crawler.onIdle()
+              .then(() => {
+                assert.equal(onSuccess.callCount, 1);
+              });
+          });
+
+          it('fails request when the timeout option is shorter than the response delay', () => {
+            crawler.queue({ url: INDEX_PAGE, timeout: 50 });
+            return crawler.onIdle()
+              .then(() => {
+                assert.equal(onError.callCount, 1);
+                assert.ok(includes(onError.firstCall.args[0].message, 'Navigation Timeout Exceeded:'));
+              });
+          });
+        });
+
+        context('when an image is responded after the timeout option', () => {
+          beforeEach(() => {
+            server.setContent('/', `<body><img src="${PREFIX}/empty.png"></body>`);
+            server.setContent('/empty.png', '');
+            server.setResponseDelay('/empty.png', 100);
+          });
+
+          it('fails request when the waitUntil option is not set', () => {
+            crawler.queue({ url: INDEX_PAGE, timeout: 50 });
+            return crawler.onIdle()
+              .then(() => {
+                assert.equal(onError.callCount, 1);
+                assert.ok(includes(onError.firstCall.args[0].message, 'Navigation Timeout Exceeded:'));
+              });
+          });
+
+          it("fails request with waitUntil = 'load'", () => {
+            crawler.queue({ url: INDEX_PAGE, timeout: 50, waitUntil: 'load' });
+            return crawler.onIdle()
+              .then(() => {
+                assert.equal(onError.callCount, 1);
+                assert.ok(includes(onError.firstCall.args[0].message, 'Navigation Timeout Exceeded:'));
+              });
+          });
+
+          it("succeeds request with waitUntil = 'domcontentloaded'", () => {
+            crawler.queue({ url: INDEX_PAGE, timeout: 50, waitUntil: 'domcontentloaded' });
+            return crawler.onIdle()
+              .then(() => {
+                assert.equal(onSuccess.callCount, 1);
+              });
+          });
+
+          it("succeeds request with waitUntil = ['domcontentloaded']", () => {
+            crawler.queue({ url: INDEX_PAGE, timeout: 50, waitUntil: ['domcontentloaded'] });
+            return crawler.onIdle()
+              .then(() => {
+                assert.equal(onSuccess.callCount, 1);
+              });
+          });
+
+          it("fails request with waitUntil = ['load', 'domcontentloaded']", () => {
+            crawler.queue({ url: INDEX_PAGE, timeout: 50, waitUntil: ['load', 'domcontentloaded'] });
+            return crawler.onIdle()
+              .then(() => {
+                assert.equal(onError.callCount, 1);
+                assert.ok(includes(onError.firstCall.args[0].message, 'Navigation Timeout Exceeded:'));
+              });
+          });
         });
       });
 
@@ -471,9 +563,7 @@ describe('HCCrawler', () => {
             })
         ));
 
-        afterEach(() => crawler.close());
-
-        it('does not throw an error when delay option is set', () => {
+        it('does not throw an error when the delay option is set', () => {
           crawler.queue({ url: INDEX_PAGE, delay: 100 });
           return crawler.onIdle()
             .then(() => {
@@ -481,7 +571,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('does not crawl already cached url', () => {
+        it('does not crawl already cached urls', () => {
           crawler.queue(`${PREFIX}/1.html`);
           crawler.queue(`${PREFIX}/2.html`);
           crawler.queue(`${PREFIX}/1.html`); // The queue won't be requested
@@ -491,7 +581,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('obeys priority order', () => {
+        it('obeys the priority order', () => {
           crawler.queue({ url: `${PREFIX}/1.html`, priority: 1 });
           crawler.queue({ url: `${PREFIX}/2.html`, priority: 2 });
           return crawler.onIdle()
@@ -522,7 +612,7 @@ describe('HCCrawler', () => {
             server.setContent('/2.html', `go to <a href="${PREFIX}/4.html">/4.html</a>`);
           });
 
-          it('follow links with depth first order with maxDepth = 3', () => {
+          it('follow links with depth first order (DFS) with maxDepth = 3', () => {
             crawler.queue({ url: `${PREFIX}/1.html`, maxDepth: 3 });
             return crawler.onIdle()
               .then(() => {
@@ -533,7 +623,7 @@ describe('HCCrawler', () => {
               });
           });
 
-          it('follow links with breadth first order with maxDepth = 3 and depthPriority = false', () => {
+          it('follow links with breadth first order (BFS) with maxDepth = 3 and depthPriority = false', () => {
             crawler.queue({ url: `${PREFIX}/1.html`, maxDepth: 3, depthPriority: false });
             return crawler.onIdle()
               .then(() => {
@@ -546,7 +636,7 @@ describe('HCCrawler', () => {
         });
       });
 
-      context('when the crawler is launched with maxRequest option', () => {
+      context('when the crawler is launched with the maxRequest option', () => {
         beforeEach(() => (
           HCCrawler.launch(extend({
             onSuccess,
@@ -558,9 +648,7 @@ describe('HCCrawler', () => {
             })
         ));
 
-        afterEach(() => crawler.close());
-
-        it('pauses at maxRequest option', () => {
+        it('pauses at the maxRequest option', () => {
           let maxrequestreached = 0;
           crawler.on('maxrequestreached', () => { maxrequestreached += 1; });
           crawler.queue(`${PREFIX}/1.html`);
@@ -578,7 +666,7 @@ describe('HCCrawler', () => {
             });
         });
 
-        it('resumes from maxRequest option', () => {
+        it('resumes from the maxRequest option', () => {
           crawler.queue(`${PREFIX}/1.html`);
           crawler.queue(`${PREFIX}/2.html`);
           crawler.queue(`${PREFIX}/3.html`);
@@ -605,8 +693,8 @@ describe('HCCrawler', () => {
         });
       });
 
-      context('when the crawler is launched with preRequest option', () => {
-        context('when preRequest returns true', () => {
+      context('when the crawler is launched with the preRequest function', () => {
+        context('when the preRequest function returns true', () => {
           function preRequest() {
             return true;
           }
@@ -617,8 +705,6 @@ describe('HCCrawler', () => {
                 crawler = _crawler;
               })
           ));
-
-          afterEach(() => crawler.close());
 
           it('does not skip crawling', () => {
             let requestskipped = 0;
@@ -632,7 +718,7 @@ describe('HCCrawler', () => {
           });
         });
 
-        context('when preRequest returns false', () => {
+        context('when the preRequest function returns false', () => {
           function preRequest() {
             return false;
           }
@@ -643,8 +729,6 @@ describe('HCCrawler', () => {
                 crawler = _crawler;
               })
           ));
-
-          afterEach(() => crawler.close());
 
           it('skips crawling', () => {
             let requestskipped = 0;
@@ -658,7 +742,7 @@ describe('HCCrawler', () => {
           });
         });
 
-        context('when preRequest modifies options', () => {
+        context('when the preRequest function modifies options', () => {
           const path = './tmp/example.png';
           function preRequest(options) {
             options.screenshot = { path };
@@ -672,8 +756,6 @@ describe('HCCrawler', () => {
               })
           ));
 
-          afterEach(() => crawler.close());
-
           it('modifies options', () => {
             crawler.queue(INDEX_PAGE);
             return crawler.onIdle()
@@ -685,7 +767,7 @@ describe('HCCrawler', () => {
         });
       });
 
-      context('when the crawler is launched with exporter option', () => {
+      context('when the crawler is launched with the exporter option', () => {
         function removeTemporaryFile(file) {
           return new Promise(resolve => {
             unlink(file, (() => void resolve()));
@@ -701,10 +783,7 @@ describe('HCCrawler', () => {
           });
         }
 
-        afterEach(() => (
-          crawler.close()
-            .then(() => removeTemporaryFile(CSV_FILE))
-        ));
+        afterEach(() => removeTemporaryFile(CSV_FILE));
 
         context('when the crawler is launched with exporter = CSVExporter', () => {
           beforeEach(() => (
@@ -778,7 +857,7 @@ describe('HCCrawler', () => {
         });
       });
 
-      context('when the crawler is launched with redis cache', () => {
+      context('when the crawler is launched with the redis cache', () => {
         context('for the fist time with persistCache = true', () => {
           beforeEach(() => {
             const cache = new RedisCache();
@@ -792,8 +871,6 @@ describe('HCCrawler', () => {
                 return crawler.clearCache();
               });
           });
-
-          afterEach(() => crawler.close());
 
           it('crawls all queued urls', () => {
             crawler.queue(`${PREFIX}/1.html`);
@@ -814,9 +891,7 @@ describe('HCCrawler', () => {
               });
           });
 
-          afterEach(() => crawler.close());
-
-          it('does not crawl already cached url', () => {
+          it('does not crawl already cached urls', () => {
             crawler.queue(`${PREFIX}/2.html`);
             crawler.queue(`${PREFIX}/3.html`);
             return crawler.onIdle()
@@ -827,7 +902,7 @@ describe('HCCrawler', () => {
         });
       });
 
-      it('emits disconnect event', () => {
+      it('emits a disconnect event', () => {
         let disconnected = 0;
         return HCCrawler.launch(DEFAULT_OPTIONS)
           .then(_crawler => {
@@ -839,17 +914,13 @@ describe('HCCrawler', () => {
       });
     });
 
-    context('when crawling fails', () => {
-      const onError = sinon.spy();
-
+    context('when the server is not running', () => {
       beforeEach(() => (
         HCCrawler.launch(extend({ onError }, DEFAULT_OPTIONS))
           .then(_crawler => {
             crawler = _crawler;
           })
       ));
-
-      afterEach(() => crawler.close());
 
       it('retries and gives up', () => {
         let requestretried = 0;
@@ -864,6 +935,7 @@ describe('HCCrawler', () => {
             assert.equal(crawler.pendingQueueSize(), 0);
             assert.equal(crawler.requestedCount(), 1);
             assert.equal(onError.callCount, 1);
+            assert.equal(onError.firstCall.args[0].message, 'net::ERR_CONNECTION_REFUSED');
           });
       });
     });
