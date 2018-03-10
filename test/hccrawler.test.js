@@ -649,6 +649,15 @@ describe('HCCrawler', () => {
             });
         });
 
+        it('does not crawl twice if one url has a trailing slash on the root folder and the other does not', () => {
+          crawler.queue(`${PREFIX}`);
+          crawler.queue(`${PREFIX}/`);
+          return crawler.onIdle()
+            .then(() => {
+              assert.equal(onSuccess.callCount, 1);
+            });
+        });
+
         it('obeys the priority order', () => {
           crawler.queue({ url: `${PREFIX}/1.html`, priority: 1 });
           crawler.queue({ url: `${PREFIX}/2.html`, priority: 2 });
