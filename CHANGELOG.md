@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fix a bug of not allowed to set `timeout` option per request.
+- Fix a bug of crawling twice if one url has a trailing slash on the root folder and the other does not.
 
 ## [1.4.0] - 2018-02-24
 
