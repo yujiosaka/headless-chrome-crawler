@@ -27,7 +27,7 @@
     "lodash": "4.17.5",
     "puppeteer": "1.1.1",
     "redis": "2.8.0",
-    "request": "2.84.0",
+    "request": "2.83.0",
     "request-promise": "4.2.2",
     "robots-parser": "1.0.2"
   },
