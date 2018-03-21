@@ -1,7 +1,9 @@
 const { unlink, readFile, existsSync } = require('fs');
 const assert = require('assert');
 const sinon = require('sinon');
-const { extend, includes, noop } = require('lodash');
+const extend = require('lodash/extend');
+const includes = require('lodash/includes');
+const noop = require('lodash/noop');
 const HCCrawler = require('../');
 const RedisCache = require('../cache/redis');
 const CSVExporter = require('../exporter/csv');

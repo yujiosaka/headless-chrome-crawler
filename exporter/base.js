@@ -1,4 +1,4 @@
-const { extend } = require('lodash');
+const extend = require('lodash/extend');
 const { createWriteStream } = require('fs');
 
 /**
