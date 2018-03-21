@@ -543,7 +543,15 @@ The static crawlers are based on simple requests to HTML files. They are general
 
 Dynamic crawlers based on [PhantomJS](http://phantomjs.org) and [Selenium](http://www.seleniumhq.org) work magically on such dynamic applications. However, [PhantomJS's maintainer has stepped down and recommended to switch to Headless Chrome](https://groups.google.com/forum/#!topic/phantomjs/9aI5d-LDuNE), which is fast and stable. [Selenium](http://www.seleniumhq.org) is still a well-maintained cross browser platform which runs on Chrome, Safari, IE and so on. However, crawlers do not need such cross browsers support.
 
- This crawler is dynamic and based on Headless Chrome.
+This crawler is dynamic and based on Headless Chrome.
+
+### How is this different from Puppeteer?
+
+This crawler is built on top of [Puppeteer](https://github.com/GoogleChrome/puppeteer).
+
+[Puppeteer](https://github.com/GoogleChrome/puppeteer) provides low to mid level APIs to manupulate Headless Chrome, so you can build your own crawler with it. This way you have more controls on what features to implement in order to satisfy your needs.
+
+However, most crawlers requires such common features as following links, obeying robots.txt and etc. This crawler is a general solution for most crawling purposes. If you want to quickly start crawling with Headless Chrome, this crawler is for you.
 
 [Array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array "Array"
 [boolean]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type "Boolean"
