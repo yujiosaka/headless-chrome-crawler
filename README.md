@@ -306,7 +306,7 @@ This method clears the cache when it's used.
 
 #### crawler.wsEndpoint()
 
-* returns: <[Promise]<[string]>> Promise resolved with websocket url.
+* returns: <[string]> Websocket url to connect to the browser.
 
 #### crawler.onIdle()
 
