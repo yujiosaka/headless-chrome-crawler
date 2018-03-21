@@ -536,7 +536,7 @@ describe('HCCrawler', () => {
 
         context('when the page response is delayed', () => {
           beforeEach(() => {
-            server.setResponseDelay('/', 100);
+            server.setResponseDelay('/', 200);
           });
 
           it('succeeds request when the timeout option is not set', () => {
@@ -556,7 +556,7 @@ describe('HCCrawler', () => {
           });
 
           it('succeeds request when the timeout option is longer than the response delay', () => {
-            crawler.queue({ url: INDEX_PAGE, timeout: 200 });
+            crawler.queue({ url: INDEX_PAGE, timeout: 300 });
             return crawler.onIdle()
               .then(() => {
                 assert.equal(onSuccess.callCount, 1);
@@ -564,7 +564,7 @@ describe('HCCrawler', () => {
           });
 
           it('fails request when the timeout option is shorter than the response delay', () => {
-            crawler.queue({ url: INDEX_PAGE, timeout: 50 });
+            crawler.queue({ url: INDEX_PAGE, timeout: 100 });
             return crawler.onIdle()
               .then(() => {
                 assert.equal(onError.callCount, 1);
@@ -577,11 +577,11 @@ describe('HCCrawler', () => {
           beforeEach(() => {
             server.setContent('/', `<body><img src="${PREFIX}/empty.png"></body>`);
             server.setContent('/empty.png', '');
-            server.setResponseDelay('/empty.png', 100);
+            server.setResponseDelay('/empty.png', 200);
           });
 
           it('fails request when the waitUntil option is not set', () => {
-            crawler.queue({ url: INDEX_PAGE, timeout: 50 });
+            crawler.queue({ url: INDEX_PAGE, timeout: 100 });
             return crawler.onIdle()
               .then(() => {
                 assert.equal(onError.callCount, 1);
@@ -590,7 +590,7 @@ describe('HCCrawler', () => {
           });
 
           it("fails request with waitUntil = 'load'", () => {
-            crawler.queue({ url: INDEX_PAGE, timeout: 50, waitUntil: 'load' });
+            crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: 'load' });
             return crawler.onIdle()
               .then(() => {
                 assert.equal(onError.callCount, 1);
@@ -599,7 +599,7 @@ describe('HCCrawler', () => {
           });
 
           it("succeeds request with waitUntil = 'domcontentloaded'", () => {
-            crawler.queue({ url: INDEX_PAGE, timeout: 50, waitUntil: 'domcontentloaded' });
+            crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: 'domcontentloaded' });
             return crawler.onIdle()
               .then(() => {
                 assert.equal(onSuccess.callCount, 1);
@@ -607,7 +607,7 @@ describe('HCCrawler', () => {
           });
 
           it("succeeds request with waitUntil = ['domcontentloaded']", () => {
-            crawler.queue({ url: INDEX_PAGE, timeout: 50, waitUntil: ['domcontentloaded'] });
+            crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: ['domcontentloaded'] });
             return crawler.onIdle()
               .then(() => {
                 assert.equal(onSuccess.callCount, 1);
@@ -615,7 +615,7 @@ describe('HCCrawler', () => {
           });
 
           it("fails request with waitUntil = ['load', 'domcontentloaded']", () => {
-            crawler.queue({ url: INDEX_PAGE, timeout: 50, waitUntil: ['load', 'domcontentloaded'] });
+            crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: ['load', 'domcontentloaded'] });
             return crawler.onIdle()
               .then(() => {
                 assert.equal(onError.callCount, 1);
