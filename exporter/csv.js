@@ -1,4 +1,5 @@
-const { map, get } = require('lodash');
+const map = require('lodash/map');
+const get = require('lodash/get');
 const { escapeQuotes } = require('../lib/helper');
 const BaseExporter = require('./base');
 
