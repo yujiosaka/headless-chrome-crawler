@@ -1,4 +1,4 @@
-const { pick } = require('lodash');
+const pick = require('lodash/pick');
 const BaseExporter = require('./base');
 
 /**
