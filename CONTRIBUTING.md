@@ -7,7 +7,7 @@ Please note that this project has a [code of conduct](https://github.com/yujiosa
 
 ## Contributing Process
 
-1. Modify code following [ESLint](https://eslint.org) and the code should be annotated with [closure annotations](https://github.com/google/closure-compiler/wiki/Annotating-JavaScript-for-the-Closure-Compiler).
+1. Modify code following [ESLint](https://eslint.org) and the code should be annotated with [JSDoc annotations](https://github.com/Microsoft/TypeScript/wiki/JSDoc-support-in-JavaScript).
 2. Make sure all tests are passed by `yarn test`. Modify tests when the interface has changed.
 2. Update the [README.md](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/README.md) with details of changes to the interface.
 3. Update the [CHANGELOG.md](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/CHANGELOG.md). The versioning scheme we use is [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
