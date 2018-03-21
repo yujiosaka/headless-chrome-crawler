@@ -1012,7 +1012,7 @@ describe('HCCrawler', () => {
             assert.equal(crawler.pendingQueueSize(), 0);
             assert.equal(crawler.requestedCount(), 1);
             assert.equal(onError.callCount, 1);
-            assert.equal(onError.firstCall.args[0].message, 'net::ERR_CONNECTION_REFUSED');
+            assert.ok(includes(onError.firstCall.args[0].message, 'net::ERR_CONNECTION_REFUSED'));
           });
       });
     });
