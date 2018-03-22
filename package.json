@@ -40,7 +40,7 @@
     "@types/node": "9.4.7",
     "@types/puppeteer": "1.2.0",
     "@types/request-promise": "4.1.41",
-    "eslint": "4.19.0",
+    "eslint": "4.19.1",
     "eslint-config-airbnb": "16.1.0",
     "eslint-plugin-import": "2.9.0",
     "greenkeeper-lockfile": "1.14.0",
