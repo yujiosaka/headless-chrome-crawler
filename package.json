@@ -37,7 +37,7 @@
     "@commitlint/config-conventional": "6.1.3",
     "@types/debug": "0.0.30",
     "@types/lodash": "4.14.106",
-    "@types/node": "9.4.7",
+    "@types/node": "9.6.0",
     "@types/puppeteer": "1.2.0",
     "@types/request-promise": "4.1.41",
     "eslint": "4.19.1",
@@ -45,7 +45,7 @@
     "eslint-plugin-import": "2.9.0",
     "greenkeeper-lockfile": "1.14.0",
     "mime": "2.2.0",
-    "mocha": "5.0.3",
+    "mocha": "5.0.5",
     "power-assert": "1.4.4",
     "sinon": "5.0.0",
     "typescript": "2.7.2"
