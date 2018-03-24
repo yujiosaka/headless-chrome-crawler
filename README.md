@@ -176,7 +176,7 @@ HCCrawler.launch({
 This method connects to an existing Chromium instance. The following options are passed to [puppeteer.connect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
 
 ```
-browserWSEndpoint, ignoreHTTPSErrors
+browserWSEndpoint, ignoreHTTPSErrors, slowMo
 ```
 
 Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
