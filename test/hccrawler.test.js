@@ -34,6 +34,33 @@ describe('HCCrawler', () => {
     });
   });
 
+  describe('HCCrawler.connect', () => {
+    let crawler;
+
+    beforeEach(() => (
+      HCCrawler.launch(DEFAULT_OPTIONS)
+        .then(_crawler => {
+          crawler = _crawler;
+        })
+    ));
+
+    afterEach(() => crawler.close());
+
+    it('connects multiple times to the same crawler', () => (
+      HCCrawler.connect({ browserWSEndpoint: crawler.wsEndpoint() })
+        .then(secondCrawler => secondCrawler.close())
+    ));
+
+    it('reconnects to an already disconnected crawler', () => {
+      const browserWSEndpoint = crawler.wsEndpoint();
+      return crawler.disconnect()
+        .then(() => HCCrawler.connect({ browserWSEndpoint }))
+        .then(_crawler => {
+          crawler = _crawler;
+        });
+    });
+  });
+
   describe('HCCrawler.launch', () => {
     let crawler;
     let onSuccess;
@@ -45,6 +72,13 @@ describe('HCCrawler', () => {
     });
 
     afterEach(() => crawler.close());
+
+    it('launches a crawler', () => (
+      HCCrawler.launch(DEFAULT_OPTIONS)
+        .then(_crawler => {
+          crawler = _crawler;
+        })
+    ));
 
     context('when the server is running', () => {
       let server;
