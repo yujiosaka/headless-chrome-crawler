@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Support `waitFor` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+- Support `slowMo` for [HCCrawler.connect()](#hccrawlerconnectoptions)'s options.
 
 ### Fixed
 
