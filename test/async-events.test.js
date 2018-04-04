@@ -54,7 +54,10 @@ describe('AsyncEventEmitter', () => {
   it('listens to an async event', () => {
     let actual = 0;
     const expected = 0;
-    eventEmitter.on('success', () => delay(100).then(() => { actual += 1; }));
+    eventEmitter.on('success', async () => {
+      await delay(100);
+      actual += 1;
+    });
     eventEmitter.emitAsync('success');
     assert.equal(actual, expected);
   });
@@ -62,7 +65,10 @@ describe('AsyncEventEmitter', () => {
   it('waits until resolving async event', () => {
     let actual = 0;
     const expected = 1;
-    eventEmitter.on('success', () => delay(100).then(() => { actual += 1; }));
+    eventEmitter.on('success', async () => {
+      await delay(100);
+      actual += 1;
+    });
     return eventEmitter.emitAsync('success')
       .then(() => {
         assert.equal(actual, expected);

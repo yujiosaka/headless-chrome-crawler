@@ -19,24 +19,18 @@ const {
 
 describe('Helper', () => {
   describe('Helper.delay', () => {
-    it('should wait until shorter delay', () => {
+    it('should wait until shorter delay', async () => {
       let waited = false;
-      delay(50).then(() => {
-        waited = true;
-      });
-      return delay(100).then(() => {
-        assert.equal(waited, true);
-      });
+      delay(50).then(() => { waited = true; });
+      await delay(100);
+      assert.equal(waited, true);
     });
 
-    it('should not wait until longer delay', () => {
+    it('should not wait until longer delay', async () => {
       let waited = false;
-      delay(100).then(() => {
-        waited = true;
-      });
-      return delay(50).then(() => {
-        assert.equal(waited, false);
-      });
+      delay(100).then(() => { waited = true; });
+      await delay(50);
+      assert.equal(waited, false);
     });
   });
 
