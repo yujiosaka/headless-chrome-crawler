@@ -21,8 +21,8 @@ class BaseExporter {
   /**
    * @return {!Promise}
    */
-  onEnd() {
-    return new Promise((resolve, reject) => {
+  async onEnd() {
+    await new Promise((resolve, reject) => {
       this._stream.on('finish', resolve);
       this._stream.on('error', reject);
     });
