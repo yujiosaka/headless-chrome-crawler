@@ -10,126 +10,144 @@ describe('Cache', () => {
 
   function testSuite() {
     describe('get and set', () => {
-      it('works for null', () => (
-        cache.set(KEY, null)
-          .then(() => cache.get(KEY).then(value => void assert.equal(value, null)))
-      ));
+      it('works for null', async () => {
+        await cache.set(KEY, null);
+        const value = await cache.get(KEY);
+        assert.equal(value, null);
+      });
 
-      it('works for number', () => (
-        cache.set(KEY, 1)
-          .then(() => cache.get(KEY).then(value => void assert.equal(value, 1)))
-      ));
+      it('works for number', async () => {
+        await cache.set(KEY, 1);
+        const value = await cache.get(KEY);
+        assert.equal(value, 1);
+      });
 
-      it('works for string', () => (
-        cache.set(KEY, 'http://example.com')
-          .then(() => cache.get(KEY).then(value => void assert.equal(value, 'http://example.com')))
-      ));
+      it('works for string', async () => {
+        await cache.set(KEY, 'http://example.com');
+        const value = await cache.get(KEY);
+        assert.equal(value, 'http://example.com');
+      });
 
-      it('works for object', () => (
-        cache.set(KEY, { url: 'http://example.com' })
-          .then(() => cache.get(KEY).then(value => void assert.deepEqual(value, { url: 'http://example.com' })))
-      ));
+      it('works for object', async () => {
+        await cache.set(KEY, { url: 'http://example.com' });
+        const value = await cache.get(KEY);
+        assert.deepEqual(value, { url: 'http://example.com' });
+      });
     });
 
     describe('enqueue and dequeue', () => {
-      it('works for null', () => (
-        cache.enqueue(KEY, null)
-          .then(() => cache.dequeue(KEY).then(value => void assert.equal(value, null)))
-      ));
+      it('works for null', async () => {
+        await cache.enqueue(KEY, null);
+        const value = await cache.dequeue(KEY);
+        assert.equal(value, null);
+      });
 
-      it('works for number', () => (
-        cache.enqueue(KEY, 1)
-          .then(() => cache.dequeue(KEY).then(value => void assert.equal(value, 1)))
-      ));
+      it('works for number', async () => {
+        await cache.enqueue(KEY, 1);
+        const value = await cache.dequeue(KEY);
+        assert.equal(value, 1);
+      });
 
-      it('works for string', () => (
-        cache.enqueue(KEY, 'http://example.com')
-          .then(() => cache.dequeue(KEY).then(value => void assert.equal(value, 'http://example.com')))
-      ));
+      it('works for string', async () => {
+        await cache.enqueue(KEY, 'http://example.com');
+        const value = await cache.dequeue(KEY);
+        assert.equal(value, 'http://example.com');
+      });
 
-      it('works for object', () => (
-        cache.enqueue(KEY, { url: 'http://example.com' })
-          .then(() => cache.dequeue(KEY).then(value => void assert.deepEqual(value, { url: 'http://example.com' })))
-      ));
+      it('works for object', async () => {
+        await cache.enqueue(KEY, { url: 'http://example.com' });
+        const value = await cache.dequeue(KEY);
+        assert.deepEqual(value, { url: 'http://example.com' });
+      });
 
-      it('obeys priority order', () => (
-        cache.enqueue(KEY, 'http://example.com/', 0)
-          .then(() => cache.enqueue(KEY, 'http://example.net/', 1))
-          .then(() => cache.size(KEY).then(length => void assert.equal(length, 2)))
-          .then(() => cache.dequeue(KEY).then(value => void assert.equal(value, 'http://example.net/')))
-          .then(() => cache.dequeue(KEY).then(value => void assert.equal(value, 'http://example.com/')))
-          .then(() => cache.size(KEY).then(length => void assert.equal(length, 0)))
-      ));
+      it('obeys priority order', async () => {
+        await cache.enqueue(KEY, 'http://example.com/', 0);
+        await cache.enqueue(KEY, 'http://example.net/', 1);
+        const length1 = await cache.size(KEY);
+        assert.equal(length1, 2);
+        const value1 = await cache.dequeue(KEY);
+        assert.equal(value1, 'http://example.net/');
+        const value2 = await cache.dequeue(KEY);
+        assert.equal(value2, 'http://example.com/');
+        const length2 = await cache.size(KEY);
+        assert.equal(length2, 0);
+      });
     });
 
     describe('clear', () => {
-      it('clears set value', () => (
-        cache.set(KEY, 'http://example.com/')
-          .then(() => cache.clear())
-          .then(() => cache.get(KEY).then(value => void assert.equal(value, null)))
-      ));
+      it('clears set value', async () => {
+        await cache.set(KEY, 'http://example.com/');
+        await cache.clear();
+        const value = await cache.get(KEY);
+        assert.equal(value, null);
+      });
 
-      it('clears enqueued value', () => (
-        cache.enqueue(KEY, 'http://example.com/')
-          .then(() => cache.clear())
-          .then(() => cache.dequeue(KEY).then(value => void assert.equal(value, null)))
-      ));
+      it('clears enqueued value', async () => {
+        await cache.enqueue(KEY, 'http://example.com/');
+        await cache.clear();
+        const value = await cache.dequeue(KEY);
+        assert.equal(value, null);
+      });
     });
 
     describe('remove', () => {
-      it('removes set value', () => (
-        cache.set(KEY, 'http://example.com/')
-          .then(() => cache.remove(KEY))
-          .then(() => cache.get(KEY).then(value => void assert.equal(value, null)))
-      ));
+      it('removes set value', async () => {
+        await cache.set(KEY, 'http://example.com/');
+        await cache.remove(KEY);
+        const value = await cache.get(KEY);
+        assert.equal(value, null);
+      });
 
-      it('removes enqueued value', () => (
-        cache.enqueue(KEY, 'http://example.com/')
-          .then(() => cache.remove(KEY))
-          .then(() => cache.dequeue(KEY).then(value => void assert.equal(value, null)))
-      ));
+      it('removes enqueued value', async () => {
+        await cache.enqueue(KEY, 'http://example.com/');
+        await cache.remove(KEY);
+        const value = await cache.dequeue(KEY);
+        assert.equal(value, null);
+      });
     });
   }
 
-  afterEach(() => (
-    cache.clear()
-      .then(() => cache.close())
-  ));
+  afterEach(async () => {
+    await cache.clear();
+    await cache.close();
+  });
 
   describe('SessionCache', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       cache = new SessionCache();
-      return cache.init()
-        .then(() => cache.clear());
+      await cache.init();
+      await cache.clear();
     });
     testSuite();
   });
 
   describe('RedisCache', () => {
     context('constructed without expire option', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         cache = new RedisCache();
-        return cache.init()
-          .then(() => cache.clear());
+        await cache.init();
+        await cache.clear();
       });
       testSuite();
     });
     context('constructed with expire = 1', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         cache = new RedisCache({ expire: 1 });
-        return cache.init()
-          .then(() => cache.clear());
+        await cache.init();
+        await cache.clear();
       });
-      it('expires set value after wait', () => (
-        cache.set(KEY, 'http://example.com/')
-          .then(() => delay(1500))
-          .then(() => cache.get(KEY).then(value => void assert.equal(value, null)))
-      ));
-      it('expires enqueued value after wait', () => (
-        cache.enqueue(KEY, 'http://example.com/')
-          .then(() => delay(1500))
-          .then(() => cache.get(KEY).then(value => void assert.equal(value, null)))
-      ));
+      it('expires set value after wait', async () => {
+        await cache.set(KEY, 'http://example.com/');
+        await delay(1500);
+        const value = await cache.get(KEY);
+        assert.equal(value, null);
+      });
+      it('expires enqueued value after wait', async () => {
+        await cache.enqueue(KEY, 'http://example.com/');
+        await delay(1500);
+        const value = await cache.get(KEY);
+        assert.equal(value, null);
+      });
     });
   });
 });
