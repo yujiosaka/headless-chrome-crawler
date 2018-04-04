@@ -60,17 +60,17 @@ class FsCache extends BaseCache {
 
 const cache = new FsCache({ file: FILE });
 
-HCCrawler.launch({
-  maxConcurrency: 1,
-  onSuccess: (result => {
-    console.log(`Requested ${result.options.url}.`);
-  }),
-  cache,
-})
-  .then(crawler => {
-    crawler.queue('https://example.com/');
-    crawler.queue('https://example.net/');
-    crawler.queue('https://example.com/'); // The queue won't be requested
-    crawler.onIdle()
-      .then(() => crawler.close());
+(async () => {
+  const crawler = await HCCrawler.launch({
+    maxConcurrency: 1,
+    onSuccess: (result => {
+      console.log(`Requested ${result.options.url}.`);
+    }),
+    cache,
   });
+  crawler.queue('https://example.com/');
+  crawler.queue('https://example.net/');
+  crawler.queue('https://example.com/'); // The queue won't be requested
+  await crawler.onIdle();
+  await crawler.close();
+})();
