@@ -81,7 +81,7 @@ describe('PriorityQueue', () => {
     });
   }
 
-  context('when constructed with SessionCache', async () => {
+  context('when constructed with SessionCache', () => {
     beforeEach(async () => {
       cache = new SessionCache();
       await cache.init();
