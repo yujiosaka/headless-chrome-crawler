@@ -39,34 +39,34 @@ yarn add headless-chrome-crawler
 ```js
 const HCCrawler = require('headless-chrome-crawler');
 
-HCCrawler.launch({
-  // Function to be evaluated in browsers
-  evaluatePage: (() => ({
-    title: $('title').text(),
-  })),
-  // Function to be called with evaluated results from browsers
-  onSuccess: (result => {
-    console.log(result);
-  }),
-})
-  .then(crawler => {
-    // Queue a request
-    crawler.queue('https://example.com/');
-    // Queue multiple requests
-    crawler.queue(['https://example.net/', 'https://example.org/']);
-    // Queue a request with custom options
-    crawler.queue({
-      url: 'https://example.com/',
-      // Emulate a tablet device
-      device: 'Nexus 7',
-      // Enable screenshot by passing options
-      screenshot: {
-        path: './tmp/example-com.png'
-      },
-    });
-    crawler.onIdle() // Resolved when no queue is left
-      .then(() => crawler.close()); // Close the crawler
+(async () => {
+  const crawler = await HCCrawler.launch({
+    // Function to be evaluated in browsers
+    evaluatePage: (() => ({
+      title: $('title').text(),
+    })),
+    // Function to be called with evaluated results from browsers
+    onSuccess: (result => {
+      console.log(result);
+    }),
   });
+  // Queue a request
+  crawler.queue('https://example.com/');
+  // Queue multiple requests
+  crawler.queue(['https://example.net/', 'https://example.org/']);
+  // Queue a request with custom options
+  crawler.queue({
+    url: 'https://example.com/',
+    // Emulate a tablet device
+    device: 'Nexus 7',
+    // Enable screenshot by passing options
+    screenshot: {
+      path: './tmp/example-com.png'
+    },
+  });
+  await crawler.onIdle(); // Resolved when no queue is left
+  await crawler.close(); // Close the crawler
+})();
 ```
 
 ## Examples
@@ -132,19 +132,19 @@ HCCrawler provides methods to launch or connect to a Chromium instance.
 ```js
 const HCCrawler = require('headless-chrome-crawler');
 
-HCCrawler.launch({
-  evaluatePage: (() => ({
-    title: $('title').text(),
-  })),
-  onSuccess: (result => {
-    console.log(result);
-  }),
-})
-  .then(crawler => {
-    crawler.queue('https://example.com/');
-    crawler.onIdle()
-      .then(() => crawler.close());
+(async () => {
+  const crawler = await HCCrawler.launch({
+    evaluatePage: (() => ({
+      title: $('title').text(),
+    })),
+    onSuccess: (result => {
+      console.log(result);
+    }),
   });
+  crawler.queue('https://example.com/');
+  await crawler.onIdle();
+  await crawler.close();
+})();
 ```
 
 #### HCCrawler.connect([options])
@@ -397,9 +397,10 @@ Emitted when the browser instance is disconnected.
 ```js
 const HCCrawler = require('headless-chrome-crawler');
 
-// Pass null to the cache option to disable it.
-HCCrawler.launch({ cache: null });
-// ...
+(async () => {
+  const crawler = await HCCrawler.launch({ cache: null }); // Pass null to the cache option to disable it.
+  // ...
+})();
 ```
 
 ### class: RedisCache
@@ -417,11 +418,13 @@ const RedisCache = require('headless-chrome-crawler/cache/redis');
 
 const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
 
-HCCrawler.launch({
-  persistCache: true, // Set true so that cache won't be cleared when closing the crawler
-  cache,
-});
-// ...
+(async () => {
+  const crawler = await HCCrawler.launch({
+    persistCache: true, // Set true so that cache won't be cleared when closing the crawler
+    cache,
+  });
+  // ...
+})();
 ```
 
 ### class: BaseCache
@@ -449,8 +452,10 @@ const exporter = new CSVExporter({
   separator: '\t',
 });
 
-HCCrawler.launch({ exporter })
-// ...
+(async () => {
+  const crawler = await HCCrawler.launch({ exporter });
+  // ...
+})();
 ```
 
 ### class: JSONLineExporter
@@ -471,8 +476,10 @@ const exporter = new JSONLineExporter({
   fields: ['options', 'response'],
 });
 
-HCCrawler.launch({ exporter })
-// ...
+(async () => {
+  const crawler = await HCCrawler.launch({ exporter });
+  // ...
+})();
 ```
 
 ### class: BaseExporter
@@ -500,13 +507,13 @@ const cache = new RedisCache({
   // ...
 });
 
-HCCrawler.launch({
-  maxDepth: 3,
-  cache,
-})
-  .then(crawler => {
-    crawler.queue(TOP_PAGES);
+(async () => {
+  const crawler = await HCCrawler.launch({
+    maxDepth: 3,
+    cache,
   });
+  crawler.queue(TOP_PAGES);
+})();
 ```
 
 ### Launch options
