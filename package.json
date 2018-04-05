@@ -62,6 +62,6 @@
     "scraping"
   ],
   "engines": {
-    "node": ">=6.4.0"
+    "node": ">=8.10.0"
   }
 }

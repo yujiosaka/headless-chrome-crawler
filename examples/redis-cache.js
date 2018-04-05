@@ -13,17 +13,15 @@ function launch(persistCache) {
   });
 }
 
-launch(true) // Launch the crawler with persisting cache
-  .then(crawler => {
-    crawler.queue('https://example.com/');
-    crawler.queue('https://example.net/');
-    return crawler.onIdle()
-      .then(() => crawler.close()); // Close the crawler but cache won't be cleared
-  })
-  .then(() => launch(false)) // Launch the crawler again without persisting cache
-  .then(crawler => {
-    crawler.queue('https://example.net/'); // This queue won't be requested because cache remains
-    crawler.queue('https://example.org/');
-    return crawler.onIdle()
-      .then(() => crawler.close());
-  });
+(async () => {
+  const crawler1 = await launch(true); // Launch the crawler with persisting cache
+  crawler1.queue('https://example.com/');
+  crawler1.queue('https://example.net/');
+  await crawler1.onIdle();
+  await crawler1.close(); // Close the crawler but cache won't be cleared
+  const crawler2 = await launch(false); // Launch the crawler again without persisting cache
+  crawler2.queue('https://example.net/'); // This queue won't be requested because cache remains
+  crawler2.queue('https://example.org/');
+  await crawler2.onIdle();
+  await crawler2.close();
+})();

@@ -14,102 +14,82 @@ describe('PriorityQueue', () => {
     onPull = sinon.spy();
   });
 
-  afterEach(() => {
-    queue.end();
-    return cache.clear()
-      .then(() => cache.close());
+  afterEach(async () => {
+    await queue.end();
+    await cache.clear();
+    await cache.close();
   });
 
   function testSuite() {
-    it('pulls without argument', () => {
+    it('pulls without argument', async () => {
       queue.push(0);
-      return queue.onIdle()
-        .then(() => {
-          assert.equal(onPull.callCount, 1);
-        });
+      await queue.onIdle();
+      assert.equal(onPull.callCount, 1);
     });
 
-    it('pulls with a number', () => {
+    it('pulls with a number', async () => {
       queue.push(1, 0);
-      return queue.onIdle()
-        .then(() => {
-          assert.equal(onPull.callCount, 1);
-          assert.ok(onPull.calledWith(1));
-        });
+      await queue.onIdle();
+      assert.equal(onPull.callCount, 1);
+      assert.ok(onPull.calledWith(1));
     });
 
-    it('pulls with a string', () => {
+    it('pulls with a string', async () => {
       queue.push('http://example.com/', 0);
-      return queue.onIdle()
-        .then(() => {
-          assert.equal(onPull.callCount, 1);
-          assert.ok(onPull.calledWith('http://example.com/'));
-        });
+      await queue.onIdle();
+      assert.equal(onPull.callCount, 1);
+      assert.ok(onPull.calledWith('http://example.com/'));
     });
 
-    it('pulls with an object', () => {
+    it('pulls with an object', async () => {
       queue.push({ url: 'http://example.com' }, 0);
-      return queue.onIdle()
-        .then(() => {
-          assert.equal(onPull.callCount, 1);
-          assert.ok(onPull.calledWith({ url: 'http://example.com' }));
-        });
+      await queue.onIdle();
+      assert.equal(onPull.callCount, 1);
+      assert.ok(onPull.calledWith({ url: 'http://example.com' }));
     });
 
-    it('pulls with multiple arguments', () => {
+    it('pulls with multiple arguments', async () => {
       queue.push({ url: 'http://example.com/' }, 1, 0);
-      return queue.onIdle()
-        .then(() => {
-          assert.equal(onPull.callCount, 1);
-          assert.ok(onPull.calledWith({ url: 'http://example.com/' }, 1));
-        });
+      await queue.onIdle();
+      assert.equal(onPull.callCount, 1);
+      assert.ok(onPull.calledWith({ url: 'http://example.com/' }, 1));
     });
 
-    it('obeys priority order', () => {
+    it('obeys priority order', async () => {
       queue.push({ url: 'http://example.com/' }, 1);
       queue.push({ url: 'http://example.net/' }, 2);
-      return queue.onIdle()
-        .then(() => {
-          assert.equal(onPull.callCount, 2);
-          assert.ok(onPull.firstCall.calledWith({ url: 'http://example.net/' }));
-          assert.ok(onPull.secondCall.calledWith({ url: 'http://example.com/' }));
-        });
+      await queue.onIdle();
+      assert.equal(onPull.callCount, 2);
+      assert.ok(onPull.firstCall.calledWith({ url: 'http://example.net/' }));
+      assert.ok(onPull.secondCall.calledWith({ url: 'http://example.com/' }));
     });
 
-    it('pauses and resumes', () => {
+    it('pauses and resumes', async () => {
       queue.push({ url: 'http://example.com/' }, 1, 0);
-      return Promise.all([
+      await Promise.all([
         queue.onIdle(),
         queue.pause(),
-      ])
-        .then(() => {
-          assert.equal(onPull.callCount, 0);
-          assert.equal(queue.isPaused(), true);
-          assert.equal(queue.pending(), 0);
-          return queue.size();
-        })
-        .then(size => {
-          assert.equal(size, 1);
-          queue.resume();
-          return queue.onIdle();
-        })
-        .then(() => {
-          assert.equal(onPull.callCount, 1);
-        });
+      ]);
+      assert.equal(onPull.callCount, 0);
+      assert.equal(queue.isPaused(), true);
+      assert.equal(queue.pending(), 0);
+      const size = await queue.size();
+      assert.equal(size, 1);
+      queue.resume();
+      await queue.onIdle();
+      assert.equal(onPull.callCount, 1);
     });
   }
 
   context('when constructed with SessionCache', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       cache = new SessionCache();
-      return cache.init()
-        .then(() => {
-          queue = new PriorityQueue({
-            maxConcurrency: 1,
-            cache,
-          });
-          queue.on('pull', onPull);
-        });
+      await cache.init();
+      queue = new PriorityQueue({
+        maxConcurrency: 1,
+        cache,
+      });
+      queue.on('pull', onPull);
     });
 
     testSuite();
@@ -117,59 +97,49 @@ describe('PriorityQueue', () => {
 
   context('when constructed with RedisCache', () => {
     context('when queue is not registered', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         cache = new RedisCache();
-        return cache.init()
-          .then(() => {
-            queue = new PriorityQueue({
-              maxConcurrency: 1,
-              cache,
-            });
-            queue.on('pull', onPull);
-          });
+        await cache.init();
+        queue = new PriorityQueue({
+          maxConcurrency: 1,
+          cache,
+        });
+        queue.on('pull', onPull);
       });
 
       testSuite();
     });
 
     context('when queue is already registered', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         cache = new RedisCache();
-        return cache.init()
-          .then(() => {
-            queue = new PriorityQueue({ cache });
-            queue.push({ url: 'http://example.com/' }, 1, 0);
-            return Promise.all([
-              queue.onIdle(),
-              queue.pause(),
-            ]);
-          })
-          .then(() => {
-            queue = new PriorityQueue({ cache });
-            queue.on('pull', onPull);
-          });
+        await cache.init();
+        queue = new PriorityQueue({ cache });
+        queue.push({ url: 'http://example.com/' }, 1, 0);
+        await Promise.all([
+          queue.onIdle(),
+          queue.pause(),
+        ]);
+        queue = new PriorityQueue({ cache });
+        queue.on('pull', onPull);
       });
 
       context('when the queue is initialized', () => {
         beforeEach(() => {
           queue.init();
         });
-        it('pulls from the registered queue', () => (
-          queue.onIdle()
-            .then(() => {
-              assert.equal(onPull.callCount, 1);
-              assert.ok(onPull.calledWith({ url: 'http://example.com/' }, 1));
-            })
-        ));
+        it('pulls from the registered queue', async () => {
+          await queue.onIdle();
+          assert.equal(onPull.callCount, 1);
+          assert.ok(onPull.calledWith({ url: 'http://example.com/' }, 1));
+        });
       });
 
       context('when the queue is not initialized', () => {
-        it('does not pull from the registered', () => (
-          delay(500)
-            .then(() => {
-              assert.equal(onPull.callCount, 0);
-            })
-        ));
+        it('does not pull from the registered', async () => {
+          await delay(500);
+          assert.equal(onPull.callCount, 0);
+        });
       });
     });
   });
