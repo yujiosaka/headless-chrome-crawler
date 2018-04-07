@@ -10,8 +10,8 @@
     "greenkeeper-lockfile-update": "greenkeeper-lockfile-update",
     "greenkeeper-lockfile-upload": "greenkeeper-lockfile-upload",
     "lint": "eslint --quiet -f codeframe . || eslint .",
-    "mocha-exclude-redis-cache": "mocha $(find test -name '*.test.js') --exclude test/cache/redis.test.js",
-    "mocha-redis-cache": "mocha test/cache/redis.test.js",
+    "mocha-exclude-redis-cache": "mocha $(find test -name '*.test.js') --exclude **/redis.test.js",
+    "mocha-redis-cache": "mocha test/**/redis.test.js",
     "test": "yarn tsc && yarn lint && yarn mocha-exclude-redis-cache",
     "test-all": "yarn test && yarn mocha-redis-cache",
     "tsc": "tsc -p ."

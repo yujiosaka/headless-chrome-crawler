@@ -3,6 +3,20 @@ const assert = require('assert');
 const KEY = '35aa17374c';
 
 class Helper {
+  static tearUp() {
+    beforeEach(async function () {
+      await this.cache.init();
+      await this.cache.clear();
+    });
+  }
+
+  static tearDown() {
+    afterEach(async function () {
+      await this.cache.clear();
+      await this.cache.close();
+    });
+  }
+
   static testSuite() {
     describe('get and set', function () {
       it('works for null', async function () {
@@ -99,13 +113,6 @@ class Helper {
         const value = await this.cache.dequeue(KEY);
         assert.equal(value, null);
       });
-    });
-  }
-
-  static closeCacheAfterEach() {
-    afterEach(async function () {
-      await this.cache.clear();
-      await this.cache.close();
     });
   }
 }
