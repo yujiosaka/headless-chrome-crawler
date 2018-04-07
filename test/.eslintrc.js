@@ -6,4 +6,8 @@ module.exports = {
   "env": {
     "mocha": true,
   },
+  "rules": {
+    "global-require": 0,
+    "prefer-arrow-callback": 0,
+  },
 };
