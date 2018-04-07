@@ -10,7 +10,10 @@
     "greenkeeper-lockfile-update": "greenkeeper-lockfile-update",
     "greenkeeper-lockfile-upload": "greenkeeper-lockfile-upload",
     "lint": "eslint --quiet -f codeframe . || eslint .",
-    "test": "yarn tsc && yarn lint && mocha",
+    "mocha-exclude-redis-cache": "mocha $(find test -name '*.test.js') --exclude test/cache/redis.test.js",
+    "mocha-redis-cache": "mocha test/cache/redis.test.js",
+    "test": "yarn tsc && yarn lint && yarn mocha-exclude-redis-cache",
+    "test-all": "yarn test && yarn mocha-redis-cache",
     "tsc": "tsc -p ."
   },
   "repository": {
@@ -45,7 +48,7 @@
     "eslint-plugin-import": "2.10.0",
     "greenkeeper-lockfile": "1.14.0",
     "mime": "2.2.1",
-    "mocha": "5.0.5",
+    "mocha": "mochajs/mocha#88b9882",
     "power-assert": "1.5.0",
     "sinon": "5.0.0",
     "typescript": "2.7.2"
