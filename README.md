@@ -51,11 +51,11 @@ const HCCrawler = require('headless-chrome-crawler');
     }),
   });
   // Queue a request
-  crawler.queue('https://example.com/');
+  await crawler.queue('https://example.com/');
   // Queue multiple requests
-  crawler.queue(['https://example.net/', 'https://example.org/']);
+  await crawler.queue(['https://example.net/', 'https://example.org/']);
   // Queue a request with custom options
-  crawler.queue({
+  await crawler.queue({
     url: 'https://example.com/',
     // Emulate a tablet device
     device: 'Nexus 7',
@@ -111,7 +111,7 @@ const cache = new RedisCache({
     maxDepth: 3,
     cache,
   });
-  crawler.queue(TOP_PAGES);
+  await crawler.queue(TOP_PAGES);
 })();
 ```
 
