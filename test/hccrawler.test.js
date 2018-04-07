@@ -600,8 +600,10 @@ describe('HCCrawler', function () {
         });
 
         it('obeys the priority order', async function () {
-          await crawler.queue({ url: `${PREFIX}/1.html`, priority: 1 });
-          await crawler.queue({ url: `${PREFIX}/2.html`, priority: 2 });
+          await Promise.all([
+            crawler.queue({ url: `${PREFIX}/1.html`, priority: 1 }),
+            crawler.queue({ url: `${PREFIX}/2.html`, priority: 2 }),
+          ]);
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 2);
           assert.equal(onSuccess.firstCall.args[0].options.url, `${PREFIX}/2.html`);
