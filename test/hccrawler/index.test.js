@@ -4,17 +4,17 @@ const sinon = require('sinon');
 const extend = require('lodash/extend');
 const includes = require('lodash/includes');
 const noop = require('lodash/noop');
-const HCCrawler = require('../');
-const RedisCache = require('../cache/redis');
-const CSVExporter = require('../exporter/csv');
-const JSONLineExporter = require('../exporter/json-line');
-const Server = require('./server');
+const HCCrawler = require('../../');
+const CSVExporter = require('../../exporter/csv');
+const JSONLineExporter = require('../../exporter/json-line');
+const Server = require('../server');
 
 const PORT = 8080;
 const PREFIX = `http://127.0.0.1:${PORT}`;
 const INDEX_PAGE = `${PREFIX}/`;
 const CSV_FILE = './tmp/result.csv';
 const JSON_FILE = './tmp/result.json';
+const PNG_FILE = './tmp/example.png';
 const ENCODING = 'utf8';
 
 const DEFAULT_OPTIONS = { args: ['--no-sandbox', '--disable-dev-shm-usage'] };
@@ -86,6 +86,14 @@ describe('HCCrawler', function () {
 
       beforeEach(function () {
         server.reset();
+      });
+
+      it('emits a disconnect event', async function () {
+        crawler = await HCCrawler.launch(DEFAULT_OPTIONS);
+        let disconnected = 0;
+        crawler.on('disconnected', () => { disconnected += 1; });
+        await crawler.close();
+        assert.equal(disconnected, 1);
       });
 
       context('when the crawler is launched with necessary options', function () {
@@ -736,9 +744,8 @@ describe('HCCrawler', function () {
         });
 
         context('when the preRequest function modifies options', function () {
-          const path = './tmp/example.png';
           function preRequest(options) {
-            options.screenshot = { path };
+            options.screenshot = { path: PNG_FILE };
             return true;
           }
 
@@ -753,7 +760,7 @@ describe('HCCrawler', function () {
             await crawler.queue(INDEX_PAGE);
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
-            assert.equal(onSuccess.firstCall.args[0].options.screenshot.path, path);
+            assert.equal(onSuccess.firstCall.args[0].options.screenshot.path, PNG_FILE);
           });
         });
       });
@@ -832,51 +839,6 @@ describe('HCCrawler', function () {
             assert.equal(onSuccess.callCount, 2);
           });
         });
-      });
-
-      context('when the crawler is launched with the redis cache', function () {
-        context('for the fist time with persistCache = true', function () {
-          beforeEach(async function () {
-            const cache = new RedisCache();
-            crawler = await HCCrawler.launch(extend({
-              onSuccess,
-              cache,
-              persistCache: true,
-            }, DEFAULT_OPTIONS));
-          });
-
-          it('crawls all queued urls', async function () {
-            await crawler.queue(`${PREFIX}/1.html`);
-            await crawler.queue(`${PREFIX}/2.html`);
-            await crawler.onIdle();
-            assert.equal(onSuccess.callCount, 2);
-          });
-        });
-
-        context('for the second time', function () {
-          beforeEach(async function () {
-            const cache = new RedisCache();
-            crawler = await HCCrawler.launch(extend({
-              onSuccess,
-              cache,
-            }, DEFAULT_OPTIONS));
-          });
-
-          it('does not crawl already cached urls', async function () {
-            await crawler.queue(`${PREFIX}/2.html`);
-            await crawler.queue(`${PREFIX}/3.html`);
-            await crawler.onIdle();
-            assert.equal(onSuccess.callCount, 1);
-          });
-        });
-      });
-
-      it('emits a disconnect event', async function () {
-        crawler = await HCCrawler.launch(DEFAULT_OPTIONS);
-        let disconnected = 0;
-        crawler.on('disconnected', () => { disconnected += 1; });
-        await crawler.close();
-        assert.equal(disconnected, 1);
       });
     });
 

@@ -1,12 +1,14 @@
 const SessionCache = require('../../cache/session');
-const { testSuite, closeCacheAfterEach } = require('./helper');
+const { tearUp, tearDown, testSuite } = require('./helper');
 
-describe('SessionCache', function () {
-  beforeEach(async function () {
-    this.cache = new SessionCache();
-    await this.cache.init();
-    await this.cache.clear();
+describe('Cache', function () {
+  describe('SessionCache', function () {
+    beforeEach(async function () {
+      this.cache = new SessionCache();
+    });
+
+    tearUp();
+    tearDown();
+    testSuite();
   });
-  closeCacheAfterEach();
-  testSuite();
 });
