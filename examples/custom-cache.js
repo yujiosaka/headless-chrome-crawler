@@ -68,9 +68,9 @@ const cache = new FsCache({ file: FILE });
     }),
     cache,
   });
-  crawler.queue('https://example.com/');
-  crawler.queue('https://example.net/');
-  crawler.queue('https://example.com/'); // The queue won't be requested
+  await crawler.queue('https://example.com/');
+  await crawler.queue('https://example.net/');
+  await crawler.queue('https://example.com/'); // The queue won't be requested
   await crawler.onIdle();
   await crawler.close();
 })();

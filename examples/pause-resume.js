@@ -8,9 +8,9 @@ const HCCrawler = require('headless-chrome-crawler');
       console.log(`Requested ${result.options.url}.`);
     }),
   });
-  crawler.queue('https://example.com/');
-  crawler.queue('https://example.net/');
-  crawler.queue('https://example.org/'); // The queue won't be requested until resumed
+  await crawler.queue('https://example.com/');
+  await crawler.queue('https://example.net/');
+  await crawler.queue('https://example.org/'); // The queue won't be requested until resumed
   await crawler.onIdle();
   crawler.setMaxRequest(3);
   crawler.resume();

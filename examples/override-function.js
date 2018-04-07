@@ -9,7 +9,7 @@ const HCCrawler = require('headless-chrome-crawler');
       console.log(`Got ${result.result.title} for ${result.options.url}.`);
     }),
   });
-  crawler.queue({
+  await crawler.queue({
     url: 'https://example.com/',
     evaluatePage: (() => ({
       title: $('title').text(),

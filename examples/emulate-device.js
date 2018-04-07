@@ -10,8 +10,8 @@ const HCCrawler = require('headless-chrome-crawler');
       console.log(`Emulated ${result.result.userAgent} for ${result.options.url}.`);
     }),
   });
-  crawler.queue({ device: 'Nexus 7' });
-  crawler.queue({ userAgent: 'headless-chrome-crawler' }); // Only override userAgent
+  await crawler.queue({ device: 'Nexus 7' });
+  await crawler.queue({ userAgent: 'headless-chrome-crawler' }); // Only override userAgent
   await crawler.onIdle();
   await crawler.close();
 })();

@@ -13,7 +13,7 @@ const exporter = new CSVExporter({
     maxDepth: 2,
     exporter,
   });
-  crawler.queue('https://example.com/');
+  await crawler.queue('https://example.com/');
   await crawler.onIdle();
   await crawler.close();
 })();
