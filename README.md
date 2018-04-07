@@ -27,7 +27,7 @@ Powered by Headless Chrome, the crawler provides [simple APIs](#api-reference) t
 
 ### Installation
 
-```
+```sh
 yarn add headless-chrome-crawler
 # or "npm i headless-chrome-crawler"
 ```
@@ -530,11 +530,25 @@ Also, the `args` option is passed to the browser instance. List of Chromium flag
 HCCrawler.launch({ args: ['--disable-web-security'] });
 ```
 
+### Running tests
+
+All tests but [RedisCache's](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/test/cache/redis.test.js) are run by the following command:
+
+```sh
+yarn test
+```
+
+When you modify [RedisCache](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/cache/redis.js)'s code, make sure that [Redis](https://redis.io/) is installed, start the server and run all tests with the following command:
+
+```sh
+yarn test-all
+```
+
 ### Enable debug logging
 
 All requests and browser's logs are logged via the [debug](https://github.com/visionmedia/debug) module under the `hccrawler` namespace.
 
-```
+```sh
 env DEBUG="hccrawler:*" node script.js
 env DEBUG="hccrawler:request" node script.js
 env DEBUG="hccrawler:browser" node script.js
