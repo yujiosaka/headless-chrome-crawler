@@ -27,7 +27,7 @@ const exporter = new InspectExporter({
 
 (async () => {
   const crawler = await HCCrawler.launch({ exporter, maxDepth: 2 });
-  crawler.queue('https://example.com/');
+  await crawler.queue('https://example.com/');
   await crawler.onIdle();
   await crawler.close();
 })();

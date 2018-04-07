@@ -13,10 +13,10 @@ const PATH = './tmp/';
       return true;
     }),
   });
-  crawler.queue({ url: 'https://example.com/' });
+  await crawler.queue({ url: 'https://example.com/' });
   // saveAs is a custom option for preRequest to conditionally modify options and skip requests
-  crawler.queue({ url: 'https://example.net/', saveAs: 'example-net.png' });
-  crawler.queue({ url: 'https://example.org/', saveAs: 'example-org.png' });
+  await crawler.queue({ url: 'https://example.net/', saveAs: 'example-net.png' });
+  await crawler.queue({ url: 'https://example.org/', saveAs: 'example-org.png' });
   await crawler.onIdle();
   await crawler.close();
 })();

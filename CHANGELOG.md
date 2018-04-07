@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Bump Node.js version up to 8.10.0.
 - Move [node_redis](https://github.com/NodeRedis/node_redis) to the peer dependencies.
+- Make [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions) to return Promise.
 
 ## [1.5.0] - 2018-03-25
 

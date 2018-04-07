@@ -7,8 +7,8 @@ const HCCrawler = require('headless-chrome-crawler');
       console.log(`Requested ${result.options.url}.`);
     }),
   });
-  crawler.queue({ url: 'https://example.com/', priority: 1 });
-  crawler.queue({ url: 'https://example.net/', priority: 2 }); // This queue is requested before the previous queue
+  await crawler.queue({ url: 'https://example.com/', priority: 1 });
+  await crawler.queue({ url: 'https://example.net/', priority: 2 }); // This queue is requested before the previous queue
   await crawler.onIdle();
   await crawler.close();
 })();

@@ -107,16 +107,20 @@ describe('HCCrawler', function () {
           assert.ok(includes(crawler.wsEndpoint(), 'ws://'));
         });
 
-        it('throws an error when queueing null', function () {
-          assert.throws(function () {
-            crawler.queue(null);
-          });
+        it('throws an error when queueing null', async function () {
+          try {
+            await crawler.queue(null);
+          } catch (error) {
+            assert.equal(error.message, 'Url must be defined!');
+          }
         });
 
-        it('throws an error when queueing options without URL', function () {
-          assert.throws(function () {
-            crawler.queue();
-          });
+        it('throws an error when queueing options without URL', async function () {
+          try {
+            await crawler.queue();
+          } catch (error) {
+            assert.equal(error.message, 'Url must be defined!');
+          }
         });
 
         it('crawls when queueing necessary options', async function () {
@@ -124,7 +128,7 @@ describe('HCCrawler', function () {
           let requestfinished = 0;
           crawler.on('requeststarted', () => { requeststarted += 1; });
           crawler.on('requestfinished', () => { requestfinished += 1; });
-          crawler.queue(INDEX_PAGE);
+          await crawler.queue(INDEX_PAGE);
           await crawler.onIdle();
           assert.equal(requeststarted, 1);
           assert.equal(requestfinished, 1);
@@ -138,52 +142,58 @@ describe('HCCrawler', function () {
         });
 
         it('crawls when queueing a string', async function () {
-          crawler.queue(INDEX_PAGE);
+          await crawler.queue(INDEX_PAGE);
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 1);
         });
 
         it('crawls when queueing multiple strings', async function () {
-          crawler.queue([`${PREFIX}/1.html`, `${PREFIX}/2.html`, `${PREFIX}/3.html`]);
+          await crawler.queue([`${PREFIX}/1.html`, `${PREFIX}/2.html`, `${PREFIX}/3.html`]);
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 3);
         });
 
         it('crawls when queueing an object', async function () {
-          crawler.queue({ url: INDEX_PAGE });
+          await crawler.queue({ url: INDEX_PAGE });
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 1);
         });
 
         it('crawls when queueing multiple objects', async function () {
-          crawler.queue([{ url: `${PREFIX}/1.html` }, { url: `${PREFIX}/2.html` }]);
+          await crawler.queue([{ url: `${PREFIX}/1.html` }, { url: `${PREFIX}/2.html` }]);
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 2);
         });
 
         it('crawls when queueing mixed styles', async function () {
-          crawler.queue([`${PREFIX}/1.html`, { url: `${PREFIX}/2.html` }]);
-          crawler.queue(`${PREFIX}/3.html`);
+          await crawler.queue([`${PREFIX}/1.html`, { url: `${PREFIX}/2.html` }]);
+          await crawler.queue(`${PREFIX}/3.html`);
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 3);
         });
 
-        it('throws an error when overriding the onSuccess function', function () {
-          assert.throws(() => {
-            crawler.queue({ url: INDEX_PAGE, onSuccess: noop });
-          });
+        it('throws an error when overriding the onSuccess function', async function () {
+          try {
+            await crawler.queue({ url: INDEX_PAGE, onSuccess: noop });
+          } catch (error) {
+            assert.equal(error.message, 'Overriding onSuccess is not allowed!');
+          }
         });
 
-        it('throws an error when queueing options with an unavailable device', function () {
-          assert.throws(() => {
-            crawler.queue({ url: INDEX_PAGE, device: 'do-not-exist' });
-          });
+        it('throws an error when queueing options with an unavailable device', async function () {
+          try {
+            await crawler.queue({ url: INDEX_PAGE, device: 'do-not-exist' });
+          } catch (error) {
+            assert.equal(error.message, 'Specified device is not supported!');
+          }
         });
 
-        it('throws an error when the delay option is set', function () {
-          assert.throws(() => {
-            crawler.queue({ url: INDEX_PAGE, delay: 100 });
-          });
+        it('throws an error when the delay option is set', async function () {
+          try {
+            await crawler.queue({ url: INDEX_PAGE, delay: 100 });
+          } catch (error) {
+            assert.equal(error.message, 'Max concurrency must be 1 when delay is set!');
+          }
         });
 
         it('emits a newpage event', async function () {
@@ -193,7 +203,7 @@ describe('HCCrawler', function () {
             page.on('request', _request => { request = _request; });
             page.on('response', _response => { response = _response; });
           });
-          crawler.queue(INDEX_PAGE);
+          await crawler.queue(INDEX_PAGE);
           await crawler.onIdle();
           assert.equal(request.response(), response);
           assert.equal(onSuccess.callCount, 1);
@@ -202,7 +212,7 @@ describe('HCCrawler', function () {
         it('crawls when the requested domain exactly matches allowed domains', async function () {
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
-          crawler.queue({ url: INDEX_PAGE, allowedDomains: ['127.0.0.1'] });
+          await crawler.queue({ url: INDEX_PAGE, allowedDomains: ['127.0.0.1'] });
           await crawler.onIdle();
           assert.equal(requestskipped, 0);
           assert.equal(onSuccess.callCount, 1);
@@ -211,7 +221,7 @@ describe('HCCrawler', function () {
         it('crawls when the requested domain matches allowed domains by the regular expression', async function () {
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
-          crawler.queue({ url: INDEX_PAGE, allowedDomains: [/\d+\.\d+\.\d+\.\d+/] });
+          await crawler.queue({ url: INDEX_PAGE, allowedDomains: [/\d+\.\d+\.\d+\.\d+/] });
           await crawler.onIdle();
           assert.equal(requestskipped, 0);
           assert.equal(onSuccess.callCount, 1);
@@ -220,7 +230,7 @@ describe('HCCrawler', function () {
         it('skips crawling when the requested domain does not match allowed domains', async function () {
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
-          crawler.queue({ url: INDEX_PAGE, allowedDomains: ['0.0.0.0'] });
+          await crawler.queue({ url: INDEX_PAGE, allowedDomains: ['0.0.0.0'] });
           await crawler.onIdle();
           assert.equal(requestskipped, 1);
           assert.equal(onSuccess.callCount, 0);
@@ -229,7 +239,7 @@ describe('HCCrawler', function () {
         it('skips crawling when the requested domain exactly matches denied domains', async function () {
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
-          crawler.queue({ url: INDEX_PAGE, deniedDomains: ['127.0.0.1'] });
+          await crawler.queue({ url: INDEX_PAGE, deniedDomains: ['127.0.0.1'] });
           await crawler.onIdle();
           assert.equal(requestskipped, 1);
           assert.equal(onSuccess.callCount, 0);
@@ -238,7 +248,7 @@ describe('HCCrawler', function () {
         it('skips crawling when the requested domain matches denied domains by the regular expression', async function () {
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
-          crawler.queue({ url: INDEX_PAGE, deniedDomains: [/\d+\.\d+\.\d+\.\d+/] });
+          await crawler.queue({ url: INDEX_PAGE, deniedDomains: [/\d+\.\d+\.\d+\.\d+/] });
           await crawler.onIdle();
           assert.equal(requestskipped, 1);
           assert.equal(onSuccess.callCount, 0);
@@ -248,7 +258,7 @@ describe('HCCrawler', function () {
           let maxdepthreached = 0;
           server.setContent('/1.html', `go to <a href="${PREFIX}/2.html">/2.html</a>`);
           crawler.on('maxdepthreached', () => { maxdepthreached += 1; });
-          crawler.queue({ url: `${PREFIX}/1.html`, maxDepth: 2 });
+          await crawler.queue({ url: `${PREFIX}/1.html`, maxDepth: 2 });
           await crawler.onIdle();
           assert.equal(maxdepthreached, 1);
           assert.equal(onSuccess.callCount, 2);
@@ -258,7 +268,7 @@ describe('HCCrawler', function () {
 
         it('crawls regardless of alert dialogs', async function () {
           server.setContent('/', `<script>alert('Welcome to ${INDEX_PAGE}');</script>`);
-          crawler.queue(INDEX_PAGE);
+          await crawler.queue(INDEX_PAGE);
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 1);
         });
@@ -267,7 +277,7 @@ describe('HCCrawler', function () {
           server.setContent('/robots.txt', 'User-agent: *\nAllow: /');
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
-          crawler.queue(INDEX_PAGE);
+          await crawler.queue(INDEX_PAGE);
           await crawler.onIdle();
           assert.equal(requestskipped, 0);
           assert.equal(onSuccess.callCount, 1);
@@ -277,7 +287,7 @@ describe('HCCrawler', function () {
           server.setContent('/robots.txt', 'User-agent: *\nDisallow: /');
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
-          crawler.queue(INDEX_PAGE);
+          await crawler.queue(INDEX_PAGE);
           await crawler.onIdle();
           assert.equal(requestskipped, 1);
           assert.equal(onSuccess.callCount, 0);
@@ -287,8 +297,8 @@ describe('HCCrawler', function () {
           server.setContent('/robots.txt', 'User-agent: *\nDisallow: /2.html');
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
-          crawler.queue(`${PREFIX}/1.html`);
-          crawler.queue(`${PREFIX}/2.html`);
+          await crawler.queue(`${PREFIX}/1.html`);
+          await crawler.queue(`${PREFIX}/2.html`);
           await crawler.onIdle();
           assert.equal(requestskipped, 1);
           assert.equal(onSuccess.callCount, 1);
@@ -298,7 +308,7 @@ describe('HCCrawler', function () {
           server.setContent('/robots.txt', 'User-agent: *\nDisallow: /');
           let requestskipped = 0;
           crawler.on('requestskipped', () => { requestskipped += 1; });
-          crawler.queue({ url: INDEX_PAGE, obeyRobotsTxt: false });
+          await crawler.queue({ url: INDEX_PAGE, obeyRobotsTxt: false });
           await crawler.onIdle();
           assert.equal(requestskipped, 0);
           assert.equal(onSuccess.callCount, 1);
@@ -316,7 +326,7 @@ describe('HCCrawler', function () {
           });
 
           it('fails evaluating the delayed content without the waitFor option', async function () {
-            crawler.queue({
+            await crawler.queue({
               url: INDEX_PAGE,
               evaluatePage,
             });
@@ -326,7 +336,7 @@ describe('HCCrawler', function () {
           });
 
           it('succeeds evaluating the delayed content with the waitFor timeout option', async function () {
-            crawler.queue({
+            await crawler.queue({
               url: INDEX_PAGE,
               waitFor: { selectorOrFunctionOrTimeout: 150 },
               evaluatePage,
@@ -337,7 +347,7 @@ describe('HCCrawler', function () {
           });
 
           it('succeeds evaluating the delayed content with the waitFor selector option', async function () {
-            crawler.queue({
+            await crawler.queue({
               url: INDEX_PAGE,
               waitFor: { selectorOrFunctionOrTimeout: 'h1' },
               evaluatePage,
@@ -348,7 +358,7 @@ describe('HCCrawler', function () {
           });
 
           it('succeeds evaluating the delayed content with the waitFor function', async function () {
-            crawler.queue({
+            await crawler.queue({
               url: INDEX_PAGE,
               waitFor: {
                 selectorOrFunctionOrTimeout: (expected => (
@@ -371,7 +381,7 @@ describe('HCCrawler', function () {
           });
 
           it('fails authentication when username and password options are not set', async function () {
-            crawler.queue({
+            await crawler.queue({
               url: INDEX_PAGE,
               evaluatePage,
             });
@@ -381,7 +391,7 @@ describe('HCCrawler', function () {
           });
 
           it('fails authentication when wrong username and password options are set', async function () {
-            crawler.queue({
+            await crawler.queue({
               url: INDEX_PAGE,
               username: 'password',
               password: 'username',
@@ -393,7 +403,7 @@ describe('HCCrawler', function () {
           });
 
           it('passes authentication when proper username and password options are set', async function () {
-            crawler.queue({
+            await crawler.queue({
               url: INDEX_PAGE,
               username: 'username',
               password: 'password',
@@ -419,13 +429,13 @@ describe('HCCrawler', function () {
           });
 
           it('does not follow the sitemap.xml', async function () {
-            crawler.queue(`${PREFIX}/1.html`);
+            await crawler.queue(`${PREFIX}/1.html`);
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
           });
 
           it('follows the sitemap.xml with followSitemapXml = true', async function () {
-            crawler.queue({ url: `${PREFIX}/1.html`, followSitemapXml: true });
+            await crawler.queue({ url: `${PREFIX}/1.html`, followSitemapXml: true });
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 2);
           });
@@ -443,21 +453,21 @@ describe('HCCrawler', function () {
         });
 
         it('modifies the userAgent', async function () {
-          crawler.queue(INDEX_PAGE);
+          await crawler.queue(INDEX_PAGE);
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 1);
           assert.ok(includes(onSuccess.firstCall.args[0].result, 'iPhone'));
         });
 
         it("overrides the device with device = 'Nexus 6'", async function () {
-          crawler.queue({ url: INDEX_PAGE, device: 'Nexus 6' });
+          await crawler.queue({ url: INDEX_PAGE, device: 'Nexus 6' });
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 1);
           assert.ok(includes(onSuccess.firstCall.args[0].result, 'Nexus 6'));
         });
 
         it("overrides the user agent with userAgent = 'headless-chrome-crawler'", async function () {
-          crawler.queue({ url: INDEX_PAGE, userAgent: 'headless-chrome-crawler' });
+          await crawler.queue({ url: INDEX_PAGE, userAgent: 'headless-chrome-crawler' });
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 1);
           assert.equal(onSuccess.firstCall.args[0].result, 'headless-chrome-crawler');
@@ -474,14 +484,14 @@ describe('HCCrawler', function () {
         });
 
         it('succeeds evaluating page', async function () {
-          crawler.queue({ url: INDEX_PAGE, evaluatePage });
+          await crawler.queue({ url: INDEX_PAGE, evaluatePage });
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 1);
           assert.equal(onSuccess.firstCall.args[0].result, '/');
         });
 
         it('fails evaluating page with jQuery = false', async function () {
-          crawler.queue({ url: INDEX_PAGE, jQuery: false, evaluatePage });
+          await crawler.queue({ url: INDEX_PAGE, jQuery: false, evaluatePage });
           await crawler.onIdle();
           assert.equal(onError.callCount, 1);
           assert.ok(includes(onError.firstCall.args[0].message, 'Evaluation failed:'));
@@ -493,25 +503,25 @@ describe('HCCrawler', function () {
           });
 
           it('succeeds request when the timeout option is not set', async function () {
-            crawler.queue({ url: INDEX_PAGE });
+            await crawler.queue({ url: INDEX_PAGE });
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
           });
 
           it('succeeds request when the timeout option is disabled', async function () {
-            crawler.queue({ url: INDEX_PAGE, timeout: 0 });
+            await crawler.queue({ url: INDEX_PAGE, timeout: 0 });
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
           });
 
           it('succeeds request when the timeout option is longer than the response delay', async function () {
-            crawler.queue({ url: INDEX_PAGE, timeout: 300 });
+            await crawler.queue({ url: INDEX_PAGE, timeout: 300 });
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
           });
 
           it('fails request when the timeout option is shorter than the response delay', async function () {
-            crawler.queue({ url: INDEX_PAGE, timeout: 100 });
+            await crawler.queue({ url: INDEX_PAGE, timeout: 100 });
             await crawler.onIdle();
             assert.equal(onError.callCount, 1);
             assert.ok(includes(onError.firstCall.args[0].message, 'Navigation Timeout Exceeded:'));
@@ -526,33 +536,33 @@ describe('HCCrawler', function () {
           });
 
           it('fails request when the waitUntil option is not set', async function () {
-            crawler.queue({ url: INDEX_PAGE, timeout: 100 });
+            await crawler.queue({ url: INDEX_PAGE, timeout: 100 });
             await crawler.onIdle();
             assert.equal(onError.callCount, 1);
             assert.ok(includes(onError.firstCall.args[0].message, 'Navigation Timeout Exceeded:'));
           });
 
           it("fails request with waitUntil = 'load'", async function () {
-            crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: 'load' });
+            await crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: 'load' });
             await crawler.onIdle();
             assert.equal(onError.callCount, 1);
             assert.ok(includes(onError.firstCall.args[0].message, 'Navigation Timeout Exceeded:'));
           });
 
           it("succeeds request with waitUntil = 'domcontentloaded'", async function () {
-            crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: 'domcontentloaded' });
+            await crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: 'domcontentloaded' });
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
           });
 
           it("succeeds request with waitUntil = ['domcontentloaded']", async function () {
-            crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: ['domcontentloaded'] });
+            await crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: ['domcontentloaded'] });
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
           });
 
           it("fails request with waitUntil = ['load', 'domcontentloaded']", async function () {
-            crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: ['load', 'domcontentloaded'] });
+            await crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: ['load', 'domcontentloaded'] });
             await crawler.onIdle();
             assert.equal(onError.callCount, 1);
             assert.ok(includes(onError.firstCall.args[0].message, 'Navigation Timeout Exceeded:'));
@@ -569,29 +579,31 @@ describe('HCCrawler', function () {
         });
 
         it('does not throw an error when the delay option is set', async function () {
-          crawler.queue({ url: INDEX_PAGE, delay: 100 });
+          await crawler.queue({ url: INDEX_PAGE, delay: 100 });
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 1);
         });
 
         it('does not crawl already cached urls', async function () {
-          crawler.queue(`${PREFIX}/1.html`);
-          crawler.queue(`${PREFIX}/2.html`);
-          crawler.queue(`${PREFIX}/1.html`); // The queue won't be requested
+          await crawler.queue(`${PREFIX}/1.html`);
+          await crawler.queue(`${PREFIX}/2.html`);
+          await crawler.queue(`${PREFIX}/1.html`); // The queue won't be requested
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 2);
         });
 
         it('does not crawl twice if one url has a trailing slash on the root folder and the other does not', async function () {
-          crawler.queue(`${PREFIX}`);
-          crawler.queue(`${PREFIX}/`);
+          await crawler.queue(`${PREFIX}`);
+          await crawler.queue(`${PREFIX}/`);
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 1);
         });
 
         it('obeys the priority order', async function () {
-          crawler.queue({ url: `${PREFIX}/1.html`, priority: 1 });
-          crawler.queue({ url: `${PREFIX}/2.html`, priority: 2 });
+          await Promise.all([
+            crawler.queue({ url: `${PREFIX}/1.html`, priority: 1 }),
+            crawler.queue({ url: `${PREFIX}/2.html`, priority: 2 }),
+          ]);
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 2);
           assert.equal(onSuccess.firstCall.args[0].options.url, `${PREFIX}/2.html`);
@@ -599,10 +611,10 @@ describe('HCCrawler', function () {
         });
 
         it('crawls duplicate urls with skipDuplicates = false', async function () {
-          crawler.queue({ url: `${PREFIX}/1.html` });
-          crawler.queue({ url: `${PREFIX}/2.html` });
-          crawler.queue({ url: `${PREFIX}/1.html` });
-          crawler.queue({ url: `${PREFIX}/2.html`, skipDuplicates: false }); // The queue will be requested
+          await crawler.queue({ url: `${PREFIX}/1.html` });
+          await crawler.queue({ url: `${PREFIX}/2.html` });
+          await crawler.queue({ url: `${PREFIX}/1.html` });
+          await crawler.queue({ url: `${PREFIX}/2.html`, skipDuplicates: false }); // The queue will be requested
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 3);
         });
@@ -617,7 +629,7 @@ describe('HCCrawler', function () {
           });
 
           it('follow links with depth first order (DFS) with maxDepth = 3', async function () {
-            crawler.queue({ url: `${PREFIX}/1.html`, maxDepth: 3 });
+            await crawler.queue({ url: `${PREFIX}/1.html`, maxDepth: 3 });
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 4);
             assert.equal(onSuccess.firstCall.args[0].depth, 1);
@@ -626,7 +638,7 @@ describe('HCCrawler', function () {
           });
 
           it('follow links with breadth first order (BFS) with maxDepth = 3 and depthPriority = false', async function () {
-            crawler.queue({ url: `${PREFIX}/1.html`, maxDepth: 3, depthPriority: false });
+            await crawler.queue({ url: `${PREFIX}/1.html`, maxDepth: 3, depthPriority: false });
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 4);
             assert.equal(onSuccess.firstCall.args[0].depth, 1);
@@ -648,9 +660,9 @@ describe('HCCrawler', function () {
         it('pauses at the maxRequest option', async function () {
           let maxrequestreached = 0;
           crawler.on('maxrequestreached', () => { maxrequestreached += 1; });
-          crawler.queue(`${PREFIX}/1.html`);
-          crawler.queue(`${PREFIX}/2.html`);
-          crawler.queue(`${PREFIX}/3.html`);
+          await crawler.queue(`${PREFIX}/1.html`);
+          await crawler.queue(`${PREFIX}/2.html`);
+          await crawler.queue(`${PREFIX}/3.html`);
           await crawler.onIdle();
           assert.equal(maxrequestreached, 1);
           assert.equal(crawler.isPaused(), true);
@@ -660,9 +672,9 @@ describe('HCCrawler', function () {
         });
 
         it('resumes from the maxRequest option', async function () {
-          crawler.queue(`${PREFIX}/1.html`);
-          crawler.queue(`${PREFIX}/2.html`);
-          crawler.queue(`${PREFIX}/3.html`);
+          await crawler.queue(`${PREFIX}/1.html`);
+          await crawler.queue(`${PREFIX}/2.html`);
+          await crawler.queue(`${PREFIX}/3.html`);
           await crawler.onIdle();
           assert.equal(crawler.isPaused(), true);
           assert.equal(onSuccess.callCount, 2);
@@ -694,7 +706,7 @@ describe('HCCrawler', function () {
           it('does not skip crawling', async function () {
             let requestskipped = 0;
             crawler.on('requestskipped', () => { requestskipped += 1; });
-            crawler.queue(INDEX_PAGE);
+            await crawler.queue(INDEX_PAGE);
             await crawler.onIdle();
             assert.equal(requestskipped, 0);
             assert.equal(onSuccess.callCount, 1);
@@ -716,7 +728,7 @@ describe('HCCrawler', function () {
           it('skips crawling', async function () {
             let requestskipped = 0;
             crawler.on('requestskipped', () => { requestskipped += 1; });
-            crawler.queue(INDEX_PAGE);
+            await crawler.queue(INDEX_PAGE);
             await crawler.onIdle();
             assert.equal(requestskipped, 1);
             assert.equal(onSuccess.callCount, 0);
@@ -738,7 +750,7 @@ describe('HCCrawler', function () {
           });
 
           it('modifies options', async function () {
-            crawler.queue(INDEX_PAGE);
+            await crawler.queue(INDEX_PAGE);
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
             assert.equal(onSuccess.firstCall.args[0].options.screenshot.path, path);
@@ -780,8 +792,8 @@ describe('HCCrawler', function () {
           });
 
           it('exports a CSV file', async function () {
-            crawler.queue(`${PREFIX}/1.html`);
-            crawler.queue(`${PREFIX}/2.html`);
+            await crawler.queue(`${PREFIX}/1.html`);
+            await crawler.queue(`${PREFIX}/2.html`);
             await crawler.onIdle();
             const actual = await readTemporaryFile(CSV_FILE);
             const header = 'result\n';
@@ -809,8 +821,8 @@ describe('HCCrawler', function () {
           });
 
           it('exports a json-line file', async function () {
-            crawler.queue(`${PREFIX}/1.html`);
-            crawler.queue(`${PREFIX}/2.html`);
+            await crawler.queue(`${PREFIX}/1.html`);
+            await crawler.queue(`${PREFIX}/2.html`);
             await crawler.onIdle();
             const actual = await readTemporaryFile(JSON_FILE);
             const line1 = `${JSON.stringify({ result: '/1.html' })}\n`;
@@ -834,8 +846,8 @@ describe('HCCrawler', function () {
           });
 
           it('crawls all queued urls', async function () {
-            crawler.queue(`${PREFIX}/1.html`);
-            crawler.queue(`${PREFIX}/2.html`);
+            await crawler.queue(`${PREFIX}/1.html`);
+            await crawler.queue(`${PREFIX}/2.html`);
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 2);
           });
@@ -851,8 +863,8 @@ describe('HCCrawler', function () {
           });
 
           it('does not crawl already cached urls', async function () {
-            crawler.queue(`${PREFIX}/2.html`);
-            crawler.queue(`${PREFIX}/3.html`);
+            await crawler.queue(`${PREFIX}/2.html`);
+            await crawler.queue(`${PREFIX}/3.html`);
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
           });
@@ -878,7 +890,7 @@ describe('HCCrawler', function () {
         let requestfailed = 0;
         crawler.on('requestretried', () => { requestretried += 1; });
         crawler.on('requestfailed', () => { requestfailed += 1; });
-        crawler.queue({ url: INDEX_PAGE, retryCount: 3, retryDelay: 100 });
+        await crawler.queue({ url: INDEX_PAGE, retryCount: 3, retryDelay: 100 });
         await crawler.onIdle();
         assert.equal(requestretried, 3);
         assert.equal(requestfailed, 1);
