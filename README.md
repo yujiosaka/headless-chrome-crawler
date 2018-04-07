@@ -87,6 +87,34 @@ NODE_PATH=../ node examples/priority-queue.js
 
 See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md) for the API reference.
 
+## Tips
+
+### Distributed crawling
+
+In order to crawl under distributed mode, use [Redis](https://redis.io) for the shared cache storage.
+You can run the same script on multiple machines, so that [Redis](https://redis.io) is used to share and distribute task queues.
+
+```js
+const HCCrawler = require('headless-chrome-crawler');
+const RedisCache = require('headless-chrome-crawler/cache/redis');
+
+const TOP_PAGES = [
+  // ...
+];
+
+const cache = new RedisCache({
+  // ...
+});
+
+(async () => {
+  const crawler = await HCCrawler.launch({
+    maxDepth: 3,
+    cache,
+  });
+  crawler.queue(TOP_PAGES);
+})();
+```
+
 ### Launch options
 
 [HCCrawler.launch()](#hccrawlerlaunchoptions)'s options are passed to [puppeteer.launch()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions). It may be useful to set the `headless` and `slowMo` options so that you can see what is going on.
