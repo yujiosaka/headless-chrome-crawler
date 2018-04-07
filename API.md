@@ -1,6 +1,6 @@
-## API reference
+# API reference
 
-### Table of Contents
+## Table of Contents
 
 * [class: HCCrawler](#class-hccrawler)
   * [HCCrawler.connect([options])](#hccrawlerconnectoptions)
@@ -40,7 +40,7 @@
 * [class: JSONLineExporter](#class-jsonlineexporter)
 * [class: BaseExporter](#class-baseexporter)
 
-### class: HCCrawler
+## class: HCCrawler
 
 HCCrawler provides methods to launch or connect to a Chromium instance.
 
@@ -62,7 +62,7 @@ const HCCrawler = require('headless-chrome-crawler');
 })();
 ```
 
-#### HCCrawler.connect([options])
+### HCCrawler.connect([options])
 
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
@@ -102,7 +102,7 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
 
 > **Note**: In practice, setting the options every time you queue equests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
 
-#### HCCrawler.launch([options])
+### HCCrawler.launch([options])
 
 * `options` <[Object]>
   * `maxConcurrency` <[number]> Maximum number of pages to open concurrently, defaults to `10`.
@@ -142,15 +142,15 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
 
 > **Note**: In practice, setting the options every time you queue the requests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
 
-#### HCCrawler.executablePath()
+### HCCrawler.executablePath()
 
 * returns: <[string]> An expected path to find bundled Chromium.
 
-#### HCCrawler.defaultArgs()
+### HCCrawler.defaultArgs()
 
 * returns: <[Array]<[string]>> The default flags that Chromium will be launched with.
 
-#### crawler.queue([options])
+### crawler.queue([options])
 
 * `options` <[Object]>
   * `url` <[string]> Url to navigate to. The url should include scheme, e.g. `https://`.
@@ -185,123 +185,123 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
 
 The options can be either an object, an array, or a string. When it's an array, each item in the array will be executed. When it's a string, the options are transformed to an object with only url defined.
 
-#### crawler.setMaxRequest(maxRequest)
+### crawler.setMaxRequest(maxRequest)
 
 * `maxRequest` <[number]> Modify `maxRequest` option you passed to [HCCrawler.connect()](#hccrawlerconnectoptions) or [HCCrawler.launch()](#hccrawlerlaunchoptions).
 
-#### crawler.pause()
+### crawler.pause()
 
 This method pauses processing queues. You can resume the queue by calling [crawler.resume()](#crawlerresume).
 
-#### crawler.resume()
+### crawler.resume()
 
 This method resumes processing queues. This method may be used after the crawler is intentionally closed by calling [crawler.pause()](#crawlerpause) or request count reached `maxRequest` option.
 
-#### crawler.clearCache()
+### crawler.clearCache()
 
 * returns: <[Promise]> Promise resolved when the cache is cleared.
 
 This method clears the cache when it's used.
 
-#### crawler.close()
+### crawler.close()
 
 * returns: <[Promise]> Promise resolved when ther browser is closed.
 
-#### crawler.disconnect()
+### crawler.disconnect()
 
 * returns: <[Promise]> Promise resolved when ther browser is disconnected.
 
-#### crawler.version()
+### crawler.version()
 
 * returns: <[Promise]<[string]>> Promise resolved with the Chromium version.
 
-#### crawler.userAgent()
+### crawler.userAgent()
 
 * returns: <[Promise]<[string]>> Promise resolved with the default user agent.
 
-#### crawler.wsEndpoint()
+### crawler.wsEndpoint()
 
 * returns: <[string]> Websocket url to connect to the browser.
 
-#### crawler.onIdle()
+### crawler.onIdle()
 
 * returns: <[Promise]> Promise resolved when queues become empty or paused.
 
-#### crawler.isPaused()
+### crawler.isPaused()
 
 * returns: <[boolean]> Whether the queue is paused.
 
-#### crawler.queueSize()
+### crawler.queueSize()
 
 * returns: <[Promise]<[number]>> Promise resolves to the size of queues.
 
-#### crawler.pendingQueueSize()
+### crawler.pendingQueueSize()
 
 * returns: <[number]> The size of pending queues.
 
-#### crawler.requestedCount()
+### crawler.requestedCount()
 
 * returns: <[number]> The count of total requests.
 
-#### event: 'newpage'
+### event: 'newpage'
 
 * `page` <[Page]>
 
 Emitted when a [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s page is opened.
 
-#### event: 'requeststarted'
+### event: 'requeststarted'
 
 * `options` <[Object]>
 
 Emitted when a request started.
 
-#### event: 'requestskipped'
+### event: 'requestskipped'
 
 * `options` <[Object]>
 
 Emitted when a request is skipped.
 
-#### event: 'requestfinished'
+### event: 'requestfinished'
 
 * `options` <[Object]>
 
 Emitted when a request finished successfully.
 
-#### event: 'requestretried'
+### event: 'requestretried'
 
 * `options` <[Object]>
 
 Emitted when a request is retried.
 
-#### event: 'requestfailed'
+### event: 'requestfailed'
 
 * `error` <[Error]>
 
 Emitted when a request failed.
 
-#### event: 'robotstxtrequestfailed'
+### event: 'robotstxtrequestfailed'
 
 * `error` <[Error]>
 
 Emitted when a request to [robots.txt](https://developers.google.com/search/reference/robots_txt) failed
 
-#### event: 'sitemapxmlrequestfailed'
+### event: 'sitemapxmlrequestfailed'
 
 * `error` <[Error]>
 
 Emitted when a request to [sitemap.xml](https://www.sitemaps.org/) failed
 
-#### event: 'maxdepthreached'
+### event: 'maxdepthreached'
 
 * `options` <[Object]>
 
 Emitted when a queue reached the [crawler.queue()](#crawlerqueueoptions)'s `maxDepth` option.
 
-#### event: 'maxrequestreached'
+### event: 'maxrequestreached'
 
 Emitted when a queue reached the [HCCrawler.connect()](#hccrawlerconnectoptions) or [HCCrawler.launch()](#hccrawlerlaunchoptions)'s `maxRequest` option.
 
-#### event: 'disconnected'
+### event: 'disconnected'
 
 Emitted when the browser instance is disconnected.
 
@@ -402,31 +402,3 @@ const exporter = new JSONLineExporter({
 You can create your own exporter by extending the [BaseExporter's interfaces](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/exporter/base.js).
 
 See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/examples/custom-exporter.js) for example.
-
-## Tips
-
-### Distributed crawling
-
-In order to crawl under distributed mode, use [Redis](https://redis.io) for the shared cache storage.
-You can run the same script on multiple machines, so that [Redis](https://redis.io) is used to share and distribute task queues.
-
-```js
-const HCCrawler = require('headless-chrome-crawler');
-const RedisCache = require('headless-chrome-crawler/cache/redis');
-
-const TOP_PAGES = [
-  // ...
-];
-
-const cache = new RedisCache({
-  // ...
-});
-
-(async () => {
-  const crawler = await HCCrawler.launch({
-    maxDepth: 3,
-    cache,
-  });
-  crawler.queue(TOP_PAGES);
-})();
-```
