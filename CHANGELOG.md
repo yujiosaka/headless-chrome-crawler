@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### changed
+
+- Bump Node.js version up to 8.10.0.
+- Move [node_redis](https://github.com/NodeRedis/node_redis) to the peer dependencies.
+
 ## [1.5.0] - 2018-03-25
 
 ### Added
