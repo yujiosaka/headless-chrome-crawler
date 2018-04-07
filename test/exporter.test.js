@@ -14,7 +14,7 @@ const TITLE2 = 'headless-chrome-crawler/package.json at master · yujiosaka/head
 const HEADER1 = 'yujiosaka/headless-chrome-crawler';
 const HEADER2 = 'yujiosaka/headless-chrome-crawler';
 
-describe('Exporter', () => {
+describe('Exporter', function () {
   let exporter;
 
   function removeTemporaryFile(file) {
@@ -32,12 +32,12 @@ describe('Exporter', () => {
     });
   }
 
-  describe('CSVExporter', () => {
+  describe('CSVExporter', function () {
     beforeEach(() => removeTemporaryFile(CSV_FILE));
     afterEach(() => removeTemporaryFile(CSV_FILE));
 
-    context('when the exporter is constructed', () => {
-      beforeEach(() => {
+    context('when the exporter is constructed', function () {
+      beforeEach(function () {
         exporter = new CSVExporter({
           file: CSV_FILE,
           fields: ['options.url', 'result.title', 'result.header'],
@@ -118,8 +118,8 @@ describe('Exporter', () => {
       ));
     });
 
-    context("when the exporter is constructed with separator = '\\t'", () => {
-      beforeEach(() => {
+    context("when the exporter is constructed with separator = '\\t'", function () {
+      beforeEach(function () {
         exporter = new CSVExporter({
           file: CSV_FILE,
           fields: ['options.url', 'result.title', 'result.header'],
@@ -156,12 +156,12 @@ describe('Exporter', () => {
     });
   });
 
-  describe('JSONLineExporter', () => {
+  describe('JSONLineExporter', function () {
     beforeEach(() => removeTemporaryFile(JSON_FILE));
     afterEach(() => removeTemporaryFile(JSON_FILE));
 
-    context('when the exporter is constructed', () => {
-      beforeEach(() => {
+    context('when the exporter is constructed', function () {
+      beforeEach(function () {
         exporter = new JSONLineExporter({ file: JSON_FILE });
       });
 
@@ -247,8 +247,8 @@ describe('Exporter', () => {
       ));
     });
 
-    context("when the exporter is constructed with fields = ['options.url', 'result.title']", () => {
-      beforeEach(() => {
+    context("when the exporter is constructed with fields = ['options.url', 'result.title']", function () {
+      beforeEach(function () {
         exporter = new JSONLineExporter({
           file: JSON_FILE,
           fields: ['options.url', 'result.title'],
@@ -286,8 +286,8 @@ describe('Exporter', () => {
       ));
     });
 
-    context('when the exporter is constructed with jsonReplacer = jsonStableReplacer', () => {
-      beforeEach(() => {
+    context('when the exporter is constructed with jsonReplacer = jsonStableReplacer', function () {
+      beforeEach(function () {
         exporter = new JSONLineExporter({
           file: JSON_FILE,
           jsonReplacer: jsonStableReplacer,
