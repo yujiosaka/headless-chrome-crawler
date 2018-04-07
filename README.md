@@ -27,7 +27,7 @@ Powered by Headless Chrome, the crawler provides [simple APIs](#api-reference) t
 
 ### Installation
 
-```
+```sh
 yarn add headless-chrome-crawler
 # or "npm i headless-chrome-crawler"
 ```
@@ -548,7 +548,7 @@ yarn test-all
 
 All requests and browser's logs are logged via the [debug](https://github.com/visionmedia/debug) module under the `hccrawler` namespace.
 
-```
+```sh
 env DEBUG="hccrawler:*" node script.js
 env DEBUG="hccrawler:request" node script.js
 env DEBUG="hccrawler:browser" node script.js
