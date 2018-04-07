@@ -180,6 +180,7 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
   * `userAgent` <[string]> User agent string to override in this page.
   * `extraHeaders` <[Object]> An object containing additional headers to be sent with every request. All header values must be strings.
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
+* returns: <[Promise]> Promise resolved when queue is pushed.
 
 > **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
 
