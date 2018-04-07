@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Support `waitFor` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+- Support `waitFor` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions)'s options.
 - Support `slowMo` for [HCCrawler.connect()](#hccrawlerconnectoptions)'s options.
 
 ### Fixed
@@ -27,21 +27,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Support `browserCache` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+- Support `browserCache` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions)'s options.
 - Support `depthPriority` option again.
 
 ## [1.3.4] - 2018-02-22
 
 ### changed
 
-- Drop `depthPriority` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+- Drop `depthPriority` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions)'s options.
 
 ## [1.3.3] - 2018-02-21
 
 ### Added
 
 - Emit `newpage` event.
-- Support `deniedDomains` and `depthPriority` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+- Support `deniedDomains` and `depthPriority` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions)'s options.
 
 ### changed
 
@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Support `followSitemapXml` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+- Support `followSitemapXml` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions)'s options.
 
 ### Fixed
 
@@ -67,23 +67,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.3.0] - 2018-01-12
 ### Added
 
-- Add [HCCrawler.defaultArgs()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerdefaultargs) method.
+- Add [HCCrawler.defaultArgs()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#hccrawlerdefaultargs) method.
 - Emit `requestretried` event.
 
 ### changed
 
 - Use `cache` option not only for remembering already requested URLs but for request queue for distributed environments.
-- Moved `onSuccess`, `onError` and `maxDepth` options from [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions) to [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions).
+- Moved `onSuccess`, `onError` and `maxDepth` options from [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#hccrawlerlaunchoptions) to [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions).
 
 ## [1.2.5] - 2018-01-03
 ### Added
 
-- Support `obeyRobotsTxt` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
-- Support `persist` for [RedisCache](https://github.com/yujiosaka/headless-chrome-crawler#rediscache)'s constructing options.
+- Support `obeyRobotsTxt` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions)'s options.
+- Support `persist` for [RedisCache](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#rediscache)'s constructing options.
 
 ### changed
 
-- Make `cache` to be required for [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions)'s options.
+- Make `cache` to be required for [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#hccrawlerlaunchoptions)'s options.
 - Provide `skipDuplicates` to remember and skip duplicate URLs, instead of passing `null` to `cache` option.
 - Modify `BaseCache` interface.
 
@@ -116,26 +116,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Automatically collect and follow links found in the requested page.
-- Support `maxDepth` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+- Support `maxDepth` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions)'s options.
 
 ## [1.2.1] - 2017-12-13
 ### Added
 
-- Support `screenshot` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+- Support `screenshot` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions)'s options.
 
 ## [1.2.0] - 2017-12-11
 ### Changed
 
-- Rename `ensureCacheClear` to `persistCache` for [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions)'s options.
+- Rename `ensureCacheClear` to `persistCache` for [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#hccrawlerlaunchoptions)'s options.
 
 ## [1.1.2] - 2017-12-10
 ### Added
 
-- Support `maxRequest` for [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions)'s options.
-- Support `allowedDomains` and `userAgent` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
-- Support pluggable cache such as [SessionCache](https://github.com/yujiosaka/headless-chrome-crawler#class-sessioncache), [RedisCache](https://github.com/yujiosaka/headless-chrome-crawler#class-rediscache) and [BaseCache](https://github.com/yujiosaka/headless-chrome-crawler#class-basecache) interface for customizing caches.
-- Add [crawler.setMaxRequest()](https://github.com/yujiosaka/headless-chrome-crawler#crawlersetmaxrequestmaxrequest), [crawler.pause()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerpause) and [crawler.resume()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerresume) methods.
-- Add [crawler.pendingQueueSize](https://github.com/yujiosaka/headless-chrome-crawler#crawlerpendingqueuesize) and [crawler.requestedCount](https://github.com/yujiosaka/headless-chrome-crawler#crawlerrequestedcount) read-only properties.
+- Support `maxRequest` for [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#hccrawlerlaunchoptions)'s options.
+- Support `allowedDomains` and `userAgent` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions)'s options.
+- Support pluggable cache such as [SessionCache](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#class-sessioncache), [RedisCache](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#class-rediscache) and [BaseCache](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#class-basecache) interface for customizing caches.
+- Add [crawler.setMaxRequest()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlersetmaxrequestmaxrequest), [crawler.pause()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerpause) and [crawler.resume()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerresume) methods.
+- Add [crawler.pendingQueueSize](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerpendingqueuesize) and [crawler.requestedCount](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerrequestedcount) read-only properties.
 
 ## [1.1.1] - 2017-12-09
 ### Added
@@ -151,13 +151,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.1.0] - 2017-12-08
 ### Added
 
-- Support `extraHeaders` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+- Support `extraHeaders` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions)'s options.
 - Add comment in [JSDoc](http://usejsdoc.org) style.
 
 ### Changed
 
-- Public API to launch a browser has changed. Now you can launch browser by [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler#hccrawlerlaunchoptions).
-- Rename `shouldRequest` to `preRequest` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler#crawlerqueueoptions)'s options.
+- Public API to launch a browser has changed. Now you can launch browser by [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#hccrawlerlaunchoptions).
+- Rename `shouldRequest` to `preRequest` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions)'s options.
 - Refactor by separating `HCCrawler` and `Crawler` classes.
 - Refactor handlers for options.
 
