@@ -49,7 +49,7 @@
     "eslint-config-airbnb": "16.1.0",
     "eslint-plugin-import": "2.10.0",
     "greenkeeper-lockfile": "1.14.0",
-    "mime": "2.2.1",
+    "mime": "2.3.0",
     "mocha": "mochajs/mocha#88b9882",
     "power-assert": "1.5.0",
     "redis": "2.8.0",
