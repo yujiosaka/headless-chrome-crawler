@@ -47,7 +47,7 @@
     "@types/request-promise": "4.1.41",
     "eslint": "4.19.1",
     "eslint-config-airbnb": "16.1.0",
-    "eslint-plugin-import": "2.10.0",
+    "eslint-plugin-import": "2.11.0",
     "greenkeeper-lockfile": "1.14.0",
     "mime": "2.3.0",
     "mocha": "mochajs/mocha#88b9882",
