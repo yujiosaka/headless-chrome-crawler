@@ -176,6 +176,9 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
   * `device` <[string]> Device to emulate. Available devices are listed [here](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js).
   * `username` <[string]> Username for basic authentication. pass `null` if it's not necessary.
   * `screenshot` <[Object]> Screenshot option, defaults to `null`. This option is passed to [Puppeteer's page.screenshot()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagescreenshotoptions). Pass `null` or leave default to disable screenshot.
+  * `viewport` <[Object]> See [Puppeteer's page.setViewport()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetviewportviewport) for further details.
+    * `width` <[number]> Page width in pixels.
+    * `height` <[number]> Page height in pixels.
   * `password` <[string]> Password for basic authentication. pass `null` if it's not necessary.
   * `userAgent` <[string]> User agent string to override in this page.
   * `extraHeaders` <[Object]> An object containing additional headers to be sent with every request. All header values must be strings.
