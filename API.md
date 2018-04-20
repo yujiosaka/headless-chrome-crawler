@@ -23,6 +23,7 @@
   * [crawler.pendingQueueSize()](#crawlerpendingqueuesize)
   * [crawler.requestedCount()](#crawlerrequestedcount)
   * [event: 'newpage'](#event-newpage)
+  * [event: 'requestdisallowed'](#event-requestdisallowed)
   * [event: 'requeststarted'](#event-requeststarted)
   * [event: 'requestskipped'](#event-requestskipped)
   * [event: 'requestfinished'](#event-requestfinished)
@@ -252,6 +253,12 @@ This method clears the cache when it's used.
 * `page` <[Page]>
 
 Emitted when a [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s page is opened.
+
+### event: 'requestdisallowed'
+
+* `options` <[Object]>
+
+Emitted when a request is disallowed by robots.txt.
 
 ### event: 'requeststarted'
 
