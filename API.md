@@ -75,6 +75,9 @@ const HCCrawler = require('headless-chrome-crawler');
     * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
   * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
     * `response` <[Object]>
+      * `redirectChain` <[Array]<[Object]>> Chain of requests.
+        * `url` <[string]> Requested url.
+        * `headers` <[Object]> Request headers.
       * `response` <[Object]>
         * `ok` <[boolean]> whether the status code in the range 200-299 or not.
         * `status` <[string]> status code of the request.
@@ -83,7 +86,7 @@ const HCCrawler = require('headless-chrome-crawler');
       * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
       * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
       * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
-      * `links` <[Array]> List of links found in the requested page.
+      * `links` <[Array]<[string]>> List of links found in the requested page.
       * `depth` <[number]> Depth of the followed links.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
