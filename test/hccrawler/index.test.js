@@ -17,7 +17,7 @@ const JSON_FILE = './tmp/result.json';
 const PNG_FILE = './tmp/example.png';
 const ENCODING = 'utf8';
 
-const DEFAULT_OPTIONS = { args: ['--no-sandbox', '--disable-dev-shm-usage'] };
+const DEFAULT_OPTIONS = { args: ['--no-sandbox'] };
 
 describe('HCCrawler', function () {
   describe('HCCrawler.executablePath', function () {
