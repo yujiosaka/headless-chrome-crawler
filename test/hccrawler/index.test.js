@@ -505,6 +505,35 @@ describe('HCCrawler', function () {
           assert.ok(includes(onError.firstCall.args[0].message, 'Evaluation failed:'));
         });
 
+        context('when the page is protected by CSP meta tag', async function () {
+          beforeEach(function () {
+            server.setContent('/csp.html', `
+            <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+            <h1>Welcome to ${PREFIX}/csp.html</h1>
+            `);
+          });
+
+          it('succeeds evaluating page', async function () {
+            await crawler.queue({ url: `${PREFIX}/csp.html`, evaluatePage });
+            await crawler.onIdle();
+            assert.equal(onSuccess.callCount, 1);
+            assert.ok(includes(onSuccess.firstCall.args[0].result, 'Welcome to'));
+          });
+        });
+
+        context('when the page is protected by CSP header', async function () {
+          beforeEach(function () {
+            server.setCSP('/empty.html', 'default-src "self"');
+          });
+
+          it('succeeds evaluating page', async function () {
+            await crawler.queue({ url: `${INDEX_PAGE}`, evaluatePage });
+            await crawler.onIdle();
+            assert.equal(onSuccess.callCount, 1);
+            assert.equal(onSuccess.firstCall.args[0].result, '/');
+          });
+        });
+
         context('when the page response is delayed', async function () {
           beforeEach(function () {
             server.setResponseDelay('/', 200);

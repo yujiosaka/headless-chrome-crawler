@@ -22,6 +22,7 @@ class Server {
     this._server.listen(port);
     this._delays = new Map();
     this._auths = new Map();
+    this._csps = new Map();
     this._contents = new Map();
   }
 
@@ -29,6 +30,7 @@ class Server {
     this._delays.clear();
     this._auths.clear();
     this._contents.clear();
+    this._csps.clear();
   }
 
   /**
@@ -45,6 +47,14 @@ class Server {
    */
   setAuth(path, username, password) {
     this._auths.set(path, { username, password });
+  }
+
+  /**
+   * @param {string} path
+   * @param {string} csp
+   */
+  setCSP(path, csp) {
+    this._csps.set(path, csp);
   }
 
   /**
