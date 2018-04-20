@@ -20,6 +20,7 @@ class Server {
   constructor(port) {
     this._server = createServer(this._onRequest.bind(this));
     this._server.listen(port);
+    this._routes = new Map();
     this._delays = new Map();
     this._auths = new Map();
     this._csps = new Map();
@@ -27,6 +28,7 @@ class Server {
   }
 
   reset() {
+    this._routes.clear();
     this._delays.clear();
     this._auths.clear();
     this._contents.clear();
@@ -74,6 +76,17 @@ class Server {
   }
 
   /**
+   * @param {string} from
+   * @param {string} to
+   */
+  setRedirect(from, to) {
+    this._routes.set(from, (request, response) => {
+      response.writeHead(302, { location: to });
+      response.end();
+    });
+  }
+
+  /**
    * @param {!IncomingMessage} request
    * @param {!ServerResponse} response
    * @private
@@ -90,6 +103,11 @@ class Server {
     }
     const delay = this._delays.get(path) || 0;
     setTimeout(() => {
+      const route = this._routes.get(path);
+      if (route) {
+        route(request, response);
+        return;
+      }
       const content = this._contents.get(path);
       if (content) {
         response.end(content);
