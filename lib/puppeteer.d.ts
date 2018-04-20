@@ -1,4 +1,4 @@
-import { Browser, Page, Dialog } from 'puppeteer';
+import { Browser, Page, Request, Response, Dialog } from 'puppeteer';
 
 export as namespace Puppeteer;
-export { Browser, Page, Dialog };
+export { Browser, Page, Request, Response, Dialog };

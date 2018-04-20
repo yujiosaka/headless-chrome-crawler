@@ -75,6 +75,9 @@ const HCCrawler = require('headless-chrome-crawler');
     * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
   * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
     * `response` <[Object]>
+      * `redirectChain` <[Array]<[Object]>> Redirect chain of requests.
+        * `url` <[string]> Requested url.
+        * `headers` <[Object]> Request headers.
       * `response` <[Object]>
         * `ok` <[boolean]> whether the status code in the range 200-299 or not.
         * `status` <[string]> status code of the request.
@@ -83,7 +86,7 @@ const HCCrawler = require('headless-chrome-crawler');
       * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
       * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
       * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
-      * `links` <[Array]> List of links found in the requested page.
+      * `links` <[Array]<[string]>> List of links found in the requested page.
       * `depth` <[number]> Depth of the followed links.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
@@ -158,7 +161,8 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
   * `maxDepth` <[number]> Maximum depth for the crawler to follow links automatically, default to 1. Leave default to disable following links.
   * `priority` <[number]> Basic priority of queues, defaults to `1`. Priority with larger number is preferred.
   * `depthPriority` <[boolean]> Whether to adjust priority based on its depth, defaults to `true`. Leave default to increase priority for higher depth, which is [depth-first search](https://en.wikipedia.org/wiki/Depth-first_search).
-  * `skipDuplicates` <[boolean]> Whether to skip duplicate requests, default to `null`. The request is considered to be the same if `url`, `userAgent`, `device` and `extraHeaders` are strictly the same.
+  * `skipDuplicates` <[boolean]> Whether to skip duplicate requests, default to `true`. The request is considered to be the same if `url`, `userAgent`, `device` and `extraHeaders` are strictly the same.
+  * `skipRequestedRedirect` <[boolean]> Whether to skip requests already appeared in redirect chains of requests, default to `false`. This option is ignored when `skipDuplicates` is set `false`.
   * `obeyRobotsTxt` <[boolean]> Whether to obey [robots.txt](https://developers.google.com/search/reference/robots_txt), default to `true`.
   * `followSitemapXml` <[boolean]> Whether to use [sitemap.xml](https://www.sitemaps.org/) to find locations, default to `false`.
   * `allowedDomains` <[Array]<[string]|[RegExp]>> List of domains allowed to request. Pass `null` or leave default to skip checking allowed domain

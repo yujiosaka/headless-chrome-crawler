@@ -98,7 +98,10 @@ describe('HCCrawler', function () {
 
       context('when the crawler is launched with necessary options', function () {
         beforeEach(async function () {
-          crawler = await HCCrawler.launch(extend({ onSuccess }, DEFAULT_OPTIONS));
+          crawler = await HCCrawler.launch(extend({
+            evaluatePage,
+            onSuccess,
+          }, DEFAULT_OPTIONS));
         });
 
         it('shows the browser version', async function () {
@@ -334,10 +337,7 @@ describe('HCCrawler', function () {
           });
 
           it('fails evaluating the delayed content without the waitFor option', async function () {
-            await crawler.queue({
-              url: INDEX_PAGE,
-              evaluatePage,
-            });
+            await crawler.queue(INDEX_PAGE);
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
             assert.equal(onSuccess.firstCall.args[0].result, '');
@@ -347,7 +347,6 @@ describe('HCCrawler', function () {
             await crawler.queue({
               url: INDEX_PAGE,
               waitFor: { selectorOrFunctionOrTimeout: 150 },
-              evaluatePage,
             });
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
@@ -358,7 +357,6 @@ describe('HCCrawler', function () {
             await crawler.queue({
               url: INDEX_PAGE,
               waitFor: { selectorOrFunctionOrTimeout: 'h1' },
-              evaluatePage,
             });
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
@@ -374,11 +372,45 @@ describe('HCCrawler', function () {
                 )),
                 args: ['Welcome to'],
               },
-              evaluatePage,
             });
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
             assert.ok(includes(onSuccess.firstCall.args[0].result, 'Welcome to'));
+          });
+        });
+
+        context('when the page is redirected multiple times', function () {
+          beforeEach(function () {
+            server.setRedirect('/1.html', '/2.html');
+            server.setRedirect('/2.html', '/3.html');
+          });
+
+          it('resolves a redirect chain', async function () {
+            await crawler.queue(`${PREFIX}/1.html`);
+            await crawler.onIdle();
+            assert.equal(onSuccess.callCount, 1);
+            assert.equal(onSuccess.firstCall.args[0].result, '/3.html');
+            assert.equal(onSuccess.firstCall.args[0].redirectChain.length, 2);
+            assert.equal(onSuccess.firstCall.args[0].redirectChain[0].url, `${PREFIX}/1.html`);
+            assert.equal(onSuccess.firstCall.args[0].redirectChain[1].url, `${PREFIX}/2.html`);
+          });
+
+          it('requested already requested redirects', async function () {
+            await crawler.queue(`${PREFIX}/1.html`);
+            await crawler.onIdle();
+            await crawler.queue(`${PREFIX}/2.html`);
+            await crawler.queue(`${PREFIX}/3.html`);
+            await crawler.onIdle();
+            assert.equal(onSuccess.callCount, 3);
+          });
+
+          it('skips already requested redirects with skipRequestedRedirect = true', async function () {
+            await crawler.queue({ url: `${PREFIX}/1.html`, skipRequestedRedirect: true });
+            await crawler.onIdle();
+            await crawler.queue({ url: `${PREFIX}/2.html`, skipRequestedRedirect: true });
+            await crawler.queue({ url: `${PREFIX}/3.html`, skipRequestedRedirect: true });
+            await crawler.onIdle();
+            assert.equal(onSuccess.callCount, 1);
           });
         });
 
@@ -389,10 +421,7 @@ describe('HCCrawler', function () {
           });
 
           it('fails authentication when username and password options are not set', async function () {
-            await crawler.queue({
-              url: INDEX_PAGE,
-              evaluatePage,
-            });
+            await crawler.queue(INDEX_PAGE);
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
             assert.equal(onSuccess.firstCall.args[0].result, 'HTTP Error 401 Unauthorized: Access is denied');
@@ -403,7 +432,6 @@ describe('HCCrawler', function () {
               url: INDEX_PAGE,
               username: 'password',
               password: 'username',
-              evaluatePage,
             });
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
@@ -415,7 +443,6 @@ describe('HCCrawler', function () {
               url: INDEX_PAGE,
               username: 'username',
               password: 'password',
-              evaluatePage,
             });
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
@@ -454,8 +481,8 @@ describe('HCCrawler', function () {
         beforeEach(async function () {
           server.setContent('/', '<script>window.document.write(window.navigator.userAgent);</script>');
           crawler = await HCCrawler.launch(extend({
-            onSuccess,
             evaluatePage,
+            onSuccess,
             device: 'iPhone 6',
           }, DEFAULT_OPTIONS));
         });
@@ -485,6 +512,7 @@ describe('HCCrawler', function () {
       context('when the crawler is launched with retryCount = 0', function () {
         beforeEach(async function () {
           crawler = await HCCrawler.launch(extend({
+            evaluatePage,
             onSuccess,
             onError,
             retryCount: 0,
@@ -492,14 +520,14 @@ describe('HCCrawler', function () {
         });
 
         it('succeeds evaluating page', async function () {
-          await crawler.queue({ url: INDEX_PAGE, evaluatePage });
+          await crawler.queue(INDEX_PAGE);
           await crawler.onIdle();
           assert.equal(onSuccess.callCount, 1);
           assert.equal(onSuccess.firstCall.args[0].result, '/');
         });
 
         it('fails evaluating page with jQuery = false', async function () {
-          await crawler.queue({ url: INDEX_PAGE, jQuery: false, evaluatePage });
+          await crawler.queue({ url: INDEX_PAGE, jQuery: false });
           await crawler.onIdle();
           assert.equal(onError.callCount, 1);
           assert.ok(includes(onError.firstCall.args[0].message, 'Evaluation failed:'));
@@ -514,7 +542,7 @@ describe('HCCrawler', function () {
           });
 
           it('succeeds evaluating page', async function () {
-            await crawler.queue({ url: `${PREFIX}/csp.html`, evaluatePage });
+            await crawler.queue(`${PREFIX}/csp.html`);
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
             assert.ok(includes(onSuccess.firstCall.args[0].result, 'Welcome to'));
@@ -527,7 +555,7 @@ describe('HCCrawler', function () {
           });
 
           it('succeeds evaluating page', async function () {
-            await crawler.queue({ url: `${INDEX_PAGE}`, evaluatePage });
+            await crawler.queue(`${INDEX_PAGE}`);
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
             assert.equal(onSuccess.firstCall.args[0].result, '/');
@@ -540,7 +568,7 @@ describe('HCCrawler', function () {
           });
 
           it('succeeds request when the timeout option is not set', async function () {
-            await crawler.queue({ url: INDEX_PAGE });
+            await crawler.queue(INDEX_PAGE);
             await crawler.onIdle();
             assert.equal(onSuccess.callCount, 1);
           });
