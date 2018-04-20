@@ -283,42 +283,42 @@ describe('HCCrawler', function () {
 
         it('crawls when the path is allowed by the robots.txt', async function () {
           server.setContent('/robots.txt', 'User-agent: *\nAllow: /');
-          let requestskipped = 0;
-          crawler.on('requestskipped', () => { requestskipped += 1; });
+          let requestdisallowed = 0;
+          crawler.on('requestdisallowed', () => { requestdisallowed += 1; });
           await crawler.queue(INDEX_PAGE);
           await crawler.onIdle();
-          assert.equal(requestskipped, 0);
+          assert.equal(requestdisallowed, 0);
           assert.equal(onSuccess.callCount, 1);
         });
 
         it('skips crawling when the path is not allowed by the robots.txt', async function () {
           server.setContent('/robots.txt', 'User-agent: *\nDisallow: /');
-          let requestskipped = 0;
-          crawler.on('requestskipped', () => { requestskipped += 1; });
+          let requestdisallowed = 0;
+          crawler.on('requestdisallowed', () => { requestdisallowed += 1; });
           await crawler.queue(INDEX_PAGE);
           await crawler.onIdle();
-          assert.equal(requestskipped, 1);
+          assert.equal(requestdisallowed, 1);
           assert.equal(onSuccess.callCount, 0);
         });
 
         it('stops crawling when allowed and disallowed paths are mixed', async function () {
           server.setContent('/robots.txt', 'User-agent: *\nDisallow: /2.html');
-          let requestskipped = 0;
-          crawler.on('requestskipped', () => { requestskipped += 1; });
+          let requestdisallowed = 0;
+          crawler.on('requestdisallowed', () => { requestdisallowed += 1; });
           await crawler.queue(`${PREFIX}/1.html`);
           await crawler.queue(`${PREFIX}/2.html`);
           await crawler.onIdle();
-          assert.equal(requestskipped, 1);
+          assert.equal(requestdisallowed, 1);
           assert.equal(onSuccess.callCount, 1);
         });
 
         it('does not obey the robots.txt with obeyRobotsTxt = false', async function () {
           server.setContent('/robots.txt', 'User-agent: *\nDisallow: /');
-          let requestskipped = 0;
-          crawler.on('requestskipped', () => { requestskipped += 1; });
+          let requestdisallowed = 0;
+          crawler.on('requestdisallowed', () => { requestdisallowed += 1; });
           await crawler.queue({ url: INDEX_PAGE, obeyRobotsTxt: false });
           await crawler.onIdle();
-          assert.equal(requestskipped, 0);
+          assert.equal(requestdisallowed, 0);
           assert.equal(onSuccess.callCount, 1);
         });
 
