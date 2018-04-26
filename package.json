@@ -43,7 +43,7 @@
     "@types/debug": "0.0.30",
     "@types/lodash": "4.14.108",
     "@types/node": "9.6.6",
-    "@types/puppeteer": "1.2.1",
+    "@types/puppeteer": "1.2.3",
     "@types/request-promise": "4.1.41",
     "eslint": "4.19.1",
     "eslint-config-airbnb": "16.1.0",
