@@ -166,9 +166,9 @@
   version "9.6.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.6.tgz#439b91f9caf3983cad2eef1e11f6bedcbf9431d2"
 
-"@types/puppeteer@1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@types/puppeteer/-/puppeteer-1.2.1.tgz#00d663f0d6a4f9b472094c18414a00a4ea925655"
+"@types/puppeteer@1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@types/puppeteer/-/puppeteer-1.2.3.tgz#d4d31f5c789932db6f918095f4a139805022d0ed"
   dependencies:
     "@types/events" "*"
     "@types/node" "*"
