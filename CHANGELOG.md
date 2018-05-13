@@ -6,10 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.6.0] - 2018-05-14
+
 ### Added
 
 - Support `cookies` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions)'s options.
 - Make `onSuccess` pass `cookies` in the response.
+
+### changed
+
+- Update [Puppeteer](https://github.com/GoogleChrome/puppeteer) version to 1.4.0.
 
 ## [1.6.0] - 2018-04-21
 
