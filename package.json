@@ -1,6 +1,6 @@
 {
   "name": "headless-chrome-crawler",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Distributed web crawler powered by Headless Chrome",
   "main": "index.js",
   "license": "MIT",
@@ -48,7 +48,7 @@
     "eslint-config-airbnb": "16.1.0",
     "eslint-plugin-import": "2.11.0",
     "greenkeeper-lockfile": "1.15.0",
-    "husky": "^0.14.3",
+    "husky": "0.14.3",
     "mime": "2.3.0",
     "mocha": "mochajs/mocha#88b9882",
     "power-assert": "1.5.0",
