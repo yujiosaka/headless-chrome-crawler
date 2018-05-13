@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Support `cookies` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/API.md#crawlerqueueoptions)'s options.
+- Make `onSuccess` pass `cookies` in the response.
+
 ## [1.6.0] - 2018-04-21
 
 ### Added

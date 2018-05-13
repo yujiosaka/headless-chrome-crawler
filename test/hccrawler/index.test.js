@@ -414,6 +414,35 @@ describe('HCCrawler', function () {
           });
         });
 
+        context('when the page sets cookies', function () {
+          beforeEach(async function () {
+            server.setContent('/', "<script>document.cookie = 'username=yujiosaka';</script>");
+          });
+
+          it('resolves the cookies set in the page', async function () {
+            await crawler.queue(INDEX_PAGE);
+            await crawler.onIdle();
+            assert.equal(onSuccess.callCount, 1);
+            assert.equal(onSuccess.firstCall.args[0].cookies.length, 1);
+            assert.equal(onSuccess.firstCall.args[0].cookies[0].name, 'username');
+            assert.equal(onSuccess.firstCall.args[0].cookies[0].value, 'yujiosaka');
+          });
+
+          it('resolves the cookies set both in the page by the crawler', async function () {
+            await crawler.queue({
+              url: INDEX_PAGE,
+              cookies: [{ name: 'sessionid', value: '4ec74265ba314bb0e47d4a615e9dd031', domain: '127.0.0.1' }],
+            });
+            await crawler.onIdle();
+            assert.equal(onSuccess.callCount, 1);
+            assert.equal(onSuccess.firstCall.args[0].cookies.length, 2);
+            assert.equal(onSuccess.firstCall.args[0].cookies[0].name, 'username');
+            assert.equal(onSuccess.firstCall.args[0].cookies[0].value, 'yujiosaka');
+            assert.equal(onSuccess.firstCall.args[0].cookies[1].name, 'sessionid');
+            assert.equal(onSuccess.firstCall.args[0].cookies[1].value, '4ec74265ba314bb0e47d4a615e9dd031');
+          });
+        });
+
         context('when the page requires the basic authentication', function () {
           beforeEach(function () {
             server.setContent('/', 'Authorization succeeded!');

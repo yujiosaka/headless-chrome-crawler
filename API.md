@@ -78,6 +78,16 @@ const HCCrawler = require('headless-chrome-crawler');
       * `redirectChain` <[Array]<[Object]>> Redirect chain of requests.
         * `url` <[string]> Requested url.
         * `headers` <[Object]> Request headers.
+      * `cookies` <[Array]<[Object]>> List of cookies.
+        * `name` <[string]>
+        * `value` <[string]>
+        * `domain` <[string]>
+        * `path` <[string]>
+        * `expires` <[number]> Unix time in seconds.
+        * `httpOnly` <[boolean]>
+        * `secure` <[boolean]>
+        * `session` <[boolean]>
+        * `sameSite` <[string]> `"Strict"` or `"Lax"`.
       * `response` <[Object]>
         * `ok` <[boolean]> whether the status code in the range 200-299 or not.
         * `status` <[string]> status code of the request.
@@ -101,7 +111,7 @@ browserWSEndpoint, ignoreHTTPSErrors, slowMo
 Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
 
 ```
-url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, retryCount, retryDelay, jQuery, browserCache, device, username, password, evaluatePage
+url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, retryCount, retryDelay, jQuery, browserCache, device, username, password, evaluatePage, cookies, extraHeaders
 ```
 
 > **Note**: In practice, setting the options every time you queue equests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
@@ -141,7 +151,7 @@ ignoreHTTPSErrors, headless, executablePath, slowMo, args, ignoreDefaultArgs, ha
 Also, the following options can be set as default values when [crawler.queue()](#crawlerqueueoptions) are executed.
 
 ```
-url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, retryCount, retryDelay, jQuery, browserCache, device, username, password, evaluatePage
+url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, retryCount, retryDelay, jQuery, browserCache, device, username, password, evaluatePage, cookies, extraHeaders
 ```
 
 > **Note**: In practice, setting the options every time you queue the requests is redundant. Therefore, it's recommended to set the default values and override them depending on the necessity.
@@ -187,6 +197,16 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
   * `password` <[string]> Password for basic authentication. pass `null` if it's not necessary.
   * `userAgent` <[string]> User agent string to override in this page.
   * `extraHeaders` <[Object]> An object containing additional headers to be sent with every request. All header values must be strings.
+  * `cookies` <[Array]<[Object]>> List of cookies to be sent with every request. Either url or domain must be specified for each cookie.
+    * `name` <[string]> **required**
+    * `value` <[string]> **required**
+    * `url` <[string]>
+    * `domain` <[string]>
+    * `path` <[string]>
+    * `expires` <[number]> Unix time in seconds.
+    * `httpOnly` <[boolean]>
+    * `secure` <[boolean]>
+    * `sameSite` <[string]> `"Strict"` or `"Lax"`.
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
 * returns: <[Promise]> Promise resolved when queue is pushed.
 
