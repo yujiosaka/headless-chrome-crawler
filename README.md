@@ -48,6 +48,10 @@ const HCCrawler = require('headless-chrome-crawler');
     evaluatePage: (() => ({
       title: $('title').text(),
     })),
+    // Override default scrape function when using this option evaluatePage will be ignored
+    // customScrape: (page) => {
+    //  return page.title();
+    // },
     // Function to be called with evaluated results from browsers
     onSuccess: (result => {
       console.log(result);
