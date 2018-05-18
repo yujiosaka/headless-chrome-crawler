@@ -619,7 +619,7 @@ describe('HCCrawler', () => {
 
         describe('when an image is responded after the timeout option', () => {
           beforeEach(() => {
-            this.server.setContent('/', `<body><img src="${PREFIX}/empty.png"></body>`);
+            this.server.setContent('/', `<body><div style="background-image: url('${PREFIX}/empty.png');"></body>`);
             this.server.setContent('/empty.png', '');
             this.server.setResponseDelay('/empty.png', 200);
           });
