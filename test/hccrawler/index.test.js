@@ -322,7 +322,7 @@ describe('HCCrawler', () => {
             <script>
             setTimeout(() => {
               window.document.write('<h1>Welcome to ${INDEX_PAGE}</h1>');
-            }, 100);
+            }, 200);
             </script>
             `);
           });
@@ -337,7 +337,7 @@ describe('HCCrawler', () => {
           test('succeeds evaluating the delayed content with the waitFor timeout option', async () => {
             await this.crawler.queue({
               url: INDEX_PAGE,
-              waitFor: { selectorOrFunctionOrTimeout: 150 },
+              waitFor: { selectorOrFunctionOrTimeout: 400 },
             });
             await this.crawler.onIdle();
             expect(this.onSuccess).toHaveBeenCalledTimes(1);
@@ -602,7 +602,7 @@ describe('HCCrawler', () => {
           });
 
           test('succeeds request when the timeout option is longer than the response delay', async () => {
-            await this.crawler.queue({ url: INDEX_PAGE, timeout: 300 });
+            await this.crawler.queue({ url: INDEX_PAGE, timeout: 400 });
             await this.crawler.onIdle();
             expect(this.onSuccess).toHaveBeenCalledTimes(1);
           });
@@ -621,11 +621,11 @@ describe('HCCrawler', () => {
           beforeEach(() => {
             this.server.setContent('/', `<body><div style="background-image: url('${PREFIX}/empty.png');"></body>`);
             this.server.setContent('/empty.png', '');
-            this.server.setResponseDelay('/empty.png', 200);
+            this.server.setResponseDelay('/empty.png', 400);
           });
 
           test('fails request when the waitUntil option is not set', async () => {
-            await this.crawler.queue({ url: INDEX_PAGE, timeout: 100 });
+            await this.crawler.queue({ url: INDEX_PAGE, timeout: 200 });
             await this.crawler.onIdle();
             expect(this.onError).toHaveBeenCalledTimes(1);
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
@@ -634,7 +634,7 @@ describe('HCCrawler', () => {
           });
 
           test("fails request with waitUntil = 'load'", async () => {
-            await this.crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: 'load' });
+            await this.crawler.queue({ url: INDEX_PAGE, timeout: 200, waitUntil: 'load' });
             await this.crawler.onIdle();
             expect(this.onError).toHaveBeenCalledTimes(1);
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
@@ -643,19 +643,19 @@ describe('HCCrawler', () => {
           });
 
           test("succeeds request with waitUntil = 'domcontentloaded'", async () => {
-            await this.crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: 'domcontentloaded' });
+            await this.crawler.queue({ url: INDEX_PAGE, timeout: 200, waitUntil: 'domcontentloaded' });
             await this.crawler.onIdle();
             expect(this.onSuccess).toHaveBeenCalledTimes(1);
           });
 
           test("succeeds request with waitUntil = ['domcontentloaded']", async () => {
-            await this.crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: ['domcontentloaded'] });
+            await this.crawler.queue({ url: INDEX_PAGE, timeout: 200, waitUntil: ['domcontentloaded'] });
             await this.crawler.onIdle();
             expect(this.onSuccess).toHaveBeenCalledTimes(1);
           });
 
           test("fails request with waitUntil = ['load', 'domcontentloaded']", async () => {
-            await this.crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: ['load', 'domcontentloaded'] });
+            await this.crawler.queue({ url: INDEX_PAGE, timeout: 200, waitUntil: ['load', 'domcontentloaded'] });
             await this.crawler.onIdle();
             expect(this.onError).toHaveBeenCalledTimes(1);
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
