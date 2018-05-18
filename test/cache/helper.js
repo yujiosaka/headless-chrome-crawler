@@ -1,117 +1,115 @@
-const assert = require('assert');
-
 const KEY = '35aa17374c';
 
 class Helper {
-  static tearUp() {
-    beforeEach(async function () {
-      await this.cache.init();
-      await this.cache.clear();
+  static tearUp(testContext) {
+    beforeEach(async () => {
+      await testContext.cache.init();
+      await testContext.cache.clear();
     });
   }
 
-  static tearDown() {
-    afterEach(async function () {
-      await this.cache.clear();
-      await this.cache.close();
+  static tearDown(testContext) {
+    afterEach(async () => {
+      await testContext.cache.clear();
+      await testContext.cache.close();
     });
   }
 
-  static testSuite() {
-    describe('get and set', function () {
-      it('works for null', async function () {
-        await this.cache.set(KEY, null);
-        const value = await this.cache.get(KEY);
-        assert.equal(value, null);
+  static testSuite(testContext) {
+    describe('get and set', () => {
+      test('works for null', async () => {
+        await testContext.cache.set(KEY, null);
+        const value = await testContext.cache.get(KEY);
+        expect(value).toBeNull();
       });
 
-      it('works for number', async function () {
-        await this.cache.set(KEY, 1);
-        const value = await this.cache.get(KEY);
-        assert.equal(value, 1);
+      test('works for number', async () => {
+        await testContext.cache.set(KEY, 1);
+        const value = await testContext.cache.get(KEY);
+        expect(value).toBe(1);
       });
 
-      it('works for string', async function () {
-        await this.cache.set(KEY, 'http://example.com');
-        const value = await this.cache.get(KEY);
-        assert.equal(value, 'http://example.com');
+      test('works for string', async () => {
+        await testContext.cache.set(KEY, 'http://example.com');
+        const value = await testContext.cache.get(KEY);
+        expect(value).toBe('http://example.com');
       });
 
-      it('works for object', async function () {
-        await this.cache.set(KEY, { url: 'http://example.com' });
-        const value = await this.cache.get(KEY);
-        assert.deepEqual(value, { url: 'http://example.com' });
-      });
-    });
-
-    describe('enqueue and dequeue', function () {
-      it('works for null', async function () {
-        await this.cache.enqueue(KEY, null);
-        const value = await this.cache.dequeue(KEY);
-        assert.equal(value, null);
-      });
-
-      it('works for number', async function () {
-        await this.cache.enqueue(KEY, 1);
-        const value = await this.cache.dequeue(KEY);
-        assert.equal(value, 1);
-      });
-
-      it('works for string', async function () {
-        await this.cache.enqueue(KEY, 'http://example.com');
-        const value = await this.cache.dequeue(KEY);
-        assert.equal(value, 'http://example.com');
-      });
-
-      it('works for object', async function () {
-        await this.cache.enqueue(KEY, { url: 'http://example.com' });
-        const value = await this.cache.dequeue(KEY);
-        assert.deepEqual(value, { url: 'http://example.com' });
-      });
-
-      it('obeys priority order', async function () {
-        await this.cache.enqueue(KEY, 'http://example.com/', 0);
-        await this.cache.enqueue(KEY, 'http://example.net/', 1);
-        const length1 = await this.cache.size(KEY);
-        assert.equal(length1, 2);
-        const value1 = await this.cache.dequeue(KEY);
-        assert.equal(value1, 'http://example.net/');
-        const value2 = await this.cache.dequeue(KEY);
-        assert.equal(value2, 'http://example.com/');
-        const length2 = await this.cache.size(KEY);
-        assert.equal(length2, 0);
+      test('works for object', async () => {
+        await testContext.cache.set(KEY, { url: 'http://example.com' });
+        const value = await testContext.cache.get(KEY);
+        expect(value).toEqual({ url: 'http://example.com' });
       });
     });
 
-    describe('clear', function () {
-      it('clears set value', async function () {
-        await this.cache.set(KEY, 'http://example.com/');
-        await this.cache.clear();
-        const value = await this.cache.get(KEY);
-        assert.equal(value, null);
+    describe('enqueue and dequeue', () => {
+      test('works for null', async () => {
+        await testContext.cache.enqueue(KEY, null);
+        const value = await testContext.cache.dequeue(KEY);
+        expect(value).toBeNull();
       });
 
-      it('clears enqueued value', async function () {
-        await this.cache.enqueue(KEY, 'http://example.com/');
-        await this.cache.clear();
-        const value = await this.cache.dequeue(KEY);
-        assert.equal(value, null);
+      test('works for number', async () => {
+        await testContext.cache.enqueue(KEY, 1);
+        const value = await testContext.cache.dequeue(KEY);
+        expect(value).toBe(1);
+      });
+
+      test('works for string', async () => {
+        await testContext.cache.enqueue(KEY, 'http://example.com');
+        const value = await testContext.cache.dequeue(KEY);
+        expect(value).toBe('http://example.com');
+      });
+
+      test('works for object', async () => {
+        await testContext.cache.enqueue(KEY, { url: 'http://example.com' });
+        const value = await testContext.cache.dequeue(KEY);
+        expect(value).toEqual({ url: 'http://example.com' });
+      });
+
+      test('obeys priority order', async () => {
+        await testContext.cache.enqueue(KEY, 'http://example.com/', 0);
+        await testContext.cache.enqueue(KEY, 'http://example.net/', 1);
+        const length1 = await testContext.cache.size(KEY);
+        expect(length1).toBe(2);
+        const value1 = await testContext.cache.dequeue(KEY);
+        expect(value1).toBe('http://example.net/');
+        const value2 = await testContext.cache.dequeue(KEY);
+        expect(value2).toBe('http://example.com/');
+        const length2 = await testContext.cache.size(KEY);
+        expect(length2).toBe(0);
       });
     });
 
-    describe('remove', function () {
-      it('removes set value', async function () {
-        await this.cache.set(KEY, 'http://example.com/');
-        await this.cache.remove(KEY);
-        const value = await this.cache.get(KEY);
-        assert.equal(value, null);
+    describe('clear', () => {
+      test('clears set value', async () => {
+        await testContext.cache.set(KEY, 'http://example.com/');
+        await testContext.cache.clear();
+        const value = await testContext.cache.get(KEY);
+        expect(value).toBeNull();
       });
 
-      it('removes enqueued value', async function () {
-        await this.cache.enqueue(KEY, 'http://example.com/');
-        await this.cache.remove(KEY);
-        const value = await this.cache.dequeue(KEY);
-        assert.equal(value, null);
+      test('clears enqueued value', async () => {
+        await testContext.cache.enqueue(KEY, 'http://example.com/');
+        await testContext.cache.clear();
+        const value = await testContext.cache.dequeue(KEY);
+        expect(value).toBeNull();
+      });
+    });
+
+    describe('remove', () => {
+      test('removes set value', async () => {
+        await testContext.cache.set(KEY, 'http://example.com/');
+        await testContext.cache.remove(KEY);
+        const value = await testContext.cache.get(KEY);
+        expect(value).toBeNull();
+      });
+
+      test('removes enqueued value', async () => {
+        await testContext.cache.enqueue(KEY, 'http://example.com/');
+        await testContext.cache.remove(KEY);
+        const value = await testContext.cache.dequeue(KEY);
+        expect(value).toBeNull();
       });
     });
   }

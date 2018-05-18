@@ -1,16 +1,15 @@
-const assert = require('assert');
 const { delay } = require('../../lib/helper');
 const PriorityQueue = require('../../lib/priority-queue');
 const RedisCache = require('../../cache/redis');
 const { tearUp, tearDown, testSuite } = require('./helper');
 
-describe('PriorityQueue', function () {
-  context('when constructed with RedisCache', function () {
-    context('when queue is not registered', function () {
-      tearUp();
-      tearDown();
+describe('PriorityQueue', () => {
+  describe('when constructed with RedisCache', () => {
+    describe('when queue is not registered', () => {
+      tearUp(this);
+      tearDown(this);
 
-      beforeEach(async function () {
+      beforeEach(async () => {
         this.cache = new RedisCache();
         await this.cache.init();
         this.queue = new PriorityQueue({
@@ -20,14 +19,14 @@ describe('PriorityQueue', function () {
         this.queue.on('pull', this.onPull);
       });
 
-      testSuite();
+      testSuite(this);
     });
 
-    context('when queue is already registered', function () {
-      tearUp();
-      tearDown();
+    describe('when queue is already registered', () => {
+      tearUp(this);
+      tearDown(this);
 
-      beforeEach(async function () {
+      beforeEach(async () => {
         this.cache = new RedisCache();
         await this.cache.init();
         this.queue = new PriorityQueue({ cache: this.cache });
@@ -40,21 +39,21 @@ describe('PriorityQueue', function () {
         this.queue.on('pull', this.onPull);
       });
 
-      context('when the queue is initialized', function () {
-        beforeEach(function () {
+      describe('when the queue is initialized', () => {
+        beforeEach(() => {
           this.queue.init();
         });
-        it('pulls from the registered queue', async function () {
+        test('pulls from the registered queue', async () => {
           await this.queue.onIdle();
-          assert.equal(this.onPull.callCount, 1);
-          assert.ok(this.onPull.calledWith({ url: 'http://example.com/' }, 1));
+          expect(this.onPull).toHaveBeenCalledTimes(1);
+          expect(this.onPull).toHaveBeenCalledWith({ url: 'http://example.com/' }, 1);
         });
       });
 
-      context('when the queue is not initialized', function () {
-        it('does not pull from the registered', async function () {
+      describe('when the queue is not initialized', () => {
+        test('does not pull from the registered', async () => {
           await delay(500);
-          assert.equal(this.onPull.callCount, 0);
+          expect(this.onPull).toHaveBeenCalledTimes(0);
         });
       });
     });
