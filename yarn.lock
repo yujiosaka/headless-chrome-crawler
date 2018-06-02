@@ -17,9 +17,9 @@
     lodash.pick "4.4.0"
     meow "4.0.0"
 
-"@commitlint/config-conventional@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-6.1.3.tgz#6c06eeae04c5ac789c3618df4d52aeda89ffb810"
+"@commitlint/config-conventional@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-7.0.0.tgz#217f9f5afc79a640371d6f1767abe14ed9f48fbe"
 
 "@commitlint/ensure@^6.1.3":
   version "6.1.3"
