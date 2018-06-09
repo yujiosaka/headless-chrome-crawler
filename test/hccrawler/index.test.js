@@ -559,6 +559,8 @@ describe('HCCrawler', function () {
           await crawler.queue({ url: INDEX_PAGE, jQuery: false });
           await crawler.onIdle();
           assert.equal(onError.callCount, 1);
+          assert.equal(onError.firstCall.args[0].options.url, INDEX_PAGE);
+          assert.equal(onError.firstCall.args[0].depth, 1);
           assert.ok(includes(onError.firstCall.args[0].message, 'Evaluation failed:'));
         });
 
@@ -618,6 +620,8 @@ describe('HCCrawler', function () {
             await crawler.queue({ url: INDEX_PAGE, timeout: 100 });
             await crawler.onIdle();
             assert.equal(onError.callCount, 1);
+            assert.equal(onError.firstCall.args[0].options.url, INDEX_PAGE);
+            assert.equal(onError.firstCall.args[0].depth, 1);
             assert.ok(includes(onError.firstCall.args[0].message, 'Navigation Timeout Exceeded:'));
           });
         });
@@ -633,6 +637,8 @@ describe('HCCrawler', function () {
             await crawler.queue({ url: INDEX_PAGE, timeout: 100 });
             await crawler.onIdle();
             assert.equal(onError.callCount, 1);
+            assert.equal(onError.firstCall.args[0].options.url, INDEX_PAGE);
+            assert.equal(onError.firstCall.args[0].depth, 1);
             assert.ok(includes(onError.firstCall.args[0].message, 'Navigation Timeout Exceeded:'));
           });
 
@@ -640,6 +646,8 @@ describe('HCCrawler', function () {
             await crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: 'load' });
             await crawler.onIdle();
             assert.equal(onError.callCount, 1);
+            assert.equal(onError.firstCall.args[0].options.url, INDEX_PAGE);
+            assert.equal(onError.firstCall.args[0].depth, 1);
             assert.ok(includes(onError.firstCall.args[0].message, 'Navigation Timeout Exceeded:'));
           });
 
@@ -659,6 +667,8 @@ describe('HCCrawler', function () {
             await crawler.queue({ url: INDEX_PAGE, timeout: 100, waitUntil: ['load', 'domcontentloaded'] });
             await crawler.onIdle();
             assert.equal(onError.callCount, 1);
+            assert.equal(onError.firstCall.args[0].options.url, INDEX_PAGE);
+            assert.equal(onError.firstCall.args[0].depth, 1);
             assert.ok(includes(onError.firstCall.args[0].message, 'Navigation Timeout Exceeded:'));
           });
         });
@@ -945,6 +955,8 @@ describe('HCCrawler', function () {
         assert.equal(crawler.pendingQueueSize(), 0);
         assert.equal(crawler.requestedCount(), 1);
         assert.equal(onError.callCount, 1);
+        assert.equal(onError.firstCall.args[0].options.url, INDEX_PAGE);
+        assert.equal(onError.firstCall.args[0].depth, 1);
         assert.ok(includes(onError.firstCall.args[0].message, 'net::ERR_CONNECTION_REFUSED'));
       });
     });
