@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.6.0] - 2018-05-14
 
+- Set `options` and `depth` to errors.
+
 ### Added
 
 - Support `cookies` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#crawlerqueueoptions)'s options.

@@ -100,6 +100,8 @@ const HCCrawler = require('headless-chrome-crawler');
       * `depth` <[number]> Depth of the followed links.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
+      * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
+      * `depth` <[number]> Depth of the followed links.
 * returns: <[Promise]<[HCCrawler]>> Promise which resolves to HCCrawler instance.
 
 This method connects to an existing Chromium instance. The following options are passed to [puppeteer.connect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
@@ -140,6 +142,8 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
       * `depth` <[number]> Depth of the followed links.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
+      * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
+      * `depth` <[number]> Depth of the followed links.
 * returns: <[Promise]<[HCCrawler]>> Promise which resolves to HCCrawler instance.
 
 The method launches a Chromium instance. The following options are passed to [puppeteer.launch()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
@@ -311,18 +315,24 @@ Emitted when a request is retried.
 ### event: 'requestfailed'
 
 * `error` <[Error]>
+  * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
+  * `depth` <[number]> Depth of the followed links.
 
 Emitted when a request failed.
 
 ### event: 'robotstxtrequestfailed'
 
 * `error` <[Error]>
+  * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
+  * `depth` <[number]> Depth of the followed links.
 
 Emitted when a request to [robots.txt](https://developers.google.com/search/reference/robots_txt) failed
 
 ### event: 'sitemapxmlrequestfailed'
 
 * `error` <[Error]>
+  * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
+  * `depth` <[number]> Depth of the followed links.
 
 Emitted when a request to [sitemap.xml](https://www.sitemaps.org/) failed
 
