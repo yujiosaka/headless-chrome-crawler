@@ -7,8 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
 - Set `previousUrl` to `onSuccess` argument.
 - Set `options`, `depth`, `previousUrl` to errors.
+
+### Fixed
+
+- Fix a bug of not marking skipped requests correctly.
+- Fix `requestfinished` event's argument as described in the [API reference](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md).
 
 ## [1.6.0] - 2018-05-14
 
