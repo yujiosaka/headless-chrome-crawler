@@ -22,7 +22,6 @@
   * [crawler.queueSize()](#crawlerqueuesize)
   * [crawler.pendingQueueSize()](#crawlerpendingqueuesize)
   * [crawler.requestedCount()](#crawlerrequestedcount)
-  * [event: 'newpage'](#event-newpage)
   * [event: 'requestdisallowed'](#event-requestdisallowed)
   * [event: 'requeststarted'](#event-requeststarted)
   * [event: 'requestskipped'](#event-requestskipped)
@@ -279,12 +278,6 @@ This method clears the cache when it's used.
 ### crawler.requestedCount()
 
 * returns: <[number]> The count of total requests.
-
-### event: 'newpage'
-
-* `page` <[Page]>
-
-Emitted when a [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s page is opened.
 
 ### event: 'requestdisallowed'
 

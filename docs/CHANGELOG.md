@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Set `previousUrl` to `onSuccess` argument.
 - Set `options`, `depth`, `previousUrl` to errors.
+- Support `customCrawl` for [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerlaunchoptions)'s options.
+
+### Changed
+
+- Drop `newpage` event.
 
 ### Fixed
 
@@ -24,7 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Support `cookies` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#crawlerqueueoptions)'s options.
 - Make `onSuccess` pass `cookies` in the response.
 
-### changed
+### Changed
 
 - Update [Puppeteer](https://github.com/GoogleChrome/puppeteer) version to 1.4.0.
 
@@ -36,7 +41,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Emit `requestdisallowed` event.
 - Make `onSuccess` pass `redirectChain` in the response.
 
-### changed
+### Changed
 
 - Bump Node.js version up to 8.10.0.
 - Update [Puppeteer](https://github.com/GoogleChrome/puppeteer) version to 1.3.0.
@@ -68,7 +73,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.3.4] - 2018-02-22
 
-### changed
+### Changed
 
 - Drop `depthPriority` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#crawlerqueueoptions)'s options.
 
@@ -79,7 +84,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Emit `newpage` event.
 - Support `deniedDomains` and `depthPriority` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#crawlerqueueoptions)'s options.
 
-### changed
+### Changed
 
 -  Allow `allowedDomains` option to accept a list of regular expressions.
 
@@ -106,7 +111,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add [HCCrawler.defaultArgs()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerdefaultargs) method.
 - Emit `requestretried` event.
 
-### changed
+### Changed
 
 - Use `cache` option not only for remembering already requested URLs but for request queue for distributed environments.
 - Moved `onSuccess`, `onError` and `maxDepth` options from [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerlaunchoptions) to [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#crawlerqueueoptions).
@@ -117,7 +122,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Support `obeyRobotsTxt` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#crawlerqueueoptions)'s options.
 - Support `persist` for [RedisCache](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#rediscache)'s constructing options.
 
-### changed
+### Changed
 
 - Make `cache` to be required for [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerlaunchoptions)'s options.
 - Provide `skipDuplicates` to remember and skip duplicate URLs, instead of passing `null` to `cache` option.
