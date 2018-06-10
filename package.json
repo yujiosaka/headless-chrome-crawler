@@ -10,10 +10,10 @@
     "greenkeeper-lockfile-update": "greenkeeper-lockfile-update",
     "greenkeeper-lockfile-upload": "greenkeeper-lockfile-upload",
     "lint": "eslint --quiet -f codeframe . || eslint .",
-    "mocha-exclude-redis-cache": "mocha $(find test -name '*.test.js') --exclude **/redis.test.js",
-    "mocha-redis-cache": "mocha test/**/redis.test.js",
-    "test": "yarn tsc && yarn lint && yarn mocha-exclude-redis-cache",
-    "test-all": "yarn test && yarn mocha-redis-cache",
+    "jest-exclude-redis-cache": "yarn jest $(find test -name '*.test.js' -not -name 'redis.test.js')",
+    "jest": "jest --maxWorkers=1",
+    "test": "yarn tsc && yarn lint && yarn jest-exclude-redis-cache",
+    "test-all": "yarn tsc && yarn lint && yarn jest",
     "tsc": "tsc -p ."
   },
   "repository": {
@@ -34,7 +34,7 @@
     "robots-parser": "1.0.2"
   },
   "peerDependencies": {
-    "redis": "^2.8.0"
+    "redis": "2.8.0"
   },
   "devDependencies": {
     "@commitlint/cli": "7.0.0",
@@ -49,11 +49,9 @@
     "eslint-plugin-import": "2.12.0",
     "greenkeeper-lockfile": "1.15.1",
     "husky": "0.14.3",
+    "jest": "23.1.0",
     "mime": "2.3.0",
-    "mocha": "mochajs/mocha#88b9882",
-    "power-assert": "1.5.0",
     "redis": "2.8.0",
-    "sinon": "5.1.1",
     "typescript": "2.7.2"
   },
   "keywords": [

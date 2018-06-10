@@ -4,7 +4,7 @@ module.exports = {
     '$': true,
   },
   "env": {
-    "mocha": true,
+    "jest": true,
   },
   "rules": {
     "global-require": 0,

@@ -1,79 +1,76 @@
-const assert = require('assert');
-const sinon = require('sinon');
-
 class Helper {
-  static tearUp() {
-    beforeEach(function () {
-      this.onPull = sinon.spy();
+  static tearUp(testContext) {
+    beforeEach(() => {
+      testContext.onPull = jest.fn();
     });
   }
 
-  static tearDown() {
-    afterEach(async function () {
-      await this.queue.end();
-      await this.cache.clear();
-      await this.cache.close();
+  static tearDown(testContext) {
+    afterEach(async () => {
+      await testContext.queue.end();
+      await testContext.cache.clear();
+      await testContext.cache.close();
     });
   }
 
-  static testSuite() {
-    it('pulls without argument', async function () {
-      this.queue.push(0);
-      await this.queue.onIdle();
-      assert.equal(this.onPull.callCount, 1);
+  static testSuite(testContext) {
+    test('pulls without argument', async () => {
+      testContext.queue.push(0);
+      await testContext.queue.onIdle();
+      expect(testContext.onPull).toHaveBeenCalledTimes(1);
     });
 
-    it('pulls with a number', async function () {
-      this.queue.push(1, 0);
-      await this.queue.onIdle();
-      assert.equal(this.onPull.callCount, 1);
-      assert.ok(this.onPull.calledWith(1));
+    test('pulls with a number', async () => {
+      testContext.queue.push(1, 0);
+      await testContext.queue.onIdle();
+      expect(testContext.onPull).toHaveBeenCalledTimes(1);
+      expect(testContext.onPull).toHaveBeenCalledWith(1);
     });
 
-    it('pulls with a string', async function () {
-      this.queue.push('http://example.com/', 0);
-      await this.queue.onIdle();
-      assert.equal(this.onPull.callCount, 1);
-      assert.ok(this.onPull.calledWith('http://example.com/'));
+    test('pulls with a string', async () => {
+      testContext.queue.push('http://example.com/', 0);
+      await testContext.queue.onIdle();
+      expect(testContext.onPull).toHaveBeenCalledTimes(1);
+      expect(testContext.onPull).toHaveBeenCalledWith('http://example.com/');
     });
 
-    it('pulls with an object', async function () {
-      this.queue.push({ url: 'http://example.com' }, 0);
-      await this.queue.onIdle();
-      assert.equal(this.onPull.callCount, 1);
-      assert.ok(this.onPull.calledWith({ url: 'http://example.com' }));
+    test('pulls with an object', async () => {
+      testContext.queue.push({ url: 'http://example.com' }, 0);
+      await testContext.queue.onIdle();
+      expect(testContext.onPull).toHaveBeenCalledTimes(1);
+      expect(testContext.onPull).toHaveBeenCalledWith({ url: 'http://example.com' });
     });
 
-    it('pulls with multiple arguments', async function () {
-      this.queue.push({ url: 'http://example.com/' }, 1, 0);
-      await this.queue.onIdle();
-      assert.equal(this.onPull.callCount, 1);
-      assert.ok(this.onPull.calledWith({ url: 'http://example.com/' }, 1));
+    test('pulls with multiple arguments', async () => {
+      testContext.queue.push({ url: 'http://example.com/' }, 1, 0);
+      await testContext.queue.onIdle();
+      expect(testContext.onPull).toHaveBeenCalledTimes(1);
+      expect(testContext.onPull).toHaveBeenCalledWith({ url: 'http://example.com/' }, 1);
     });
 
-    it('obeys priority order', async function () {
-      this.queue.push({ url: 'http://example.com/' }, 1);
-      this.queue.push({ url: 'http://example.net/' }, 2);
-      await this.queue.onIdle();
-      assert.equal(this.onPull.callCount, 2);
-      assert.ok(this.onPull.firstCall.calledWith({ url: 'http://example.net/' }));
-      assert.ok(this.onPull.secondCall.calledWith({ url: 'http://example.com/' }));
+    test('obeys priority order', async () => {
+      testContext.queue.push({ url: 'http://example.com/' }, 1);
+      testContext.queue.push({ url: 'http://example.net/' }, 2);
+      await testContext.queue.onIdle();
+      expect(testContext.onPull).toHaveBeenCalledTimes(2);
+      expect(testContext.onPull.mock.calls[0][0]).toEqual({ url: 'http://example.net/' });
+      expect(testContext.onPull.mock.calls[1][0]).toEqual({ url: 'http://example.com/' });
     });
 
-    it('pauses and resumes', async function () {
-      this.queue.push({ url: 'http://example.com/' }, 1, 0);
+    test('pauses and resumes', async () => {
+      testContext.queue.push({ url: 'http://example.com/' }, 1, 0);
       await Promise.all([
-        this.queue.onIdle(),
-        this.queue.pause(),
+        testContext.queue.onIdle(),
+        testContext.queue.pause(),
       ]);
-      assert.equal(this.onPull.callCount, 0);
-      assert.equal(this.queue.isPaused(), true);
-      assert.equal(this.queue.pending(), 0);
-      const size = await this.queue.size();
-      assert.equal(size, 1);
-      this.queue.resume();
-      await this.queue.onIdle();
-      assert.equal(this.onPull.callCount, 1);
+      expect(testContext.onPull).toHaveBeenCalledTimes(0);
+      expect(testContext.queue.isPaused()).toBe(true);
+      expect(testContext.queue.pending()).toBe(0);
+      const size = await testContext.queue.size();
+      expect(size).toBe(1);
+      testContext.queue.resume();
+      await testContext.queue.onIdle();
+      expect(testContext.onPull).toHaveBeenCalledTimes(1);
     });
   }
 }
