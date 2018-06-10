@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: yujiosaka/headless-chrome-linux
+      - image: yujiosaka/headless-chrome-crawler-linux
       - image: redis
     steps:
       - checkout
