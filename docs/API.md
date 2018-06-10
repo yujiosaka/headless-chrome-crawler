@@ -72,8 +72,11 @@ const HCCrawler = require('headless-chrome-crawler');
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the Chromium instance, defaults to `false`.
   * `preRequest(options)` <[Function]> Function to do anything like modifying `options` before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
-  * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
-    * `response` <[Object]>
+  * `customCrawl(page, crawl)` <[Function]> Function to customize crawled result, allowing access to [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s raw API.
+    * `page` <[Page]> [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s raw API.
+    * `crawl` <[Function]> Function to run crawling, which resolves to the result passed to `onSuccess` function.
+  * `onSuccess(result)` <[Function]> Function to be called when `evaluatePage()` successes.
+    * `result` <[Object]>
       * `redirectChain` <[Array]<[Object]>> Redirect chain of requests.
         * `url` <[string]> Requested url.
         * `headers` <[Object]> Request headers.
@@ -129,8 +132,24 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the Chromium instance, defaults to `false`.
   * `preRequest(options)` <[Function]> Function to do anything like modifying `options` before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
-  * `onSuccess(response)` <[Function]> Function to be called when `evaluatePage()` successes.
-    * `response` <[Object]>
+  * `customCrawl(page, crawl)` <[Function]> Function to customize crawled result, allowing access to [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s raw API.
+    * `page` <[Page]> [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s raw API.
+    * `crawl` <[Function]> Function to run crawling, which resolves to the result passed to `onSuccess` function.
+  * `onSuccess(result)` <[Function]> Function to be called when `evaluatePage()` successes.
+    * `result` <[Object]>
+      * `redirectChain` <[Array]<[Object]>> Redirect chain of requests.
+        * `url` <[string]> Requested url.
+        * `headers` <[Object]> Request headers.
+      * `cookies` <[Array]<[Object]>> List of cookies.
+        * `name` <[string]>
+        * `value` <[string]>
+        * `domain` <[string]>
+        * `path` <[string]>
+        * `expires` <[number]> Unix time in seconds.
+        * `httpOnly` <[boolean]>
+        * `secure` <[boolean]>
+        * `session` <[boolean]>
+        * `sameSite` <[string]> `"Strict"` or `"Lax"`.
       * `response` <[Object]>
         * `ok` <[boolean]> whether the status code in the range 200-299 or not.
         * `status` <[string]> status code of the request.
@@ -139,7 +158,7 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
       * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
       * `result` <[Serializable]> The result resolved from `evaluatePage()` option.
       * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
-      * `links` <[Array]> List of links found in the requested page.
+      * `links` <[Array]<[string]>> List of links found in the requested page.
       * `depth` <[number]> Depth of the followed links.
       * `previousUrl` <[string]> The previous request's url. The value is `null` for the initial request.
   * `onError(error)` <[Function]> Function to be called when request fails.
