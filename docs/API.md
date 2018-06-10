@@ -103,6 +103,7 @@ const HCCrawler = require('headless-chrome-crawler');
     * `error` <[Error]> Error object.
       * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
       * `depth` <[number]> Depth of the followed links.
+      * `previousUrl` <[string]> The previous request's url. The value is `null` for the initial request.
 * returns: <[Promise]<[HCCrawler]>> Promise which resolves to HCCrawler instance.
 
 This method connects to an existing Chromium instance. The following options are passed to [puppeteer.connect()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
@@ -146,6 +147,7 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
     * `error` <[Error]> Error object.
       * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
       * `depth` <[number]> Depth of the followed links.
+      * `previousUrl` <[string]> The previous request's url. The value is `null` for the initial request.
 * returns: <[Promise]<[HCCrawler]>> Promise which resolves to HCCrawler instance.
 
 The method launches a Chromium instance. The following options are passed to [puppeteer.launch()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
@@ -319,6 +321,7 @@ Emitted when a request is retried.
 * `error` <[Error]>
   * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
   * `depth` <[number]> Depth of the followed links.
+  * `previousUrl` <[string]> The previous request's url. The value is `null` for the initial request.
 
 Emitted when a request failed.
 
@@ -327,6 +330,7 @@ Emitted when a request failed.
 * `error` <[Error]>
   * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
   * `depth` <[number]> Depth of the followed links.
+  * `previousUrl` <[string]> The previous request's url. The value is `null` for the initial request.
 
 Emitted when a request to [robots.txt](https://developers.google.com/search/reference/robots_txt) failed
 
@@ -335,6 +339,8 @@ Emitted when a request to [robots.txt](https://developers.google.com/search/refe
 * `error` <[Error]>
   * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
   * `depth` <[number]> Depth of the followed links.
+  * `previousUrl` <[string]> The previous request's url. The value is `null` for the initial request.
+
 
 Emitted when a request to [sitemap.xml](https://www.sitemaps.org/) failed
 
