@@ -63,3 +63,19 @@ env DEBUG="hccrawler:*" node script.js
 env DEBUG="hccrawler:request" node script.js
 env DEBUG="hccrawler:browser" node script.js
 ```
+
+## Crawl in Docker
+
+Build the container with [this Dockerfile](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/Dockerfile):
+
+```sh
+docker build -t headless-chrome-crawler-linux .
+```
+
+Run the container by passing `node -e "<yourscript.js content as a string>"` as the command:
+
+```sh
+docker run -i --rm --cap-add=SYS_ADMIN \
+  --name headless-chrome-crawler headless-chrome-crawler-linux \
+  node -e "`cat yourscript.js`"
+```

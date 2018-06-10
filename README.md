@@ -90,7 +90,7 @@ NODE_PATH=../ node examples/priority-queue.js
 
 See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md) for the API reference.
 
-## Tips
+## Debugging tips
 
 See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/TIPS.md) for the debugging tips.
 
