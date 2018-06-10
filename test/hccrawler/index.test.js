@@ -266,6 +266,7 @@ describe('HCCrawler', () => {
           expect(this.onSuccess).toHaveBeenCalledTimes(2);
           expect(this.onSuccess.mock.calls[0][0].links).toEqual([`${PREFIX}/2.html`]);
           expect(this.onSuccess.mock.calls[1][0].depth).toBe(2);
+          expect(this.onSuccess.mock.calls[1][0].previousUrl).toBe(`${PREFIX}/1.html`);
         });
 
         test('crawls regardless of alert dialogs', async () => {
@@ -552,6 +553,7 @@ describe('HCCrawler', () => {
           expect(this.onError).toHaveBeenCalledTimes(1);
           expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
           expect(this.onError.mock.calls[0][0].depth).toBe(1);
+          expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
           expect(this.onError.mock.calls[0][0].message).toContain('Evaluation failed:');
         });
 
@@ -613,6 +615,7 @@ describe('HCCrawler', () => {
             expect(this.onError).toHaveBeenCalledTimes(1);
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
             expect(this.onError.mock.calls[0][0].depth).toBe(1);
+            expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
             expect(this.onError.mock.calls[0][0].message).toContain('Navigation Timeout Exceeded:');
           });
         });
@@ -630,6 +633,7 @@ describe('HCCrawler', () => {
             expect(this.onError).toHaveBeenCalledTimes(1);
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
             expect(this.onError.mock.calls[0][0].depth).toBe(1);
+            expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
             expect(this.onError.mock.calls[0][0].message).toContain('Navigation Timeout Exceeded:');
           });
 
@@ -639,6 +643,7 @@ describe('HCCrawler', () => {
             expect(this.onError).toHaveBeenCalledTimes(1);
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
             expect(this.onError.mock.calls[0][0].depth).toBe(1);
+            expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
             expect(this.onError.mock.calls[0][0].message).toContain('Navigation Timeout Exceeded:');
           });
 
@@ -660,6 +665,7 @@ describe('HCCrawler', () => {
             expect(this.onError).toHaveBeenCalledTimes(1);
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
             expect(this.onError.mock.calls[0][0].depth).toBe(1);
+            expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
             expect(this.onError.mock.calls[0][0].message).toContain('Navigation Timeout Exceeded:');
           });
         });
@@ -728,8 +734,11 @@ describe('HCCrawler', () => {
             await this.crawler.onIdle();
             expect(this.onSuccess).toHaveBeenCalledTimes(4);
             expect(this.onSuccess.mock.calls[0][0].depth).toBe(1);
+            expect(this.onSuccess.mock.calls[0][0].previousUrl).toBe(null);
             expect(this.onSuccess.mock.calls[1][0].depth).toBe(2);
+            expect(this.onSuccess.mock.calls[1][0].previousUrl).toBe(`${PREFIX}/1.html`);
             expect(this.onSuccess.mock.calls[2][0].depth).toBe(3);
+            expect(this.onSuccess.mock.calls[2][0].previousUrl).toBe(`${PREFIX}/2.html`);
           });
 
           test('follow links with breadth first order (BFS) with maxDepth = 3 and depthPriority = false', async () => {
@@ -737,8 +746,11 @@ describe('HCCrawler', () => {
             await this.crawler.onIdle();
             expect(this.onSuccess).toHaveBeenCalledTimes(4);
             expect(this.onSuccess.mock.calls[0][0].depth).toBe(1);
+            expect(this.onSuccess.mock.calls[0][0].previousUrl).toBe(null);
             expect(this.onSuccess.mock.calls[1][0].depth).toBe(2);
+            expect(this.onSuccess.mock.calls[1][0].previousUrl).toBe(`${PREFIX}/1.html`);
             expect(this.onSuccess.mock.calls[2][0].depth).toBe(2);
+            expect(this.onSuccess.mock.calls[2][0].previousUrl).toBe(`${PREFIX}/1.html`);
           });
         });
       });
@@ -948,6 +960,7 @@ describe('HCCrawler', () => {
         expect(this.onError).toHaveBeenCalledTimes(1);
         expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
         expect(this.onError.mock.calls[0][0].depth).toBe(1);
+        expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
         expect(this.onError.mock.calls[0][0].message).toContain('net::ERR_CONNECTION_REFUSED');
       });
     });
