@@ -6,9 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [1.6.0] - 2018-05-14
+- Set `previousUrl` to `onSuccess` argument.
+- Set `options`, `depth`, `previousUrl` to errors.
 
-- Set `options` and `depth` to errors.
+## [1.6.0] - 2018-05-14
 
 ### Added
 

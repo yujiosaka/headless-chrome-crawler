@@ -98,6 +98,7 @@ const HCCrawler = require('headless-chrome-crawler');
       * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
       * `links` <[Array]<[string]>> List of links found in the requested page.
       * `depth` <[number]> Depth of the followed links.
+      * `previousUrl` <[string]> The previous request's url. The value is `null` for the initial request.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
       * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
@@ -140,6 +141,7 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
       * `screenshot` <[Buffer]> Buffer with the screenshot image, which is `null` when `screenshot` option not passed.
       * `links` <[Array]> List of links found in the requested page.
       * `depth` <[number]> Depth of the followed links.
+      * `previousUrl` <[string]> The previous request's url. The value is `null` for the initial request.
   * `onError(error)` <[Function]> Function to be called when request fails.
     * `error` <[Error]> Error object.
       * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
