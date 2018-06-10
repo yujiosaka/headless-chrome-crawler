@@ -22,5 +22,17 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
 RUN chmod +x /usr/local/bin/dumb-init
 
+# Install puppeteer so it's available in the container.
+RUN yarn add headless-chrome-crawler
+
+# Add user so we don't need --no-sandbox.
+RUN groupadd -r crawler && useradd -r -g crawler -G audio,video crawler \
+    && mkdir -p /home/crawler/Downloads \
+    && chown -R crawler:crawler /home/crawler \
+    && chown -R crawler:crawler /node_modules
+
+# Run everything after as non-privileged user.
+USER crawler
+
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["google-chrome-unstable"]
