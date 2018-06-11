@@ -4,9 +4,9 @@ const HCCrawler = require('headless-chrome-crawler');
   const crawler = await HCCrawler.launch({
     maxConcurrency: 1,
     maxRequest: 2,
-    onSuccess: (result => {
+    onSuccess: result => {
       console.log(`Requested ${result.options.url}.`);
-    }),
+    },
   });
   await crawler.queue('https://example.com/');
   await crawler.queue('https://example.net/');

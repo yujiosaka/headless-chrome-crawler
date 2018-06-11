@@ -5,9 +5,9 @@ const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
 
 function launch(persistCache) {
   return HCCrawler.launch({
-    onSuccess: (result => {
+    onSuccess: result => {
       console.log(`Requested ${result.options.url}.`);
-    }),
+    },
     cache,
     persistCache, // Cache won't be cleared when closing the crawler if set true
   });

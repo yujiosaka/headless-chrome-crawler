@@ -2,12 +2,12 @@ const HCCrawler = require('headless-chrome-crawler');
 
 (async () => {
   const crawler = await HCCrawler.launch({
-    evaluatePage: (() => ({
+    evaluatePage: () => ({
       title: $('title').text(),
-    })),
-    onSuccess: (result => {
-      console.log(`Got ${result.result.title} for ${result.options.url}.`);
     }),
+    onSuccess: result => {
+      console.log(`Got ${result.result.title} for ${result.options.url}.`);
+    },
   });
   await crawler.queue('https://example.com/'); // Queue a request
   await crawler.queue(['https://example.net/', { url: 'https://example.org/' }]); // Queue multiple requests in different styles

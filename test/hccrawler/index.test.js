@@ -198,19 +198,6 @@ describe('HCCrawler', () => {
           }
         });
 
-        test('emits a newpage event', async () => {
-          let request;
-          let response;
-          this.crawler.on('newpage', page => {
-            page.on('request', _request => { request = _request; });
-            page.on('response', _response => { response = _response; });
-          });
-          await this.crawler.queue(INDEX_PAGE);
-          await this.crawler.onIdle();
-          expect(request.response()).toBe(response);
-          expect(this.onSuccess).toHaveBeenCalledTimes(1);
-        });
-
         test('crawls when the requested domain exactly matches allowed domains', async () => {
           let requestskipped = 0;
           this.crawler.on('requestskipped', () => { requestskipped += 1; });
@@ -860,6 +847,32 @@ describe('HCCrawler', () => {
             await this.crawler.onIdle();
             expect(this.onSuccess).toHaveBeenCalledTimes(1);
             expect(this.onSuccess.mock.calls[0][0].options.screenshot.path).toBe(PNG_FILE);
+          });
+        });
+      });
+
+      describe('when the crawler is launched with the customCrawl function', () => {
+        describe('when the customCrawl sets page content to the result', () => {
+          async function customCrawl(page, crawl) {
+            const result = await crawl();
+            result.content = await page.content();
+            return result;
+          }
+
+          beforeEach(async () => {
+            this.crawler = await HCCrawler.launch(extend({
+              onSuccess: this.onSuccess,
+              customCrawl,
+            }, DEFAULT_OPTIONS));
+          });
+
+          test('resolves the page content', async () => {
+            const content = `<h1>Welcome to ${INDEX_PAGE}</h1>`;
+            this.server.setContent('/', content);
+            await this.crawler.queue(INDEX_PAGE);
+            await this.crawler.onIdle();
+            expect(this.onSuccess).toHaveBeenCalledTimes(1);
+            expect(this.onSuccess.mock.calls[0][0].content).toContain(content);
           });
         });
       });

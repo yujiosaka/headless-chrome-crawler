@@ -63,9 +63,9 @@ const cache = new FsCache({ file: FILE });
 (async () => {
   const crawler = await HCCrawler.launch({
     maxConcurrency: 1,
-    onSuccess: (result => {
+    onSuccess: result => {
       console.log(`Requested ${result.options.url}.`);
-    }),
+    },
     cache,
   });
   await crawler.queue('https://example.com/');
