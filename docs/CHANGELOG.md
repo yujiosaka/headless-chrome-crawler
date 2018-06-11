@@ -7,22 +7,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.8.0] - 2018-06-11
+
 ### Added
 
 - Set `previousUrl` to `onSuccess` argument.
 - Set `options`, `depth`, `previousUrl` to errors.
 - Support `customCrawl` for [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerlaunchoptions)'s options.
+- Add [Dockerfile](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/Dockerfile) and [tips](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/TIPS.md) for using [Docker](https://www.docker.com/).
 
 ### Changed
 
 - Drop `newpage` event.
+- Update [Puppeteer](https://github.com/GoogleChrome/puppeteer) version to 1.5.0.
 
 ### Fixed
 
 - Fix a bug of not marking skipped requests correctly.
 - Fix `requestfinished` event's argument as described in the [API reference](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md).
 
-## [1.6.0] - 2018-05-14
+## [1.7.0] - 2018-05-14
 
 ### Added
 
