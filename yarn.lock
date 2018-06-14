@@ -176,13 +176,13 @@
   version "9.6.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.2.tgz#e49ac1adb458835e95ca6487bc20f916b37aff23"
 
-"@types/node@10.3.2":
-  version "10.3.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.3.2.tgz#3840ec6c12556fdda6e0e6d036df853101d732a4"
+"@types/node@10.3.3":
+  version "10.3.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.3.3.tgz#8798d9e39af2fa604f715ee6a6b19796528e46c3"
 
-"@types/puppeteer@1.3.3":
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/@types/puppeteer/-/puppeteer-1.3.3.tgz#d3b462263f496bff93c126cac14962f067bfbf22"
+"@types/puppeteer@1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@types/puppeteer/-/puppeteer-1.3.4.tgz#6fff43968792924ac2b68744641566e6acefdc20"
   dependencies:
     "@types/events" "*"
     "@types/node" "*"
