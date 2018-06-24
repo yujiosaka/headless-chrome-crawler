@@ -10,23 +10,28 @@ class FsCache extends BaseCache {
     fs.writeFileSync(this._settings.file, '{}');
     return Promise.resolve();
   }
+
   clear() {
     fs.unlinkSync(this._settings.file);
     return Promise.resolve();
   }
+
   close() {
     return Promise.resolve();
   }
+
   get(key) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
     return Promise.resolve(obj[key] || null);
   }
+
   set(key, value) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
     obj[key] = value;
     fs.writeFileSync(this._settings.file, JSON.stringify(obj));
     return Promise.resolve();
   }
+
   enqueue(key, value, priority) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
     const queue = obj[key] || [];
@@ -37,6 +42,7 @@ class FsCache extends BaseCache {
     fs.writeFileSync(this._settings.file, JSON.stringify(obj));
     return Promise.resolve();
   }
+
   dequeue(key) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
     const queue = obj[key] || [];
@@ -45,11 +51,13 @@ class FsCache extends BaseCache {
     if (!item) return Promise.resolve(null);
     return Promise.resolve(item.value);
   }
+
   size(key) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
     if (!obj[key]) return Promise.resolve(0);
     return Promise.resolve(obj[key].length);
   }
+
   remove(key) {
     const obj = JSON.parse(fs.readFileSync(this._settings.file));
     delete obj[key];
