@@ -234,6 +234,8 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
     * `secure` <[boolean]>
     * `sameSite` <[string]> `"Strict"` or `"Lax"`.
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
+  * `exposedFunctionName` <string> The name of the function exposed via [Puppeteer's page.exposeFunction()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pageexposefunctionname-puppeteerfunction).
+  * `exposeFunction()` <[Function]> The method adds a function called `exposedFunctionName` on the page's window object. When called, the function executes in node.js and returns a Promise which resolves to the return value of the function.
 * returns: <[Promise]> Promise resolved when queue is pushed.
 
 > **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
