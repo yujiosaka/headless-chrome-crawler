@@ -234,6 +234,7 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
     * `secure` <[boolean]>
     * `sameSite` <[string]> `"Strict"` or `"Lax"`.
   * `evaluatePage()` <[Function]> Function to be evaluated in browsers. Return serializable object. If it's not serializable, the result will be `undefined`.
+  * `evaluatePageArgs` <[Object]> Arguments which pass to the evaluatePage().
 * returns: <[Promise]> Promise resolved when queue is pushed.
 
 > **Note**: `response.url` may be different from `options.url` especially when the requested url is redirected.
