@@ -41,7 +41,7 @@
     "@commitlint/config-conventional": "7.0.0",
     "@types/debug": "0.0.30",
     "@types/lodash": "4.14.110",
-    "@types/node": "10.3.4",
+    "@types/node": "10.11.7",
     "@types/puppeteer": "1.3.4",
     "@types/request-promise": "4.1.41",
     "eslint": "5.0.1",
