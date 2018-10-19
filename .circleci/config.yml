@@ -10,6 +10,8 @@ jobs:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
           - v1-dependencies-
+      - run: apt-get update
+      - run: apt-get install -y git ssh
       - run: yarn install
       - save_cache:
           paths:
