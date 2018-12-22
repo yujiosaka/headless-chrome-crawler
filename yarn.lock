@@ -995,7 +995,14 @@ debug@2.6.9, debug@^2.1.2, debug@^2.2.0, debug@^2.3.3, debug@^2.6.8, debug@^2.6.
   dependencies:
     ms "2.0.0"
 
-debug@3.1.0, debug@^3.1.0:
+debug@4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
+  integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
+  dependencies:
+    ms "^2.1.1"
+
+debug@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
   dependencies:
@@ -1248,9 +1255,10 @@ eslint-visitor-keys@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#3f3180fb2e291017716acb4c9d6d5b5c34a6a81d"
 
-eslint@5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.0.0.tgz#3576704f7377aca072da69c00862277c5fe57153"
+eslint@5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.0.1.tgz#109b90ab7f7a736f54e0f341c8bb9d09777494c3"
+  integrity sha512-D5nG2rErquLUstgUaxJlWB5+gu+U/3VDY0fk/Iuq8y9CUFy/7Y6oF4N2cR1tV8knzQvciIbfqfohd359xTLIKQ==
   dependencies:
     ajv "^6.5.0"
     babel-code-frame "^6.26.0"
@@ -2975,6 +2983,11 @@ mkdirp@0.5.1, mkdirp@^0.5.0, mkdirp@^0.5.1:
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
+
+ms@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
+  integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
 
 mute-stream@0.0.7:
   version "0.0.7"
