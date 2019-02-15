@@ -30,7 +30,7 @@
     "lodash": "4.17.5",
     "puppeteer": "1.5.0",
     "request": "2.87.0",
-    "request-promise": "4.2.2",
+    "request-promise": "4.2.4",
     "robots-parser": "1.0.2"
   },
   "peerDependencies": {
