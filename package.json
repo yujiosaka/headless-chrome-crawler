@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "7.0.0",
-    "@commitlint/config-conventional": "7.0.0",
+    "@commitlint/config-conventional": "7.6.0",
     "@types/debug": "0.0.30",
     "@types/lodash": "4.14.110",
     "@types/node": "10.3.4",
