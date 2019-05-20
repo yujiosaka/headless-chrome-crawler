@@ -168,9 +168,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/lodash@4.14.110":
-  version "4.14.110"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.110.tgz#fb07498f84152947f30ea09d89207ca07123461e"
+"@types/lodash@4.14.130":
+  version "4.14.130"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.130.tgz#04b3a690d5f4fc34579963c99adae067b8c8eb5a"
+  integrity sha512-H++wk0tbneBsRVfLkgAAd0IIpmpVr2Bj4T0HncoOsQf3/xrJexRYQK2Tqo0Ej3pFslM8GkMgdis9bu6xIb1ycw==
 
 "@types/node@*":
   version "9.6.2"
@@ -1248,9 +1249,10 @@ eslint-visitor-keys@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#3f3180fb2e291017716acb4c9d6d5b5c34a6a81d"
 
-eslint@5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.0.0.tgz#3576704f7377aca072da69c00862277c5fe57153"
+eslint@5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.0.1.tgz#109b90ab7f7a736f54e0f341c8bb9d09777494c3"
+  integrity sha512-D5nG2rErquLUstgUaxJlWB5+gu+U/3VDY0fk/Iuq8y9CUFy/7Y6oF4N2cR1tV8knzQvciIbfqfohd359xTLIKQ==
   dependencies:
     ajv "^6.5.0"
     babel-code-frame "^6.26.0"
