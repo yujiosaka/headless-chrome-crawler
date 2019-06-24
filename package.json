@@ -48,7 +48,7 @@
     "eslint-config-airbnb": "17.0.0",
     "eslint-plugin-import": "2.13.0",
     "greenkeeper-lockfile": "1.15.1",
-    "husky": "0.14.3",
+    "husky": "2.5.0",
     "jest": "23.1.0",
     "mime": "2.3.0",
     "redis": "2.8.0",
