@@ -1,7 +1,7 @@
 const { unlink, readFile, existsSync } = require('fs');
 const extend = require('lodash/extend');
 const noop = require('lodash/noop');
-const HCCrawler = require('../../');
+const HCCrawler = require('../..');
 const CSVExporter = require('../../exporter/csv');
 const JSONLineExporter = require('../../exporter/json-line');
 const Server = require('../server');
@@ -485,13 +485,14 @@ describe('HCCrawler', () => {
         });
       });
 
+      const LONG_TIMEOUT = 60000;
       describe('when the crawler is launched with the device option', () => {
         beforeEach(async () => {
           this.server.setContent('/', '<script>window.document.write(window.navigator.userAgent);</script>');
           this.crawler = await HCCrawler.launch(extend({
             evaluatePage,
             onSuccess: this.onSuccess,
-            device: 'iPhone 6',
+            device: 'Nexus 10',
           }, DEFAULT_OPTIONS));
         });
 
@@ -499,22 +500,22 @@ describe('HCCrawler', () => {
           await this.crawler.queue(INDEX_PAGE);
           await this.crawler.onIdle();
           expect(this.onSuccess).toHaveBeenCalledTimes(1);
-          expect(this.onSuccess.mock.calls[0][0].result).toContain('iPhone');
-        });
+          expect(this.onSuccess.mock.calls[0][0].result).toContain('Nexus');
+        }, LONG_TIMEOUT);
 
-        test("overrides the device with device = 'Nexus 6'", async () => {
-          await this.crawler.queue({ url: INDEX_PAGE, device: 'Nexus 6' });
+        test("overrides the device with device = 'Nexus 10'", async () => {
+          await this.crawler.queue({ url: INDEX_PAGE, device: 'Nexus 10' });
           await this.crawler.onIdle();
           expect(this.onSuccess).toHaveBeenCalledTimes(1);
-          expect(this.onSuccess.mock.calls[0][0].result).toContain('Nexus 6');
-        });
+          expect(this.onSuccess.mock.calls[0][0].result).toContain('Nexus 10');
+        }, LONG_TIMEOUT);
 
         test("overrides the user agent with userAgent = 'headless-chrome-crawler'", async () => {
           await this.crawler.queue({ url: INDEX_PAGE, userAgent: 'headless-chrome-crawler' });
           await this.crawler.onIdle();
           expect(this.onSuccess).toHaveBeenCalledTimes(1);
           expect(this.onSuccess.mock.calls[0][0].result).toBe('headless-chrome-crawler');
-        });
+        }, LONG_TIMEOUT);
       });
 
       describe('when the crawler is launched with retryCount = 0', () => {
@@ -544,7 +545,7 @@ describe('HCCrawler', () => {
           expect(this.onError.mock.calls[0][0].message).toContain('Evaluation failed:');
         });
 
-        describe('when the page is protected by CSP meta tag', async () => {
+        describe('when the page is protected by CSP meta tag', () => {
           beforeEach(() => {
             this.server.setContent('/csp.html', `
             <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
@@ -560,7 +561,7 @@ describe('HCCrawler', () => {
           });
         });
 
-        describe('when the page is protected by CSP header', async () => {
+        describe('when the page is protected by CSP header', () => {
           beforeEach(() => {
             this.server.setCSP('/empty.html', 'default-src "self"');
           });
@@ -573,7 +574,7 @@ describe('HCCrawler', () => {
           });
         });
 
-        describe('when the page response is delayed', async () => {
+        describe('when the page response is delayed', () => {
           beforeEach(() => {
             this.server.setResponseDelay('/', 200);
           });
@@ -603,7 +604,7 @@ describe('HCCrawler', () => {
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
             expect(this.onError.mock.calls[0][0].depth).toBe(1);
             expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
-            expect(this.onError.mock.calls[0][0].message).toContain('Navigation Timeout Exceeded:');
+            expect(this.onError.mock.calls[0][0].message).toContain('Navigation timeout of 100 ms exceeded');
           });
         });
 
@@ -621,7 +622,7 @@ describe('HCCrawler', () => {
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
             expect(this.onError.mock.calls[0][0].depth).toBe(1);
             expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
-            expect(this.onError.mock.calls[0][0].message).toContain('Navigation Timeout Exceeded:');
+            expect(this.onError.mock.calls[0][0].message).toContain('Navigation timeout of 200 ms exceeded');
           });
 
           test("fails request with waitUntil = 'load'", async () => {
@@ -631,7 +632,7 @@ describe('HCCrawler', () => {
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
             expect(this.onError.mock.calls[0][0].depth).toBe(1);
             expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
-            expect(this.onError.mock.calls[0][0].message).toContain('Navigation Timeout Exceeded:');
+            expect(this.onError.mock.calls[0][0].message).toContain('Navigation timeout of 200 ms exceeded');
           });
 
           test("succeeds request with waitUntil = 'domcontentloaded'", async () => {
@@ -653,7 +654,7 @@ describe('HCCrawler', () => {
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
             expect(this.onError.mock.calls[0][0].depth).toBe(1);
             expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
-            expect(this.onError.mock.calls[0][0].message).toContain('Navigation Timeout Exceeded:');
+            expect(this.onError.mock.calls[0][0].message).toContain('Navigation timeout of 200 ms exceeded');
           });
         });
       });
@@ -924,7 +925,7 @@ describe('HCCrawler', () => {
           });
         });
 
-        describe('when the crawler is launched with exporter = JSONLineExporter', async () => {
+        describe('when the crawler is launched with exporter = JSONLineExporter', () => {
           beforeEach(async () => {
             await removeTemporaryFile(JSON_FILE);
             const exporter = new JSONLineExporter({

@@ -1,13 +1,13 @@
 module.exports = {
-  "extends": "../.eslintrc.js",
-  "globals": {
-    '$': true,
+  extends: '../.eslintrc.js',
+  globals: {
+    $: true,
   },
-  "env": {
-    "jest": true,
+  env: {
+    jest: true,
   },
-  "rules": {
-    "global-require": 0,
-    "prefer-arrow-callback": 0,
+  rules: {
+    'global-require': 0,
+    'prefer-arrow-callback': 0,
   },
 };

@@ -19,6 +19,7 @@ class RedisCache extends BaseCache {
    */
   init() {
     this._client = redis.createClient(this._settings);
+    // this._client = redis.createClient(6379, '0.0.0.0');
     return Promise.resolve();
   }
 

@@ -1,6 +1,7 @@
 # See https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-in-docker
-
-FROM node:8-slim
+# Consider: 14.3.0-alpine3.11
+# was: node:8-slim
+FROM 14.3.0-slim 
 
 # See https://crbug.com/795759
 RUN apt-get update && apt-get install -yq libgconf-2-4

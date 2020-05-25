@@ -1,4 +1,4 @@
-const Server = require('./');
+const Server = require('./index');
 
 const PORT = 8080;
 
