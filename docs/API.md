@@ -72,8 +72,8 @@ const HCCrawler = require('headless-chrome-crawler');
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the Chromium instance, defaults to `false`.
   * `preRequest(options)` <[Function]> Function to do anything like modifying `options` before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
-  * `customCrawl(page, crawl)` <[Function]> Function to customize crawled result, allowing access to [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s raw API.
-    * `page` <[Page]> [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s raw API.
+  * `customCrawl(Crawler, crawl)` <[Function]> Function to customize crawled result, allowing access to [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s raw API through [Crawler.page()] function.
+    * `crawler` <[Crawler]> [Crawler] Object containing current crawler url, options and [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s raw API.
     * `crawl` <[Function]> Function to run crawling, which resolves to the result passed to `onSuccess` function.
   * `onSuccess(result)` <[Function]> Function to be called when `evaluatePage()` successes.
     * `result` <[Object]>
@@ -132,7 +132,7 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
   * `persistCache` <[boolean]> Whether to clear cache on closing or disconnecting from the Chromium instance, defaults to `false`.
   * `preRequest(options)` <[Function]> Function to do anything like modifying `options` before each request. You can also return `false` if you want to skip the request.
     * `options` <[Object]> [crawler.queue()](#crawlerqueueoptions)'s options with default values.
-  * `customCrawl(page, crawl)` <[Function]> Function to customize crawled result, allowing access to [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s raw API.
+  * `customCrawl(Crawler, crawl)` <[Function]> Function to customize crawled result, allowing access to [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s raw API through [Crawler.page()] function.
     * `page` <[Page]> [Puppeteer](https://github.com/GoogleChrome/puppeteer)'s raw API.
     * `crawl` <[Function]> Function to run crawling, which resolves to the result passed to `onSuccess` function.
   * `onSuccess(result)` <[Function]> Function to be called when `evaluatePage()` successes.

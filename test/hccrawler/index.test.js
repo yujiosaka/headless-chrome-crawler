@@ -853,9 +853,9 @@ describe('HCCrawler', () => {
 
       describe('when the crawler is launched with the customCrawl function', () => {
         describe('when the customCrawl sets page content to the result', () => {
-          async function customCrawl(page, crawl) {
+          async function customCrawl(crawler, crawl) {
             const result = await crawl();
-            result.content = await page.content();
+            result.content = await crawler.page().content();
             return result;
           }
 

@@ -2,10 +2,10 @@ const HCCrawler = require('headless-chrome-crawler');
 
 (async () => {
   const crawler = await HCCrawler.launch({
-    customCrawl: async (page, crawl) => {
+    customCrawl: async (crawler, crawl) => {
       // You can access the page object before requests
-      await page.setRequestInterception(true);
-      page.on('request', request => {
+      await crawler.page().setRequestInterception(true);
+      crawler.page().on('request', request => {
         if (request.url().endsWith('/')) {
           request.continue();
         } else {
@@ -15,7 +15,7 @@ const HCCrawler = require('headless-chrome-crawler');
       // The result contains options, links, cookies and etc.
       const result = await crawl();
       // You can access the page object after requests
-      result.content = await page.content();
+      result.content = await crawler.page().content();
       // You need to extend and return the crawled result
       return result;
     },
