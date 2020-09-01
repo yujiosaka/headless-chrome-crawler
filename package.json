@@ -6,7 +6,6 @@
   "license": "MIT",
   "author": "Yuji Isobe",
   "scripts": {
-    //"commitmsg": "commitlint -e $GIT_PARAMS",
     "greenkeeper-lockfile-update": "greenkeeper-lockfile-update",
     "greenkeeper-lockfile-upload": "greenkeeper-lockfile-upload",
     "lint": "eslint --quiet -f codeframe . || eslint .",
