@@ -6,7 +6,7 @@
   "license": "MIT",
   "author": "Yuji Isobe",
   "scripts": {
-    "commitmsg": "commitlint -e $GIT_PARAMS",
+    //"commitmsg": "commitlint -e $GIT_PARAMS",
     "greenkeeper-lockfile-update": "greenkeeper-lockfile-update",
     "greenkeeper-lockfile-upload": "greenkeeper-lockfile-upload",
     "lint": "eslint --quiet -f codeframe . || eslint .",
@@ -37,8 +37,6 @@
     "redis": "2.8.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "7.0.0",
-    "@commitlint/config-conventional": "7.0.0",
     "@types/debug": "0.0.30",
     "@types/lodash": "4.14.110",
     "@types/node": "10.3.4",
@@ -48,7 +46,6 @@
     "eslint-config-airbnb": "17.0.0",
     "eslint-plugin-import": "2.13.0",
     "greenkeeper-lockfile": "1.15.1",
-    "husky": "0.14.3",
     "jest": "23.1.0",
     "mime": "2.3.0",
     "redis": "2.8.0",
