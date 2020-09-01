@@ -1,5 +1,5 @@
-const redis = require('redis');
-const BaseCache = require('./base');
+const redis = require("redis");
+const BaseCache = require("./base");
 
 const DEQUEUE_SCRIPT = `
 local queue = redis.call('ZREVRANGE', KEYS[1], 0, 0)[1]\n
@@ -19,6 +19,7 @@ class RedisCache extends BaseCache {
    */
   init() {
     this._client = redis.createClient(this._settings);
+    this._client.on("error", (error) => console.error(error));
     return Promise.resolve();
   }
 
@@ -28,7 +29,7 @@ class RedisCache extends BaseCache {
    */
   clear() {
     return new Promise((resolve, reject) => {
-      this._client.flushdb(error => {
+      this._client.flushdb((error) => {
         if (error) {
           reject(error);
           return;
@@ -84,7 +85,7 @@ class RedisCache extends BaseCache {
         reject(error);
         return;
       }
-      this._client.set(key, json, error => {
+      this._client.set(key, json, (error) => {
         if (error) {
           reject(error);
           return;
@@ -93,7 +94,7 @@ class RedisCache extends BaseCache {
           resolve();
           return;
         }
-        this._client.expire(key, this._settings.expire, _error => {
+        this._client.expire(key, this._settings.expire, (_error) => {
           if (_error) {
             reject(_error);
             return;
@@ -120,7 +121,7 @@ class RedisCache extends BaseCache {
         reject(error);
         return;
       }
-      this._client.zadd(key, priority, json, error => {
+      this._client.zadd(key, priority, json, (error) => {
         if (error) {
           reject(error);
           return;
@@ -129,7 +130,7 @@ class RedisCache extends BaseCache {
           resolve();
           return;
         }
-        this._client.expire(key, this._settings.expire, _error => {
+        this._client.expire(key, this._settings.expire, (_error) => {
           if (_error) {
             reject(_error);
             return;
@@ -169,7 +170,7 @@ class RedisCache extends BaseCache {
    */
   size(key) {
     return new Promise((resolve, reject) => {
-      this._client.zcount(key, '-inf', 'inf', (error, size) => {
+      this._client.zcount(key, "-inf", "inf", (error, size) => {
         if (error) {
           reject(error);
           return;
@@ -186,7 +187,7 @@ class RedisCache extends BaseCache {
    */
   remove(key) {
     return new Promise((resolve, reject) => {
-      this._client.del(key, error => {
+      this._client.del(key, (error) => {
         if (error) {
           reject(error);
           return;

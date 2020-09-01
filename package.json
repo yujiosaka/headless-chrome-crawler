@@ -10,7 +10,7 @@
     "greenkeeper-lockfile-upload": "greenkeeper-lockfile-upload",
     "lint": "eslint --quiet -f codeframe . || eslint .",
     "jest-exclude-redis-cache": "yarn jest $(find test -name '*.test.js' -not -name 'redis.test.js')",
-    "jest": "jest --maxWorkers=1",
+    "jest": "jest --detectOpenHandles --maxWorkers=1",
     "test": "yarn tsc && yarn lint && yarn jest-exclude-redis-cache",
     "test-all": "yarn tsc && yarn lint && yarn jest",
     "tsc": "tsc -p ."
@@ -27,9 +27,9 @@
     "debug": "3.1.0",
     "jquery": "3.3.1",
     "lodash": "4.17.5",
-    "puppeteer": "1.5.0",
+    "puppeteer": "5.2.1",
     "request": "2.87.0",
-    "request-promise": "4.2.2",
+    "request-promise": "^4.2.6",
     "robots-parser": "1.0.2"
   },
   "peerDependencies": {
