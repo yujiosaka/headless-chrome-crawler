@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Update [jquery](https://github.com/jquery/jquery) version to 3.5.1.
+- Update [lodash](https://lodash.com) version to 4.17.20.
+- Update [puppeteer](https://github.com/puppeteer/puppeteer) version to 1.20.0.
+- Update [request](https://github.com/request/request) version to 2.88.2.
+- Update [request-promise](https://github.com/request/request-promise) version to 4.2.6.
+- Update [@types/lodash](https://github.com/DefinitelyTyped/DefinitelyTyped) version to 4.14.162.
+- Update [@types/puppeteer](https://github.com/DefinitelyTyped/DefinitelyTyped) version to 1.20.0.
+- Update [@types/request-promise](https://github.com/DefinitelyTyped/DefinitelyTyped) version to 4.1.46.
+
+### Fixed
+
+- Fix `crawler.response` returning `null` when connecting to specific chrome instance #354.
+- Fix crawler failure to follow urls with `#` hashes in them #332.
+- Fix crawler pending indefinitely when mixed content is present #260.
+
+### Security
+
+- Fix: 🔒 high-severity lodash vulnerability #339.
+- Fix: 🔒 update jquery and lodash to fix Prototype Pollution vulnerability.
+- Fix: 🔒 update puppeteer to fix Use After Free vulnerability #350.
+- Fix: 🔒 update JQuery to fix XSS vulnerability
+
 ## [1.8.0] - 2018-06-11
 
 ### Added
@@ -90,7 +114,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
--  Allow `allowedDomains` option to accept a list of regular expressions.
+- Allow `allowedDomains` option to accept a list of regular expressions.
 
 ## [1.3.2] - 2018-01-19
 
@@ -110,6 +134,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fix a bug of not obeying robots.txt.
 
 ## [1.3.0] - 2018-01-12
+
 ### Added
 
 - Add [HCCrawler.defaultArgs()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerdefaultargs) method.
@@ -121,6 +146,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Moved `onSuccess`, `onError` and `maxDepth` options from [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerlaunchoptions) to [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#crawlerqueueoptions).
 
 ## [1.2.5] - 2018-01-03
+
 ### Added
 
 - Support `obeyRobotsTxt` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#crawlerqueueoptions)'s options.
@@ -133,6 +159,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Modify `BaseCache` interface.
 
 ## [1.2.4] - 2017-12-25
+
 ### Added
 
 - Support [CSV](https://tools.ietf.org/html/rfc4180) and [JSON Lines](http://jsonlines.org) formats for exporting results
@@ -149,6 +176,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fix a bug of ignoring maxDepth option.
 
 ## [1.2.3] - 2017-12-17
+
 ### Changed
 
 - Refactor by changing tye style of requiring cache directory.
@@ -158,22 +186,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fix a bug of starting too many crawlers more than maxConcurrency when requests fail.
 
 ## [1.2.2] - 2017-12-16
+
 ### Added
 
 - Automatically collect and follow links found in the requested page.
 - Support `maxDepth` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#crawlerqueueoptions)'s options.
 
 ## [1.2.1] - 2017-12-13
+
 ### Added
 
 - Support `screenshot` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#crawlerqueueoptions)'s options.
 
 ## [1.2.0] - 2017-12-11
+
 ### Changed
 
 - Rename `ensureCacheClear` to `persistCache` for [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerlaunchoptions)'s options.
 
 ## [1.1.2] - 2017-12-10
+
 ### Added
 
 - Support `maxRequest` for [HCCrawler.connect()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerconnectoptions) and [HCCrawler.launch()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#hccrawlerlaunchoptions)'s options.
@@ -183,6 +215,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add [crawler.pendingQueueSize](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#crawlerpendingqueuesize) and [crawler.requestedCount](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#crawlerrequestedcount) read-only properties.
 
 ## [1.1.1] - 2017-12-09
+
 ### Added
 
 - Add [CHANGELOG.md](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/CHANGELOG.md) based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
@@ -194,6 +227,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Performance improvement by setting a page parallel.
 
 ## [1.1.0] - 2017-12-08
+
 ### Added
 
 - Support `extraHeaders` for [crawler.queue()](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md#crawlerqueueoptions)'s options.
@@ -207,6 +241,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Refactor handlers for options.
 
 ## [1.0.0] - 2017-12-05
+
 ### Added
 
 - Add test with [mocha](https://mochajs.org) and [power-assert](https://github.com/power-assert-js/power-assert).
