@@ -28,7 +28,7 @@
     "debug": "3.1.0",
     "jquery": "3.5.1",
     "lodash": "4.17.20",
-    "puppeteer": "1.20.0",
+    "puppeteer": "4.0.1",
     "request": "2.88.2",
     "request-promise": "4.2.6",
     "robots-parser": "1.0.2"
@@ -42,7 +42,7 @@
     "@types/debug": "0.0.30",
     "@types/lodash": "4.14.162",
     "@types/node": "10.3.4",
-    "@types/puppeteer": "1.20.0",
+    "@types/puppeteer": "5.4.4",
     "@types/request-promise": "4.1.46",
     "eslint": "5.0.1",
     "eslint-config-airbnb": "17.0.0",
