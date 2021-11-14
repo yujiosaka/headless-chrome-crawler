@@ -25,34 +25,36 @@
   },
   "homepage": "https://github.com/yujiosaka/headless-chrome-crawler#readme",
   "dependencies": {
-    "debug": "3.1.0",
-    "jquery": "3.5.1",
-    "lodash": "4.17.20",
-    "puppeteer": "1.20.0",
+    "debug": "4.3.2",
+    "jquery": "3.6.0",
+    "lodash": "4.17.21",
+    "puppeteer": "^11.0.0",
+    "puppeteer-extra": "^3.2.3",
+    "puppeteer-extra-plugin-stealth": "^2.9.0",
     "request": "2.88.2",
     "request-promise": "4.2.6",
-    "robots-parser": "1.0.2"
+    "robots-parser": "2.3.0"
   },
   "peerDependencies": {
-    "redis": "2.8.0"
+    "redis": "3.1.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "7.0.0",
-    "@commitlint/config-conventional": "7.0.0",
-    "@types/debug": "0.0.30",
-    "@types/lodash": "4.14.162",
-    "@types/node": "10.3.4",
-    "@types/puppeteer": "1.20.0",
-    "@types/request-promise": "4.1.46",
-    "eslint": "5.0.1",
-    "eslint-config-airbnb": "17.0.0",
-    "eslint-plugin-import": "2.13.0",
+    "@commitlint/cli": "14.1.0",
+    "@commitlint/config-conventional": "14.1.0",
+    "@types/debug": "4.1.7",
+    "@types/lodash": "4.14.176",
+    "@types/node": "16.11.7",
+    "@types/puppeteer": "5.4.4",
+    "@types/request-promise": "4.1.48",
+    "eslint": "8.2.0",
+    "eslint-config-airbnb": "19.0.0",
+    "eslint-plugin-import": "2.25.3",
     "greenkeeper-lockfile": "1.15.1",
-    "husky": "0.14.3",
-    "jest": "23.1.0",
-    "mime": "2.3.0",
-    "redis": "2.8.0",
-    "typescript": "2.7.2"
+    "husky": "7.0.4",
+    "jest": "27.3.1",
+    "mime": "3.0.0",
+    "redis": "3.1.2",
+    "typescript": "^4.4.4"
   },
   "keywords": [
     "headless",

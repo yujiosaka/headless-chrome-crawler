@@ -1,4 +1,4 @@
-const { lowerBound } = require('../lib/helper');
+const Helper = require('../lib/helper');
 const BaseCache = require('./base');
 
 /**
@@ -66,7 +66,7 @@ class SessionCache extends BaseCache {
       this._storage.set(key, queue);
       return Promise.resolve();
     }
-    const index = lowerBound(queue, item, (a, b) => b.priority - a.priority);
+    const index = Helper.lowerBound(queue, item, (a, b) => b.priority - a.priority);
     queue.splice(index, 0, item);
     this._storage.set(key, queue);
     return Promise.resolve();

@@ -1,7 +1,7 @@
-const { unlink, readFile, existsSync } = require('fs');
+const { unlink, readFile } = require('fs');
 const extend = require('lodash/extend');
 const noop = require('lodash/noop');
-const HCCrawler = require('../../');
+const HCCrawler = require('../..');
 const CSVExporter = require('../../exporter/csv');
 const JSONLineExporter = require('../../exporter/json-line');
 const Server = require('../server');
@@ -17,19 +17,19 @@ const ENCODING = 'utf8';
 const DEFAULT_OPTIONS = { args: ['--no-sandbox'] };
 
 describe('HCCrawler', () => {
-  describe('HCCrawler.executablePath', () => {
-    test('returns the existing path', () => {
-      const executablePath = HCCrawler.executablePath();
-      expect(existsSync(executablePath)).toBe(true);
-    });
-  });
+  // describe('HCCrawler.executablePath', () => {
+  //   test('returns the existing path', () => {
+  //     const executablePath = HCCrawler.executablePath();
+  //     expect(existsSync(executablePath)).toBe(true);
+  //   });
+  // });
 
-  describe('HCCrawler.defaultArgs', () => {
-    test('returns the default chrome arguments', () => {
-      const args = HCCrawler.defaultArgs();
-      expect(args).toContain('--no-first-run');
-    });
-  });
+  // describe('HCCrawler.defaultArgs', () => {
+  //   test('returns the default chrome arguments', () => {
+  //     const args = HCCrawler.defaultArgs();
+  //     expect(args).toContain('--no-first-run');
+  //   });
+  // });
 
   describe('HCCrawler.connect', () => {
     beforeEach(async () => {
@@ -544,7 +544,7 @@ describe('HCCrawler', () => {
           expect(this.onError.mock.calls[0][0].message).toContain('Evaluation failed:');
         });
 
-        describe('when the page is protected by CSP meta tag', async () => {
+        describe('when the page is protected by CSP meta tag', () => {
           beforeEach(() => {
             this.server.setContent('/csp.html', `
             <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
@@ -552,7 +552,7 @@ describe('HCCrawler', () => {
             `);
           });
 
-          test('succeeds evaluating page', async () => {
+          it('succeeds evaluating page', async () => {
             await this.crawler.queue(`${PREFIX}/csp.html`);
             await this.crawler.onIdle();
             expect(this.onSuccess).toHaveBeenCalledTimes(1);
@@ -560,12 +560,12 @@ describe('HCCrawler', () => {
           });
         });
 
-        describe('when the page is protected by CSP header', async () => {
+        describe('when the page is protected by CSP header', () => {
           beforeEach(() => {
             this.server.setCSP('/empty.html', 'default-src "self"');
           });
 
-          test('succeeds evaluating page', async () => {
+          it('succeeds evaluating page', async () => {
             await this.crawler.queue(`${INDEX_PAGE}`);
             await this.crawler.onIdle();
             expect(this.onSuccess).toHaveBeenCalledTimes(1);
@@ -573,12 +573,12 @@ describe('HCCrawler', () => {
           });
         });
 
-        describe('when the page response is delayed', async () => {
+        describe('when the page response is delayed', () => {
           beforeEach(() => {
             this.server.setResponseDelay('/', 200);
           });
 
-          test('succeeds request when the timeout option is not set', async () => {
+          it('succeeds request when the timeout option is not set', async () => {
             await this.crawler.queue(INDEX_PAGE);
             await this.crawler.onIdle();
             expect(this.onSuccess).toHaveBeenCalledTimes(1);
@@ -603,7 +603,7 @@ describe('HCCrawler', () => {
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
             expect(this.onError.mock.calls[0][0].depth).toBe(1);
             expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
-            expect(this.onError.mock.calls[0][0].message).toContain('Navigation Timeout Exceeded:');
+            expect(this.onError.mock.calls[0][0].message).toContain('Navigation timeout of 100 ms exceeded');
           });
         });
 
@@ -621,7 +621,7 @@ describe('HCCrawler', () => {
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
             expect(this.onError.mock.calls[0][0].depth).toBe(1);
             expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
-            expect(this.onError.mock.calls[0][0].message).toContain('Navigation Timeout Exceeded:');
+            expect(this.onError.mock.calls[0][0].message).toContain('Navigation timeout of 200 ms exceeded');
           });
 
           test("fails request with waitUntil = 'load'", async () => {
@@ -631,7 +631,7 @@ describe('HCCrawler', () => {
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
             expect(this.onError.mock.calls[0][0].depth).toBe(1);
             expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
-            expect(this.onError.mock.calls[0][0].message).toContain('Navigation Timeout Exceeded:');
+            expect(this.onError.mock.calls[0][0].message).toContain('Navigation timeout of 200 ms exceeded');
           });
 
           test("succeeds request with waitUntil = 'domcontentloaded'", async () => {
@@ -653,7 +653,7 @@ describe('HCCrawler', () => {
             expect(this.onError.mock.calls[0][0].options.url).toBe(INDEX_PAGE);
             expect(this.onError.mock.calls[0][0].depth).toBe(1);
             expect(this.onError.mock.calls[0][0].previousUrl).toBe(null);
-            expect(this.onError.mock.calls[0][0].message).toContain('Navigation Timeout Exceeded:');
+            expect(this.onError.mock.calls[0][0].message).toContain('Navigation timeout of 200 ms exceeded');
           });
         });
       });
@@ -924,7 +924,7 @@ describe('HCCrawler', () => {
           });
         });
 
-        describe('when the crawler is launched with exporter = JSONLineExporter', async () => {
+        describe('when the crawler is launched with exporter = JSONLineExporter', () => {
           beforeEach(async () => {
             await removeTemporaryFile(JSON_FILE);
             const exporter = new JSONLineExporter({
@@ -939,7 +939,7 @@ describe('HCCrawler', () => {
             }, DEFAULT_OPTIONS));
           });
 
-          test('exports a json-line file', async () => {
+          it('exports a json-line file', async () => {
             await this.crawler.queue(`${PREFIX}/1.html`);
             await this.crawler.queue(`${PREFIX}/2.html`);
             await this.crawler.onIdle();

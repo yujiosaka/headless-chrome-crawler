@@ -9,9 +9,11 @@ class Server {
    */
   static run(port) {
     const server = new Server(port);
-    return new Promise(resolve => void server._server.once('listening', () => {
-      resolve(server);
-    }));
+    return new Promise((resolve) => {
+      server._server.once('listening', () => {
+        resolve(server);
+      });
+    });
   }
 
   /**
@@ -39,7 +41,9 @@ class Server {
    * @return {!Promise}
    */
   stop() {
-    return new Promise(resolve => void this._server.close(resolve));
+    return new Promise((resolve) => {
+      this._server.close(resolve);
+    });
   }
 
   /**
@@ -97,7 +101,9 @@ class Server {
     response.setHeader('Content-Type', mime.getType(path));
     const auth = this._auths.get(path);
     if (!this._authenticate(auth, request)) {
-      response.writeHead(401, { 'WWW-Authenticate': 'Basic realm="Secure Area"' });
+      response.writeHead(401, {
+        'WWW-Authenticate': 'Basic realm="Secure Area"',
+      });
       response.end('HTTP Error 401 Unauthorized: Access is denied');
       return;
     }
@@ -123,7 +129,7 @@ class Server {
    * @private
    */
   _handleError(request, response) {
-    request.on('error', error => {
+    request.on('error', (error) => {
       if (error.code === 'ECONNRESET') {
         response.end();
         return;

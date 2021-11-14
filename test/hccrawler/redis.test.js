@@ -1,5 +1,5 @@
 const extend = require('lodash/extend');
-const HCCrawler = require('../../');
+const HCCrawler = require('../..');
 const RedisCache = require('../../cache/redis');
 const Server = require('../server');
 
