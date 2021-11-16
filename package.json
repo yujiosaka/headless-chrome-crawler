@@ -39,6 +39,7 @@
     "redis": "3.1.2"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.16.0",
     "@commitlint/cli": "14.1.0",
     "@commitlint/config-conventional": "14.1.0",
     "@types/debug": "4.1.7",
@@ -46,6 +47,7 @@
     "@types/node": "16.11.7",
     "@types/puppeteer": "5.4.4",
     "@types/request-promise": "4.1.48",
+    "babel-jest": "^27.3.1",
     "eslint": "8.2.0",
     "eslint-config-airbnb": "19.0.0",
     "eslint-plugin-import": "2.25.3",
@@ -69,5 +71,10 @@
   ],
   "engines": {
     "node": ">=8.10.0"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]s?$": "babel-jest"
+    }
   }
 }

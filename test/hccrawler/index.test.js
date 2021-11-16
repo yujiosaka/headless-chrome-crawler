@@ -1,4 +1,4 @@
-const { unlink, readFile } = require('fs');
+const { unlink, readFile, existsSync } = require('fs');
 const extend = require('lodash/extend');
 const noop = require('lodash/noop');
 const HCCrawler = require('../..');
@@ -17,19 +17,19 @@ const ENCODING = 'utf8';
 const DEFAULT_OPTIONS = { args: ['--no-sandbox'] };
 
 describe('HCCrawler', () => {
-  // describe('HCCrawler.executablePath', () => {
-  //   test('returns the existing path', () => {
-  //     const executablePath = HCCrawler.executablePath();
-  //     expect(existsSync(executablePath)).toBe(true);
-  //   });
-  // });
+  describe('HCCrawler.executablePath', () => {
+    test('returns the existing path', () => {
+      const executablePath = HCCrawler.executablePath();
+      expect(existsSync(executablePath)).toBe(true);
+    });
+  });
 
-  // describe('HCCrawler.defaultArgs', () => {
-  //   test('returns the default chrome arguments', () => {
-  //     const args = HCCrawler.defaultArgs();
-  //     expect(args).toContain('--no-first-run');
-  //   });
-  // });
+  describe('HCCrawler.defaultArgs', () => {
+    test('returns the default chrome arguments', () => {
+      const args = HCCrawler.defaultArgs();
+      expect(args).toContain('--no-first-run');
+    });
+  });
 
   describe('HCCrawler.connect', () => {
     beforeEach(async () => {
@@ -831,7 +831,7 @@ describe('HCCrawler', () => {
 
         describe('when the preRequest function modifies options', () => {
           function preRequest(options) {
-            options.screenshot = { path: PNG_FILE };
+            options.screenshot = { path: PNG_FILE, fullPage: true };
             return true;
           }
 

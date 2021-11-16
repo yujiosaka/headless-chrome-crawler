@@ -13,5 +13,6 @@ module.exports = {
     'no-bitwise': 0,
     'import/prefer-default-export': 'off',
     'arrow-parens': 0,
+    'import/no-import-module-exports': 'off',
   },
 };
