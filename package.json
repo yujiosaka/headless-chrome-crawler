@@ -9,7 +9,7 @@
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "greenkeeper-lockfile-update": "greenkeeper-lockfile-update",
     "greenkeeper-lockfile-upload": "greenkeeper-lockfile-upload",
-    "lint": "eslint --quiet -f codeframe . || eslint .",
+    "lint": "eslint --quiet . || eslint .",
     "jest-exclude-redis-cache": "yarn jest $(find test -name '*.test.js' -not -name 'redis.test.js')",
     "jest": "jest --maxWorkers=1",
     "test": "yarn tsc && yarn lint && yarn jest-exclude-redis-cache",
