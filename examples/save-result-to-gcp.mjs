@@ -67,11 +67,12 @@ async function addToFirestore(collectionName, data) {
   console.log(`Added URL hash ${data.hash} into ${collectionName}`);
 }
 
-const PATH='./tmp/';
+const PATH = './tmp/';
 const url = await gcpMetadata.instance('attributes/url');
 const allowedDomain = await gcpMetadata.instance('attributes/allowedDomain');
 const bucketName = await gcpMetadata.instance('attributes/bucketName');
 const collectionName = await gcpMetadata.instance('attributes/collectionName');
+const screenshot = await gcpMetadata.instance('attributes/screenshot');
 
 // Get Redis hostname
 const redisInstanceName = await gcpMetadata.instance('attributes/redisInstanceName');
@@ -85,6 +86,7 @@ const exporter = new CSVExporter.default({
   file: `${PATH}/result.csv`,
   fields: ['options.hash', 'options.url'],
 });
+
 (async () => {
   const crawler = await HCCrawler.default.launch({
     args: ['--no-sandbox'],
@@ -100,9 +102,11 @@ const exporter = new CSVExporter.default({
       uploadToBucket(bucketName, result.options.html.path, `${result.options.hash}.html`).then(() => {
         fs.unlinkSync(result.options.html.path);
       });
-      uploadToBucket(bucketName, result.options.screenshot.path, `${result.options.hash}.webp`).then(() => {
-        fs.unlinkSync(result.options.screenshot.path);
-      });
+      if (screenshot) {
+        uploadToBucket(bucketName, result.options.screenshot.path, `${result.options.hash}.webp`).then(() => {
+          fs.unlinkSync(result.options.screenshot.path);
+        });
+      }
       addToFirestore(collectionName, {
         hash: result.options.hash,
         url: result.options.url
@@ -110,7 +114,9 @@ const exporter = new CSVExporter.default({
     },
     preRequest: (options) => {
       options.hash = crypto.createHash('md5').update(options.url).digest('hex');
-      options.screenshot = { path: `${PATH}${options.hash}.webp`, fullPage: true };
+      if (screenshot) {
+        options.screenshot = { path: `${PATH}${options.hash}.webp`, fullPage: true };
+      }
       options.html = { path: `${PATH}${options.hash}.html` };
       return true;
     },
