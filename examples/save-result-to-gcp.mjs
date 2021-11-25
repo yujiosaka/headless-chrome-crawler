@@ -114,7 +114,7 @@ const exporter = new CSVExporter.default({
       options.html = { path: `${PATH}${options.hash}.html` };
       return true;
     },
-    maxDepth: 2,
+    maxDepth: 3,
     exporter
   });
   await crawler.queue(url, {
