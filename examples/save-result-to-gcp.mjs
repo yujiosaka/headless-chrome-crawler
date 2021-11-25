@@ -20,7 +20,7 @@ async function uploadToBucket(bucketName, filePath, destFileName) {
   await storage.bucket(bucketName).upload(filePath, {
     destination: destFileName,
   });
-  console.log(`${filePath} uploaded to ${bucketName}`);
+  console.log(`Uploaded ${filePath} to ${bucketName}`);
 }
 
 /**
@@ -64,41 +64,44 @@ async function getRedisHostname(instanceName, instanceLocation) {
 async function addToFirestore(collectionName, data) {
   const firestore = new Firestore();
   const document = await firestore.collection(collectionName).add(data);
-  console.log('Added new document into collection');
+  console.log(`Added URL hash ${data.hash} into ${collectionName}`);
 }
 
-const url = await gcpMetadata.instance('url');
-const allowedDomain = await gcpMetadata.instance('allowedDomain');
-const bucketName = await gcpMeta.intstance('bucketName');
-const collectionName = await gcpMeta.instances('collectionName');
+const PATH='./tmp/';
+const url = await gcpMetadata.instance('attributes/url');
+const allowedDomain = await gcpMetadata.instance('attributes/allowedDomain');
+const bucketName = await gcpMetadata.instance('attributes/bucketName');
+const collectionName = await gcpMetadata.instance('attributes/collectionName');
 
 // Get Redis hostname
-const redisInstanceName = await gcpMetadata.instance('redisInstanceName');
-const redisInstanceLocation = await gcpMeta.instance('redisInstanceLocation');
+const redisInstanceName = await gcpMetadata.instance('attributes/redisInstanceName');
+const redisInstanceLocation = await gcpMetadata.instance('attributes/redisInstanceLocation');
 const redisHostname = await getRedisHostname(redisInstanceName, redisInstanceLocation);
 const cache = new RedisCache.default({
   host: redisHostname,
   port: 6379
 });
 const exporter = new CSVExporter.default({
-  file: FILE,
+  file: `${PATH}/result.csv`,
   fields: ['options.hash', 'options.url'],
 });
 (async () => {
   const crawler = await HCCrawler.default.launch({
     maxConcurrency: 2,
-    maxRequest: 10,
     persistCache: true,
     cache,
     evaluatePage: () => ({
       content: $('html').html(),
     }),
     onSuccess: (result) => {
-      console.log(`Processing result for ${result.options.url}`);
-      fs.writeFile(`${result.options.html.path}`, result.result.content);
-      console.log(`   HTML is saved at ${result.options.html.path}`);
-      uploadToBucket(bucketName, result.options.html.path, `${result.options.hash}.html`);
-      fs.unlink(`${result.options.html.path}`);
+      console.log(`Processing ${result.options.url}`);
+      fs.writeFileSync(result.options.html.path, result.result.content);
+      uploadToBucket(bucketName, result.options.html.path, `${result.options.hash}.html`).then(() => {
+        fs.unlinkSync(result.options.html.path);
+      });
+      uploadToBucket(bucketName, result.options.screenshot.path, `${result.options.hash}.webp`).then(() => {
+        fs.unlinkSync(result.options.screenshot.path);
+      });
       addToFirestore(collectionName, {
         hash: result.options.hash,
         url: result.options.url
@@ -106,11 +109,12 @@ const exporter = new CSVExporter.default({
     },
     preRequest: (options) => {
       options.hash = crypto.createHash('md5').update(options.url).digest('hex');
+      options.screenshot = { path: `${PATH}${options.hash}.webp`, fullPage: true };
       options.html = { path: `${PATH}${options.hash}.html` };
       return true;
     },
     maxDepth: 2,
-    exporter,
+    exporter
   });
   await crawler.queue(url, {
     allowedDomains: [allowedDomain],

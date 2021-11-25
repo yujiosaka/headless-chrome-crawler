@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "Launch Program",
-            "program": "${workspaceFolder}/examples/csv-exporter.mjs",
+            "program": "${workspaceFolder}/examples/save-result-to-gcp.mjs",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
