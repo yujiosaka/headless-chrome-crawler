@@ -87,6 +87,7 @@ const exporter = new CSVExporter.default({
 });
 (async () => {
   const crawler = await HCCrawler.default.launch({
+    args: ['--no-sandbox'],
     maxConcurrency: 2,
     persistCache: true,
     cache,
