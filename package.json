@@ -27,7 +27,7 @@
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.2",
-    "puppeteer": "^10.2.0",
+    "puppeteer": "^14.2.0",
     "robots-parser": "^2.3.0"
   },
   "peerDependencies": {
