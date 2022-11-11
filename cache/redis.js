@@ -1,4 +1,4 @@
-const redis = require('redis');
+const Redis = require('ioredis').default;
 const BaseCache = require('./base');
 
 const DEQUEUE_SCRIPT = `
@@ -18,7 +18,7 @@ class RedisCache extends BaseCache {
    * @return {!Promise}
    */
   init() {
-    this._client = redis.createClient(this._settings);
+    this._client = new Redis(this._settings);
     return Promise.resolve();
   }
 
