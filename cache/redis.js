@@ -1,4 +1,4 @@
-const redis = require('redis');
+const Redis = require('ioredis').default;
 const BaseCache = require('./base');
 
 const DEQUEUE_SCRIPT = `
@@ -18,7 +18,7 @@ class RedisCache extends BaseCache {
    * @return {!Promise}
    */
   init() {
-    this._client = redis.createClient(this._settings);
+    this._client = new Redis(this._settings);
     return Promise.resolve();
   }
 
@@ -28,12 +28,13 @@ class RedisCache extends BaseCache {
    */
   clear() {
     return new Promise((resolve, reject) => {
+      if (!this._client) return reject(new Error("RedisCache: this._client is undefined"));
       this._client.flushdb(error => {
         if (error) {
           reject(error);
           return;
         }
-        resolve();
+        resolve(undefined);
       });
     });
   }
@@ -43,7 +44,7 @@ class RedisCache extends BaseCache {
    * @override
    */
   close() {
-    this._client.quit();
+    this._client?.quit();
     return Promise.resolve();
   }
 
@@ -54,13 +55,14 @@ class RedisCache extends BaseCache {
    */
   get(key) {
     return new Promise((resolve, reject) => {
+      if (!this._client) return reject(new Error("RedisCache: this._client is undefined"));
       this._client.get(key, (error, json) => {
         if (error) {
           reject(error);
           return;
         }
         try {
-          const value = JSON.parse(json || null);
+          const value = JSON.parse(String(json));
           resolve(value);
         } catch (_error) {
           reject(_error);
@@ -84,21 +86,23 @@ class RedisCache extends BaseCache {
         reject(error);
         return;
       }
+      if (!this._client) return reject(new Error("RedisCache: this._client is undefined"));
       this._client.set(key, json, error => {
         if (error) {
           reject(error);
           return;
         }
         if (!this._settings.expire) {
-          resolve();
+          resolve(undefined);
           return;
         }
+        if (!this._client) return reject(new Error("RedisCache: this._client is undefined"));
         this._client.expire(key, this._settings.expire, _error => {
           if (_error) {
             reject(_error);
             return;
           }
-          resolve();
+          resolve(undefined);
         });
       });
     });
@@ -120,21 +124,23 @@ class RedisCache extends BaseCache {
         reject(error);
         return;
       }
+      if (!this._client) return reject(new Error("RedisCache: this._client is undefined"));
       this._client.zadd(key, priority, json, error => {
         if (error) {
           reject(error);
           return;
         }
         if (!this._settings.expire) {
-          resolve();
+          resolve(undefined);
           return;
         }
+        if (!this._client) return reject(new Error("RedisCache: this._client is undefined"));
         this._client.expire(key, this._settings.expire, _error => {
           if (_error) {
             reject(_error);
             return;
           }
-          resolve();
+          resolve(undefined);
         });
       });
     });
@@ -147,13 +153,14 @@ class RedisCache extends BaseCache {
    */
   dequeue(key) {
     return new Promise((resolve, reject) => {
+      if (!this._client) return reject(new Error("RedisCache: this._client is undefined"));
       this._client.eval(DEQUEUE_SCRIPT, 1, key, (error, json) => {
         if (error) {
           reject(error);
           return;
         }
         try {
-          const value = JSON.parse(json || null);
+          const value = JSON.parse(String(json));
           resolve(value);
         } catch (_error) {
           reject(_error);
@@ -169,6 +176,7 @@ class RedisCache extends BaseCache {
    */
   size(key) {
     return new Promise((resolve, reject) => {
+      if (!this._client) return reject(new Error("RedisCache: this._client is undefined"));
       this._client.zcount(key, '-inf', 'inf', (error, size) => {
         if (error) {
           reject(error);
@@ -186,12 +194,13 @@ class RedisCache extends BaseCache {
    */
   remove(key) {
     return new Promise((resolve, reject) => {
+      if (!this._client) return reject(new Error("RedisCache: this._client is undefined"));
       this._client.del(key, error => {
         if (error) {
           reject(error);
           return;
         }
-        resolve();
+        resolve(undefined);
       });
     });
   }
