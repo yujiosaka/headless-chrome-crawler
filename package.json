@@ -26,7 +26,7 @@
     "debug": "^4.3.4",
     "jquery": "^3.6.4",
     "lodash": "~4.17.21",
-    "puppeteer": "~18.0.5",
+    "puppeteer": "^19.11.1",
     "request": "~2.88.2",
     "request-promise": "~4.2.6",
     "robots-parser": "^3.0.1",
