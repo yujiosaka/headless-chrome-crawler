@@ -25,13 +25,13 @@
   },
   "homepage": "https://github.com/yujiosaka/headless-chrome-crawler#readme",
   "dependencies": {
-    "debug": "4.3.4",
-    "jquery": "3.6.1",
-    "lodash": "4.17.21",
-    "puppeteer": "18.0.5",
-    "request": "2.88.2",
-    "request-promise": "4.2.6",
-    "robots-parser": "3.0.0"
+    "debug": "^4.3.4",
+    "jquery": "^3.6.4",
+    "lodash": "~4.17.21",
+    "puppeteer": "~18.0.5",
+    "request": "~2.88.2",
+    "request-promise": "~4.2.6",
+    "robots-parser": "^3.0.1"
   },
   "peerDependencies": {
     "redis": "4.3.1"
