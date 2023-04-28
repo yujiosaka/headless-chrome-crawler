@@ -8,7 +8,7 @@
   "scripts": {
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "lint": "eslint --quiet -f codeframe . || eslint .",
-    "jest-exclude-redis-cache": "jest --forceExit --config=./jest.config.js $(find test -name '*.test.js' -not -name 'redis.test.js')",
+    "jest-exclude-redis-cache": "jest --config=./jest.config.js $(find test -name '*.test.js' -not -name 'redis.test.js')",
     "jest": "jest --maxWorkers=1 --config ./jest.config.js",
     "test": "yarn tsc && yarn lint && yarn jest-exclude-redis-cache",
     "test-all": "yarn tsc && yarn lint && jest --config ./jest.config.js",
