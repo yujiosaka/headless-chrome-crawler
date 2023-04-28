@@ -1,6 +1,6 @@
 module.exports = {
-  "extends": "../.eslintrc.js",
-  "rules": {
-    "no-unused-vars": 0,
+  extends: '../.eslintrc.js',
+  rules: {
+    'no-unused-vars': 0,
   },
 };
