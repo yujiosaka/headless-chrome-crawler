@@ -5,9 +5,11 @@
     "checkJs": true,
     "target": "es2017",
     "module": "commonjs",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true,
   },
   "include": [
     "lib"
   ]
 }
+// upgrade to node 18 (lts/hydrogen); skip es6 type checking
