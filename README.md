@@ -94,6 +94,29 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs
 
 See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/TIPS.md) for the debugging tips.
 
+## Updates
+
+### April 2023
+* Upgraded Puppeteer to version 19 and Node to v18 (envinfo below)
+* Integrated [ttkingdom's](https://github.com/ttkingdom/headless-chrome-crawler), [sylturner's](https://github.com/sylturner/headless-chrome-crawler), [viltgroup's](https://github.com/viltgroup/headless-chrome-crawler),
+[rmhubbert's](https://github.com/rmhubbert/headless-chrome-crawler) forked repositories 
+* Added two stealth NPM modules [puppeteer-extra-plugin-stealth](https://www.npmjs.com/package/puppeteer-extra-plugin-stealth) and [puppeteer-extra](https://www.npmjs.com/package/puppeteer-extra) 
+* Tests passing. _Run_ `npm run jest-exclude-redis-cache`
+
+```text
+  $ npx envinfo --preset jest
+  System:
+    OS: macOS 13.3.1
+    CPU: (8) arm64 Apple M2
+  Binaries:
+    Node: 18.16.0 - ~/.nvm/versions/node/v18.16.0/bin/node
+    Yarn: 1.22.19 - ~/.nvm/versions/node/v18.16.0/bin/yarn
+    npm: 9.5.1 - ~/.nvm/versions/node/v18.16.0/bin/npm
+  npmPackages:
+    jest: ^29.5.0 => 29.5.0
+```
+
+
 ## FAQ
 
 ### How is this different from other crawlers?
