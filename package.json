@@ -80,6 +80,8 @@
     "jquery",
     "promise",
     "puppeteer",
+    "stealth",
+    "bot",
     "scraper",
     "scraping"
   ],
