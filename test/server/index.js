@@ -8,10 +8,16 @@ class Server {
    * @return {!Promise<!Server>}
    */
   static run(port) {
-    const server = new Server(port);
-    return new Promise(resolve => void server._server.once('listening', () => {
-      resolve(server);
-    }));
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const server = new Server(port);
+      return new Promise(resolve => void server._server.once('listening', () => {
+        resolve(server);
+      }));
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    }
   }
 
   /**
