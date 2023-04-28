@@ -4,9 +4,12 @@ const HCCrawler = require('../..');
 
 const INDEX_PAGE = 'https://bot.sannysoft.com';
 const PNG_FILE = './tmp/bot.png';
+const TEST_TIMEOUT = 10000;
 
 const DEFAULT_OPTIONS = { args: ['--no-sandbox'] };
 
+jest.useRealTimers();
+jest.setTimeout(TEST_TIMEOUT);
 describe('HCCrawler', () => {
   describe('HCCrawler.executablePath', () => {
     test('returns the existing path', () => {

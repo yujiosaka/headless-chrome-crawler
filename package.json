@@ -11,10 +11,10 @@
     "greenkeeper-lockfile-update": "greenkeeper-lockfile-update",
     "greenkeeper-lockfile-upload": "greenkeeper-lockfile-upload",
     "lint": "eslint --quiet . || eslint .",
-    "jest-exclude-redis-cache": "jest --config=./jest.config.js $(find test -name '*.test.js' -not -name 'redis.test.js')",
-    "jest": "jest --maxWorkers=1 --config ./jest.config.js",
+    "jest-exclude-redis-cache": "jest $(find test -name '*.test.js' -not -name 'redis.test.js')",
+    "jest": "jest --maxWorkers=1",
     "test": "yarn tsc && yarn lint && yarn jest-exclude-redis-cache",
-    "test-all": "yarn tsc && yarn lint && jest --config ./jest.config.js",
+    "test-all": "yarn tsc && yarn lint && yarn jest",
     "tsc": "tsc -p ."
   },
   "repository": {
@@ -85,10 +85,5 @@
   ],
   "engines": {
     "node": ">=8.10.0"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.[t|j]s?$": "babel-jest"
-    }
   }
 }
