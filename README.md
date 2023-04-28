@@ -1,6 +1,6 @@
 # Headless Chrome Crawler [![npm](https://badge.fury.io/js/headless-chrome-crawler.svg)](https://www.npmjs.com/package/headless-chrome-crawler) [![build](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master.svg?style=shield&circle-token=ba45f930aed7057b79f2ac09df6be3e1b8ee954b)](https://circleci.com/gh/yujiosaka/headless-chrome-crawler/tree/master) [![Greenkeeper badge](https://badges.greenkeeper.io/yujiosaka/headless-chrome-crawler.svg)](https://greenkeeper.io/)
 
-###### [API](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md) | [Examples](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/examples) | [Tips](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/TIPS.md) | [Code of Conduct](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/CODE_OF_CONDUCT.md) | [Contributing](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/CONTRIBUTING.md) | [Changelog](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/CHANGELOG.md)
+###### [API](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/API.md) | [Maintaining](#updates) | [Examples](https://github.com/yujiosaka/headless-chrome-crawler/tree/master/examples) | [Tips](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/TIPS.md) | [Code of Conduct](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/CODE_OF_CONDUCT.md) | [Contributing](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/CONTRIBUTING.md) | [Changelog](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/CHANGELOG.md)
 
 Distributed crawler powered by Headless Chrome
 
@@ -94,10 +94,11 @@ See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs
 
 See [here](https://github.com/yujiosaka/headless-chrome-crawler/blob/master/docs/TIPS.md) for the debugging tips.
 
-## Updates
+## Updates[]{#updates}
 
 ### April 2023
 * Upgraded Puppeteer to version 19 and Node to v18 (envinfo below)
+* New [Headless](https://developer.chrome.com/articles/new-headless/) Chrome API
 * Integrated [ttkingdom's](https://github.com/ttkingdom/headless-chrome-crawler), [sylturner's](https://github.com/sylturner/headless-chrome-crawler), [viltgroup's](https://github.com/viltgroup/headless-chrome-crawler),
 [rmhubbert's](https://github.com/rmhubbert/headless-chrome-crawler) forked repositories 
 * Added two stealth NPM modules [puppeteer-extra-plugin-stealth](https://www.npmjs.com/package/puppeteer-extra-plugin-stealth) and [puppeteer-extra](https://www.npmjs.com/package/puppeteer-extra) 
