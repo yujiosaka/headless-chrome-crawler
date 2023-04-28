@@ -1,4 +1,4 @@
-const { lowerBound } = require('../lib/helper');
+const { lowerBound } = require('../lib/helper').Helper;
 const BaseCache = require('./base');
 
 /**
