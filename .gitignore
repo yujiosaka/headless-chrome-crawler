@@ -6,6 +6,7 @@ node_modules/
 target/
 npm-debug.log
 yarn-error.log
+yarn.loc
 !tmp/.gitkeep
 .yarn-integrity
 .eslintcache
