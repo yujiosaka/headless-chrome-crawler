@@ -42,7 +42,7 @@
     "gcp-metadata": "^4.3.1",
     "html-minifier": "^4.0.0",
     "puppeteer-extra": "^3.2.3",
-    "puppeteer-extra-plugin-stealth": "^2.9.0",
+    "puppeteer-extra-plugin-stealth": "^2.9.0"
   },
   "peerDependencies": {
     "redis": "^4.3.1"
