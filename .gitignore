@@ -1,7 +1,13 @@
+# IDE
+.idea
+.vscode
+
 node_modules/
+target/
 npm-debug.log
 yarn-error.log
-tmp/
+yarn.loc
 !tmp/.gitkeep
 .yarn-integrity
 .eslintcache
+package-lock.json

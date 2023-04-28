@@ -201,8 +201,10 @@ url, allowedDomains, deniedDomains, timeout, priority, depthPriority, delay, ret
   * `skipRequestedRedirect` <[boolean]> Whether to skip requests already appeared in redirect chains of requests, default to `false`. This option is ignored when `skipDuplicates` is set `false`.
   * `obeyRobotsTxt` <[boolean]> Whether to obey [robots.txt](https://developers.google.com/search/reference/robots_txt), default to `true`.
   * `followSitemapXml` <[boolean]> Whether to use [sitemap.xml](https://www.sitemaps.org/) to find locations, default to `false`.
-  * `allowedDomains` <[Array]<[string]|[RegExp]>> List of domains allowed to request. Pass `null` or leave default to skip checking allowed domain
+  * `allowedDomains` <[Array]<[string]|[RegExp]>> List of domains allowed to request. Pass `null` or leave default to skip checking allowed domain.
   * `deniedDomains` <[Array]<[string]|[RegExp]>> List of domains not allowed to request. Pass `null` or leave default to skip checking denied domain.
+  * `allowedPaths` <[Array]<[string]|[RegExp]>> List of paths in the domain allowed to request. Pass `null` or leave default to skip checking allowed domain paths.
+  * `deniedPaths` <[Array]<[string]|[RegExp]>> List of domain paths not allowed to request. Pass `null` or leave default to skip checking denied domain paths.
   * `delay` <[number]> Number of milliseconds after each request, defaults to `0`. When delay is set, `maxConcurrency` option must be `1`.
   * `timeout` <[number]> Navigation timeout in milliseconds, defaults to `30` seconds, pass `0` to disable timeout.
   * `waitUntil` <[string]|[Array]<[string]>> When to consider navigation succeeded, defaults to `load`. See the [Puppeteer's page.goto()](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options)'s `waitUntil` options for further details.
