@@ -63,10 +63,6 @@ describe('HCCrawler', () => {
         return $('body').text();
       }
 
-      beforeAll(async () => {
-        console.log('checking if INDEX_PAGE is reachable');
-      });
-
       test('emits a disconnect event', async () => {
         this.crawler = await HCCrawler.launch(extend({
           evaluatePage,
