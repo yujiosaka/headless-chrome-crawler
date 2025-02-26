@@ -1,10 +1,11 @@
 {
-  "name": "headless-chrome-crawler",
+  "name": "karienima-hecc",
   "version": "1.8.0",
-  "description": "Distributed web crawler powered by Headless Chrome",
+  "description": "Crawler berupa Chrome tanpa kepala (headless) untuk Karienima",
   "main": "index.js",
   "license": "MIT",
   "author": "Yuji Isobe",
+  "type": "module",
   "scripts": {
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "greenkeeper-lockfile-update": "greenkeeper-lockfile-update",
@@ -18,12 +19,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yujiosaka/headless-chrome-crawler.git"
+    "url": "git+https://github.com/karienima/karienima-hecc"
   },
   "bugs": {
-    "url": "https://github.com/yujiosaka/headless-chrome-crawler/issues"
+    "url": "https://github.com/karienima/karienima-hecc/issues"
   },
-  "homepage": "https://github.com/yujiosaka/headless-chrome-crawler#readme",
+  "homepage": "https://github.com/karienima/karienima-hecc#readme",
   "dependencies": {
     "debug": "3.1.0",
     "jquery": "3.5.1",
